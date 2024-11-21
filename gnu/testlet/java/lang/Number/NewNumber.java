@@ -1,39 +1,47 @@
-// Tags: not-a-test
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.Number;
 
-class NewNumber extends Number
-{
-	private int intfld; 
-	public NewNumber()
-	{
-		super();
-	}
-	public NewNumber(int i)
-	{
-		intfld = i;
-	}
-	public int intValue()
-	{
-		return intfld;
-	}
-	public float floatValue()
-	{
-		return intfld;
-	}
-	public double doubleValue()
-	{
-		return intfld;
-	}
-	public long longValue()
-	{
-		return intfld;
-	}
-	public byte byteValue()
-	{
-		return super.byteValue();
-	}
-	public short shortValue()
-	{
-		return super.shortValue();
-	}
+class NewNumber
+extends Number {
+    private int intfld;
+
+    public NewNumber() {
+    }
+
+    public NewNumber(int i) {
+        this.intfld = i;
+    }
+
+    @Override
+    public int intValue() {
+        return this.intfld;
+    }
+
+    @Override
+    public float floatValue() {
+        return this.intfld;
+    }
+
+    @Override
+    public double doubleValue() {
+        return this.intfld;
+    }
+
+    @Override
+    public long longValue() {
+        return this.intfld;
+    }
+
+    @Override
+    public byte byteValue() {
+        return super.byteValue();
+    }
+
+    @Override
+    public short shortValue() {
+        return super.shortValue();
+    }
 }
+

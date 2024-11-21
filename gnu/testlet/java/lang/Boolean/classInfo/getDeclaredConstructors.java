@@ -1,102 +1,38 @@
-// Test for method java.lang.Boolean.getClass().getDeclaredConstructors()
-
-// Copyright (C) 2012, 2013, 2014, 2015 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.Boolean.classInfo;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
-import java.lang.Boolean;
-import java.util.Map;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
-
-
-/**
- * Test for method java.lang.Boolean.getClass().getDeclaredConstructors()
- */
-public class getDeclaredConstructors implements Testlet
-{
-
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
-    public void test(TestHarness harness)
-    {
-        // map of declared constructors which should exists
-        Map<String, String> testedDeclaredConstructors = null;
-
-        // map of declared constructors for (Open)JDK6
-        Map<String, String> testedDeclaredConstructors_jdk6 = new HashMap<String, String>();
-
-        // map of declared constructors for (Open)JDK7
-        Map<String, String> testedDeclaredConstructors_jdk7 = new HashMap<String, String>();
-
-        // map for constructors declared in (Open)JDK6
+public class getDeclaredConstructors
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        HashMap<String, String> testedDeclaredConstructors = null;
+        HashMap<String, String> testedDeclaredConstructors_jdk6 = new HashMap<String, String>();
+        HashMap<String, String> testedDeclaredConstructors_jdk7 = new HashMap<String, String>();
         testedDeclaredConstructors_jdk6.put("public java.lang.Boolean(boolean)", "java.lang.Boolean");
         testedDeclaredConstructors_jdk6.put("public java.lang.Boolean(java.lang.String)", "java.lang.Boolean");
-
-        // map for constructors declared in (Open)JDK7
         testedDeclaredConstructors_jdk7.put("public java.lang.Boolean(boolean)", "java.lang.Boolean");
         testedDeclaredConstructors_jdk7.put("public java.lang.Boolean(java.lang.String)", "java.lang.Boolean");
-
-        // create instance of a class Boolean
-        final Object o = new Boolean(true);
-
-        // get a runtime class of an object "o"
-        final Class c = o.getClass();
-
-        // get the right map containing constructor signatures
-        testedDeclaredConstructors = getJavaVersion() < 7 ? testedDeclaredConstructors_jdk6 : testedDeclaredConstructors_jdk7;
-
-        // get all declared constructors for this class
-        java.lang.reflect.Constructor[] declaredConstructors = c.getDeclaredConstructors();
-
-        // expected number of constructors
-        final int expectedNumberOfConstructors = testedDeclaredConstructors.size();
-
-        // basic check for a number of constructors
+        Boolean o = new Boolean(true);
+        Class<?> c = o.getClass();
+        testedDeclaredConstructors = this.getJavaVersion() < 7 ? testedDeclaredConstructors_jdk6 : testedDeclaredConstructors_jdk7;
+        Constructor<?>[] declaredConstructors = c.getDeclaredConstructors();
+        int expectedNumberOfConstructors = testedDeclaredConstructors.size();
         harness.check(declaredConstructors.length, expectedNumberOfConstructors);
-
-        // check if all declared constructors exist
-        for (java.lang.reflect.Constructor declaredConstructor : declaredConstructors) {
-            // constructor name should consists of package name + class name
+        for (Constructor<?> declaredConstructor : declaredConstructors) {
             String constructorName = declaredConstructor.getName();
-            // modifiers + package + class name + parameter types
-            String constructorString = declaredConstructor.toString().replaceAll(" native ", " ");
-            harness.check(testedDeclaredConstructors.containsKey(constructorString));
-            harness.check(testedDeclaredConstructors.get(constructorString), constructorName);
+            String constructorString2 = declaredConstructor.toString().replaceAll(" native ", " ");
+            harness.check(testedDeclaredConstructors.containsKey(constructorString2));
+            harness.check(testedDeclaredConstructors.get(constructorString2), (Object)constructorName);
         }
     }
 
-    /**
-     * Returns version of Java. The input could have the following form: "1.7.0_06"
-     * and we are interested only in "7" in this case.
-     * 
-     * @return Java version
-     */
     protected int getJavaVersion() {
         String javaVersionStr = System.getProperty("java.version");
         String[] parts = javaVersionStr.split("\\.");

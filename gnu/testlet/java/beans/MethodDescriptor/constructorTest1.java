@@ -1,53 +1,26 @@
-// Tags: JDK1.1
-
-//Copyright (C) 2003 Stephen Crawley <crawley@dstc.edu.au>
-//Copyright (C) 2004 Robert Schuster <thebohemian@gmx.net>
-
-//Mauve is free software; you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation; either version 2, or (at your option)
-//any later version.
-
-//Mauve is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
-
-//You should have received a copy of the GNU General Public License
-//along with Mauve; see the file COPYING.  If not, write to
-//the Free Software Foundation, 59 Temple Place - Suite 330,
-//Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.beans.MethodDescriptor;
-import gnu.testlet.Testlet;
+
 import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
+import java.awt.Component;
 import java.beans.MethodDescriptor;
 
-/** This tests the <code>MethodDescriptor</code> using classes
- * of the Java API.
- * 
- * @author Stephen Crawley <crawley@dstc.edu.au>
- * @author Robert Schuster <thebohemian@gmx.net>
- */
-public class constructorTest1 implements Testlet
-{
-    public void test(TestHarness harness)
-    {
-        boolean ok;
-
-        ok = true;
-        try
-        {
-            new MethodDescriptor(
-                java.awt.Component.class.getMethod(
-                    "getLocation",
-                    new Class[0]));
+public class constructorTest1
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        boolean ok = true;
+        try {
+            new MethodDescriptor(Component.class.getMethod("getLocation", new Class[0]));
         }
-        catch (NoSuchMethodException e)
-        {
+        catch (NoSuchMethodException e) {
             harness.debug(e);
             ok = false;
         }
         harness.check(ok);
     }
 }
+

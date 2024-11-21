@@ -1,33 +1,13 @@
-/* DnDTest.java --
-   Copyright (C) 2006 Red Hat
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to the
-Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301 USA.
-
-*/
-
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.dnd;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
-import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Label;
 import java.awt.Point;
@@ -37,7 +17,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
@@ -54,282 +33,240 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.dnd.InvalidDnDOperationException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
+import java.io.IOException;
 
 public class DnDTest
-    implements Testlet
-{
-  TestHarness harness;
-  Robot r;
+implements Testlet {
+    TestHarness harness;
+    Robot r;
+    boolean unsuccessful;
+    boolean dragGestRec;
+    boolean dragEnter;
+    boolean dragEnterTar;
+    boolean dragOver;
+    boolean dragOverTar;
+    boolean drop;
+    boolean finished;
+    boolean actionPerformed;
+    boolean dragExit;
+    boolean dropActionChanged;
+    boolean dragExitTar;
+    boolean dropActionChangedTar;
 
-  boolean unsuccessful;
-  boolean dragGestRec;
-  boolean dragEnter;
-  boolean dragEnterTar;
-  boolean dragOver;
-  boolean dragOverTar;
-  boolean drop;
-  boolean finished;
-  boolean actionPerformed;
-  boolean dragExit;
-  boolean dropActionChanged;
-  boolean dragExitTar;
-  boolean dropActionChangedTar;
-  
-  public synchronized void test(TestHarness h)
-  {
-    harness = h;
-    r = harness.createRobot ();
-    
-    new MainClass("");
-  }
-
-  class MainClass
-      extends Frame
-      implements ActionListener, DropTargetListener
-  {
-    MouseThread mt;
-    int start;
-    int end;
-    DragLabel source = new DragLabel("Drag and drop me to the following Button",
-                                     Label.CENTER);
-    Button target = new Button();
-    
-    public MainClass(String title)
-    {
-      super(title);
-      source.setForeground(Color.red);
-      add(source, BorderLayout.NORTH);
-
-      target.addActionListener(this);
-      add(target, BorderLayout.SOUTH);
-
-      new DropTarget(target, DnDConstants.ACTION_COPY_OR_MOVE, this);
-      setSize(205, 100);
-      setVisible(true);
-      
-      r.waitForIdle();
-      r.delay (1000);
-      
-      doDnD();
-      
-      r.delay(3000);
-
-      harness.check(!unsuccessful);
-      harness.check(finished);
-      harness.check(dragGestRec);
-      harness.check(dragEnter);
-      harness.check(dragEnterTar);
-      harness.check(dragOver);
-      harness.check(dragOverTar);
-      harness.check(drop);
-      harness.check(!actionPerformed);
-      harness.check(!dragExit);
-      harness.check(!dropActionChanged);
-      harness.check(!dragExitTar);
-      harness.check(!dropActionChangedTar);
-    }
-    
-    void doDnD()
-    {
-      Point sLoc = source.getLocationOnScreen();
-      Rectangle sSize = source.getBounds();
-
-      Point tLoc = target.getLocationOnScreen();
-      Rectangle tSize = target.getBounds();
-      
-      // To focus the window
-      r.mouseMove(sLoc.x + sSize.width/2, sLoc.y + sSize.height/2);
-      r.mousePress(InputEvent.BUTTON1_MASK);
-      r.mouseRelease(InputEvent.BUTTON1_MASK);
-
-      // drag and drop
-      r.delay(1000);
-      r.mousePress(InputEvent.BUTTON1_MASK);
-      r.delay(1000);
-      r.mouseMove(tLoc.x + tSize.width/2, tLoc.y + tSize.height/2);
-      
-      start = tLoc.y + tSize.height/2;
-      end = start + 5;
-        
-      mt = new MouseThread();
-      mt.start();
-      
-      r.delay(1000);
-      mt.shouldStop=true;
-      r.mouseRelease(InputEvent.BUTTON1_MASK);
-    }
-    
-    class MouseThread
-        extends Thread
-    {
-      public boolean shouldStop;
-
-      public void run()
-      {
-        try
-          {
-            shouldStop = false;
-            Robot robot = new Robot();
-
-            for (;;)
-              {
-                for (int i = start; i < end; i++)
-                  {
-                    if (shouldStop)
-                      break;
-                    
-                    robot.mouseMove(150, i);
-                    yield();
-                  }
-                for (int i = end; i > start; i--)
-                  {
-                    if (shouldStop)
-                      break;
-                    
-                    robot.mouseMove(150, i);
-                    yield();
-                  }
-                if (shouldStop)
-                  break;
-              }
-          }
-        catch (Exception e)
-          {
-            unsuccessful = true;
-          }
-      }
-    }
-    
-    public void actionPerformed(ActionEvent e)
-    {
-      Button b = (Button) e.getSource();
-      b.setLabel("");
-      source.setText("Drag and drop me to the following Button");
-      actionPerformed = true;
+    @Override
+    public synchronized void test(TestHarness h) {
+        this.harness = h;
+        this.r = this.harness.createRobot();
+        new MainClass("");
     }
 
-    public void dragEnter(DropTargetDragEvent e)
-    {
-      dragEnter = true;
-    }
+    class DragLabel
+    extends Label
+    implements DragGestureListener,
+    DragSourceListener {
+        private DragSource ds;
 
-    public void dragExit(DropTargetEvent e)
-    {
-      dragExit = true;
-    }
+        public DragLabel(String s, int alignment) {
+            super(s, alignment);
+            this.ds = DragSource.getDefaultDragSource();
+            int action = 3;
+            this.ds.createDefaultDragGestureRecognizer(this, action, this);
+        }
 
-    public void dragOver(DropTargetDragEvent e)
-    {
-      dragOver = true;
-    }
-
-    public void drop(DropTargetDropEvent e)
-    {
-      drop = true;
-      try
-        {
-          Transferable t = e.getTransferable();
-
-          if (e.isDataFlavorSupported(DataFlavor.stringFlavor))
-            {
-              e.acceptDrop(e.getDropAction());
-
-              String s;
-              s = (String) t.getTransferData(DataFlavor.stringFlavor);
-
-              target.setLabel(s);
-
-              e.dropComplete(true);
+        @Override
+        public void dragGestureRecognized(DragGestureEvent e) {
+            try {
+                StringSelection t = new StringSelection(this.getText());
+                e.startDrag(DragSource.DefaultCopyNoDrop, t, this);
+                DnDTest.this.dragGestRec = true;
             }
-          else
-            {
-              unsuccessful = true;
-              e.rejectDrop();
+            catch (InvalidDnDOperationException e2) {
+                DnDTest.this.unsuccessful = true;
             }
         }
-      catch (java.io.IOException e2)
-        {
-          unsuccessful = true;
-        }
-      catch (UnsupportedFlavorException e2)
-        {
-          unsuccessful = true;
-        }
-    }
 
-    public void dropActionChanged(DropTargetDragEvent e)
-    {
-      dropActionChanged = true;
-    }
-  }
-
-  class DragLabel
-      extends Label
-      implements DragGestureListener, DragSourceListener
-  {
-    private DragSource ds = DragSource.getDefaultDragSource();
-
-    public DragLabel(String s, int alignment)
-    {
-      super(s, alignment);
-      int action = DnDConstants.ACTION_COPY_OR_MOVE;
-      ds.createDefaultDragGestureRecognizer(this, action, this);
-    }
-
-    public void dragGestureRecognized(DragGestureEvent e)
-    {
-      try
-        {
-          Transferable t = new StringSelection(getText());
-          e.startDrag(DragSource.DefaultCopyNoDrop, t, this);
-          dragGestRec = true;
-        }
-      catch (InvalidDnDOperationException e2)
-        {
-          unsuccessful = true;
-        }
-    }
-
-    public void dragDropEnd(DragSourceDropEvent e)
-    {
-      if (e.getDropSuccess() == false)
-        {
-          unsuccessful = true;
-          return;
+        @Override
+        public void dragDropEnd(DragSourceDropEvent e) {
+            if (!e.getDropSuccess()) {
+                DnDTest.this.unsuccessful = true;
+                return;
+            }
+            int action = e.getDropAction();
+            if ((action & 2) != 0) {
+                this.setText("");
+            }
+            DnDTest.this.finished = true;
         }
 
-      int action = e.getDropAction();
-      if ((action & DnDConstants.ACTION_MOVE) != 0)
-        setText("");
-      finished = true;
+        @Override
+        public void dragEnter(DragSourceDragEvent e) {
+            DnDTest.this.dragEnterTar = true;
+            DragSourceContext ctx = e.getDragSourceContext();
+            int action = e.getDropAction();
+            if ((action & 1) != 0) {
+                ctx.setCursor(DragSource.DefaultCopyDrop);
+            } else {
+                ctx.setCursor(DragSource.DefaultCopyNoDrop);
+            }
+        }
+
+        @Override
+        public void dragExit(DragSourceEvent e) {
+            DnDTest.this.dragExitTar = true;
+        }
+
+        @Override
+        public void dragOver(DragSourceDragEvent e) {
+            DnDTest.this.dragOverTar = true;
+        }
+
+        @Override
+        public void dropActionChanged(DragSourceDragEvent e) {
+            DnDTest.this.dropActionChangedTar = true;
+        }
     }
 
-    public void dragEnter(DragSourceDragEvent e)
-    {
-      dragEnterTar = true;
-      DragSourceContext ctx = e.getDragSourceContext();
+    class MainClass
+    extends Frame
+    implements ActionListener,
+    DropTargetListener {
+        MouseThread mt;
+        int start;
+        int end;
+        DragLabel source;
+        Button target;
 
-      int action = e.getDropAction();
-      if ((action & DnDConstants.ACTION_COPY) != 0)
-        ctx.setCursor(DragSource.DefaultCopyDrop);
-      else
-        ctx.setCursor(DragSource.DefaultCopyNoDrop);
-    }
+        public MainClass(String title) {
+            super(title);
+            this.source = new DragLabel("Drag and drop me to the following Button", 1);
+            this.target = new Button();
+            this.source.setForeground(Color.red);
+            this.add((Component)this.source, "North");
+            this.target.addActionListener(this);
+            this.add((Component)this.target, "South");
+            new DropTarget(this.target, 3, this);
+            this.setSize(205, 100);
+            this.setVisible(true);
+            DnDTest.this.r.waitForIdle();
+            DnDTest.this.r.delay(1000);
+            this.doDnD();
+            DnDTest.this.r.delay(3000);
+            DnDTest.this.harness.check(!DnDTest.this.unsuccessful);
+            DnDTest.this.harness.check(DnDTest.this.finished);
+            DnDTest.this.harness.check(DnDTest.this.dragGestRec);
+            DnDTest.this.harness.check(DnDTest.this.dragEnter);
+            DnDTest.this.harness.check(DnDTest.this.dragEnterTar);
+            DnDTest.this.harness.check(DnDTest.this.dragOver);
+            DnDTest.this.harness.check(DnDTest.this.dragOverTar);
+            DnDTest.this.harness.check(DnDTest.this.drop);
+            DnDTest.this.harness.check(!DnDTest.this.actionPerformed);
+            DnDTest.this.harness.check(!DnDTest.this.dragExit);
+            DnDTest.this.harness.check(!DnDTest.this.dropActionChanged);
+            DnDTest.this.harness.check(!DnDTest.this.dragExitTar);
+            DnDTest.this.harness.check(!DnDTest.this.dropActionChangedTar);
+        }
 
-    public void dragExit(DragSourceEvent e)
-    {
-      dragExitTar = true;
-    }
+        void doDnD() {
+            Point sLoc = this.source.getLocationOnScreen();
+            Rectangle sSize = this.source.getBounds();
+            Point tLoc = this.target.getLocationOnScreen();
+            Rectangle tSize = this.target.getBounds();
+            DnDTest.this.r.mouseMove(sLoc.x + sSize.width / 2, sLoc.y + sSize.height / 2);
+            DnDTest.this.r.mousePress(16);
+            DnDTest.this.r.mouseRelease(16);
+            DnDTest.this.r.delay(1000);
+            DnDTest.this.r.mousePress(16);
+            DnDTest.this.r.delay(1000);
+            DnDTest.this.r.mouseMove(tLoc.x + tSize.width / 2, tLoc.y + tSize.height / 2);
+            this.start = tLoc.y + tSize.height / 2;
+            this.end = this.start + 5;
+            this.mt = new MouseThread();
+            this.mt.start();
+            DnDTest.this.r.delay(1000);
+            this.mt.shouldStop = true;
+            DnDTest.this.r.mouseRelease(16);
+        }
 
-    public void dragOver(DragSourceDragEvent e)
-    {
-      dragOverTar = true;
-    }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Button b = (Button)e.getSource();
+            b.setLabel("");
+            this.source.setText("Drag and drop me to the following Button");
+            DnDTest.this.actionPerformed = true;
+        }
 
-    public void dropActionChanged(DragSourceDragEvent e)
-    {
-      dropActionChangedTar = true;
+        @Override
+        public void dragEnter(DropTargetDragEvent e) {
+            DnDTest.this.dragEnter = true;
+        }
+
+        @Override
+        public void dragExit(DropTargetEvent e) {
+            DnDTest.this.dragExit = true;
+        }
+
+        @Override
+        public void dragOver(DropTargetDragEvent e) {
+            DnDTest.this.dragOver = true;
+        }
+
+        @Override
+        public void drop(DropTargetDropEvent e) {
+            DnDTest.this.drop = true;
+            try {
+                Transferable t = e.getTransferable();
+                if (e.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                    e.acceptDrop(e.getDropAction());
+                    String s = (String)t.getTransferData(DataFlavor.stringFlavor);
+                    this.target.setLabel(s);
+                    e.dropComplete(true);
+                } else {
+                    DnDTest.this.unsuccessful = true;
+                    e.rejectDrop();
+                }
+            }
+            catch (IOException e2) {
+                DnDTest.this.unsuccessful = true;
+            }
+            catch (UnsupportedFlavorException e2) {
+                DnDTest.this.unsuccessful = true;
+            }
+        }
+
+        @Override
+        public void dropActionChanged(DropTargetDragEvent e) {
+            DnDTest.this.dropActionChanged = true;
+        }
+
+        class MouseThread
+        extends Thread {
+            public boolean shouldStop;
+
+            MouseThread() {
+            }
+
+            @Override
+            public void run() {
+                try {
+                    this.shouldStop = false;
+                    Robot robot = new Robot();
+                    do {
+                        int i;
+                        for (i = MainClass.this.start; i < MainClass.this.end && !this.shouldStop; ++i) {
+                            robot.mouseMove(150, i);
+                            MouseThread.yield();
+                        }
+                        for (i = MainClass.this.end; i > MainClass.this.start && !this.shouldStop; --i) {
+                            robot.mouseMove(150, i);
+                            MouseThread.yield();
+                        }
+                    } while (!this.shouldStop);
+                }
+                catch (Exception e) {
+                    DnDTest.this.unsuccessful = true;
+                }
+            }
+        }
     }
-  }
 }
+

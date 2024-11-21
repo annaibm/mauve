@@ -1,8 +1,14 @@
-//Tags: not-a-test
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.beans.Introspector;
 
-public class C extends B
-{
-  public void c () { System.out.println ("c"); }
+import gnu.testlet.java.beans.Introspector.B;
+
+public class C
+extends B {
+    public void c() {
+        System.out.println("c");
+    }
 }
+

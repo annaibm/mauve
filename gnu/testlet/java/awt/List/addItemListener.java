@@ -1,82 +1,36 @@
-// addItemListener.java -- 
-
-// Copyright (C) 2012 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: GUI
-// Uses: ../LocationTests
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.List;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-import gnu.testlet.java.awt.LocationTests;
+import java.awt.Color;
+import java.awt.List;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-import java.awt.*;
-import java.awt.event.*;
-
-/**
-  * Check if ItemListener could be registered for an AWT List.
-  */
 public class addItemListener
-    implements Testlet
-{
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        List list2 = new List(10);
+        list2.setBackground(Color.blue);
+        ItemListener[] itemListeners = list2.getItemListeners();
+        harness.check(itemListeners.length, 0);
+        list2.addItemListener(new ItemListener(){
 
-  /**
-   * Runs the test using the specified harness. 
-   * 
-   * @param harness  the test harness (<code>null</code> not permitted).
-   */
-  public void test(TestHarness harness)
-  {
-    List list = new List(10);
-    list.setBackground(Color.blue);
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+            }
 
-    // array which will be filled by registered action listeners
-    ItemListener[] itemListeners;
-
-    // get all registered action listeners
-    itemListeners = list.getItemListeners();
-    harness.check(itemListeners.length, 0);
-
-    // register new action listener
-    list.addItemListener(
-      new ItemListener() {
-        public void itemStateChanged(ItemEvent e)
-        {
-        // empty
-        }
-
-        @Override
-        public String toString()
-        {
-          return "myItemListener";
-        }
-      }
-    );
-
-    // get all registered action listeners
-    itemListeners = list.getItemListeners();
-    harness.check(itemListeners.length, 1);
-
-    // check if the proper listener is used
-    harness.check(itemListeners[0].toString(), "myItemListener");
-  }
+            public String toString() {
+                return "myItemListener";
+            }
+        });
+        itemListeners = list2.getItemListeners();
+        harness.check(itemListeners.length, 1);
+        harness.check(itemListeners[0].toString(), (Object)"myItemListener");
+    }
 }
 

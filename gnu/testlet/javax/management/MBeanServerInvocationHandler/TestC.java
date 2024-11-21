@@ -1,172 +1,139 @@
-// Tags: not-a-test
-
-// Copyright (C) 2007 Andrew John Hughes <gnu_andrew@member.fsf.org>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.javax.management.MBeanServerInvocationHandler;
 
-import javax.management.ObjectName;
-
+import gnu.testlet.javax.management.MBeanServerInvocationHandler.ChildMXBean;
+import gnu.testlet.javax.management.MBeanServerInvocationHandler.Colour;
+import gnu.testlet.javax.management.MBeanServerInvocationHandler.TestCMXBean;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
+import javax.management.ObjectName;
 
-/**
- * Test {@link javax.management.MXBean} implementation for proxying.
- *
- * @author <a href="mailto:gnu_andrew@member.fsf.org">Andrew John Hughes</a>
- */
 public class TestC
-  implements TestCMXBean
-{
-  
-  private int id;
+implements TestCMXBean {
+    private int id;
+    private Integer size;
+    private ObjectName name;
+    private float[] weights;
+    private String[] names;
+    private Set<Integer> ages;
+    private SortedSet<String> biscuits;
+    private Colour colour;
+    private Map<String, Integer> numbers;
+    private SortedMap<String, Integer> sortedNumbers;
+    private ChildMXBean child;
 
-  private Integer size;
+    @Override
+    public int getId() {
+        return this.id;
+    }
 
-  private ObjectName name;
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
 
-  private float[] weights;
+    @Override
+    public Integer getSize() {
+        return this.size;
+    }
 
-  private String[] names;
+    @Override
+    public void setSize(Integer size2) {
+        this.size = size2;
+    }
 
-  private Set<Integer> ages;
+    @Override
+    public ObjectName getName() {
+        return this.name;
+    }
 
-  private SortedSet<String> biscuits;
+    @Override
+    public void setName(ObjectName name2) {
+        this.name = name2;
+    }
 
-  private Colour colour;
+    @Override
+    public float[] getWeights() {
+        return this.weights;
+    }
 
-  private Map<String,Integer> numbers;
+    @Override
+    public void setWeights(float[] weights) {
+        this.weights = weights;
+    }
 
-  private SortedMap<String, Integer> sortedNumbers;
+    @Override
+    public String[] getNames() {
+        return this.names;
+    }
 
-  private ChildMXBean child;
+    @Override
+    public void setNames(String[] names) {
+        this.names = names;
+    }
 
-  public int getId()
-  {
-    return id;
-  }
+    @Override
+    public Set<Integer> getAges() {
+        return this.ages;
+    }
 
-  public void setId(int id)
-  {
-    this.id = id;
-  }
+    @Override
+    public void setAges(Set<Integer> ages) {
+        this.ages = ages;
+    }
 
-  public Integer getSize()
-  {
-    return size;
-  }
+    @Override
+    public SortedSet<String> getBiscuits() {
+        return this.biscuits;
+    }
 
-  public void setSize(Integer size)
-  {
-    this.size = size;
-  }
+    @Override
+    public void setBiscuits(SortedSet<String> biscuits) {
+        this.biscuits = biscuits;
+    }
 
-  public ObjectName getName()
-  {
-    return name;
-  }
+    @Override
+    public Colour getColour() {
+        return this.colour;
+    }
 
-  public void setName(ObjectName name)
-  {
-    this.name = name;
-  }
-  
-  public float[] getWeights()
-  {
-    return weights;
-  }
+    @Override
+    public void setColour(Colour colour) {
+        this.colour = colour;
+    }
 
-  public void setWeights(float[] weights)
-  {
-    this.weights = weights;
-  }
+    @Override
+    public Map<String, Integer> getPhoneNumbers() {
+        return this.numbers;
+    }
 
-  public String[] getNames()
-  {
-    return names;
-  }
+    @Override
+    public void setPhoneNumbers(Map<String, Integer> numbers) {
+        this.numbers = numbers;
+    }
 
-  public void setNames(String[] names)
-  {
-    this.names = names;
-  }
+    @Override
+    public SortedMap<String, Integer> getSortedPhoneNumbers() {
+        return this.sortedNumbers;
+    }
 
-  public Set<Integer> getAges()
-  {
-    return ages;
-  }
+    @Override
+    public void setSortedPhoneNumbers(SortedMap<String, Integer> numbers) {
+        this.sortedNumbers = numbers;
+    }
 
-  public void setAges(Set<Integer> ages)
-  {
-    this.ages = ages;
-  }
+    @Override
+    public ChildMXBean getChild() {
+        return this.child;
+    }
 
-  public SortedSet<String> getBiscuits()
-  {
-    return biscuits;
-  }
-
-  public void setBiscuits(SortedSet<String> biscuits)
-  {
-    this.biscuits = biscuits;
-  }
-
-  public Colour getColour()
-  {
-    return colour;
-  }
-
-  public void setColour(Colour colour)
-  {
-    this.colour = colour;
-  }
-
-  public Map<String,Integer> getPhoneNumbers()
-  {
-    return numbers;
-  }
-
-  public void setPhoneNumbers(Map<String,Integer> numbers)
-  {
-    this.numbers = numbers;
-  }
-
-  public SortedMap<String,Integer> getSortedPhoneNumbers()
-  {
-    return sortedNumbers;
-  }
-
-  public void setSortedPhoneNumbers(SortedMap<String,Integer> numbers)
-  {
-    sortedNumbers = numbers;
-  }
-
-  public ChildMXBean getChild()
-  {
-    return child;
-  }
-
-  public void setChild(ChildMXBean child)
-  {
-    this.child = child;
-  }
-
+    @Override
+    public void setChild(ChildMXBean child) {
+        this.child = child;
+    }
 }
+

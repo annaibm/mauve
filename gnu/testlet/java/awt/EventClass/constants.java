@@ -1,104 +1,79 @@
-// Tags: JDK1.4
-
-// Copyright (C) 2004 David Gilbert <david.gilbert@object-refinery.com>
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.EventClass;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
 
-import java.awt.Event;
-
-/**
- * Verifies constant values for the {@link Event} class.
- */
-public class constants implements Testlet {
-
-  /**
-   * Runs the test using the specified harness.
-   * 
-   * @param harness  the test harness (<code>null</code> not permitted).
-   */
-  public void test(TestHarness harness)     
-  {
-    harness.check(Event.ACTION_EVENT,	1001);
-    harness.check(Event.ALT_MASK,	8);
-    harness.check(Event.BACK_SPACE, 8);
-    harness.check(Event.CAPS_LOCK, 1022);
-    harness.check(Event.CTRL_MASK, 2);
-    harness.check(Event.DELETE, 127);
-    harness.check(Event.DOWN, 1005);
-    harness.check(Event.END, 1001);
-    harness.check(Event.ENTER, 10);
-    harness.check(Event.ESCAPE, 27);
-    harness.check(Event.F1, 1008);
-    harness.check(Event.F10, 1017);
-    harness.check(Event.F11, 1018);
-    harness.check(Event.F12, 1019);
-    harness.check(Event.F2, 1009);
-    harness.check(Event.F3, 1010);
-    harness.check(Event.F4, 1011);
-    harness.check(Event.F5, 1012);
-    harness.check(Event.F6, 1013);
-    harness.check(Event.F7, 1014);
-    harness.check(Event.F8, 1015);
-    harness.check(Event.F9, 1016);
-    harness.check(Event.GOT_FOCUS, 1004);
-    harness.check(Event.HOME, 1000);
-    harness.check(Event.INSERT, 1025);
-    harness.check(Event.KEY_ACTION, 403);
-    harness.check(Event.KEY_ACTION_RELEASE, 404);
-    harness.check(Event.KEY_PRESS, 401);
-    harness.check(Event.KEY_RELEASE, 402);
-    harness.check(Event.LEFT,	1006);
-    harness.check(Event.LIST_DESELECT, 702);
-    harness.check(Event.LIST_SELECT, 701);
-    harness.check(Event.LOAD_FILE, 1002);
-    harness.check(Event.LOST_FOCUS, 1005);
-    harness.check(Event.META_MASK, 4);
-    harness.check(Event.MOUSE_DOWN, 501);
-    harness.check(Event.MOUSE_DRAG, 506);
-    harness.check(Event.MOUSE_ENTER, 504);
-    harness.check(Event.MOUSE_EXIT, 505);
-    harness.check(Event.MOUSE_MOVE, 503);
-    harness.check(Event.MOUSE_UP, 502);
-    harness.check(Event.NUM_LOCK, 1023);
-    harness.check(Event.PAUSE, 1024);
-    harness.check(Event.PGDN, 1003);
-    harness.check(Event.PGUP, 1002);
-    harness.check(Event.PRINT_SCREEN, 1020);
-    harness.check(Event.RIGHT, 1007);
-    harness.check(Event.SAVE_FILE, 1003);
-    harness.check(Event.SCROLL_ABSOLUTE, 605);
-    harness.check(Event.SCROLL_BEGIN,	606);
-    harness.check(Event.SCROLL_END, 607);
-    harness.check(Event.SCROLL_LINE_DOWN, 602);
-    harness.check(Event.SCROLL_LINE_UP, 601);
-    harness.check(Event.SCROLL_LOCK, 1021);
-    harness.check(Event.SCROLL_PAGE_DOWN,	604);
-    harness.check(Event.SCROLL_PAGE_UP, 603);
-    harness.check(Event.SHIFT_MASK, 1);
-    harness.check(Event.TAB, 9);
-    harness.check(Event.UP, 1004);
-    harness.check(Event.WINDOW_DEICONIFY, 204);
-    harness.check(Event.WINDOW_DESTROY, 201);
-    harness.check(Event.WINDOW_EXPOSE, 202);
-    harness.check(Event.WINDOW_ICONIFY, 203);
-    harness.check(Event.WINDOW_MOVED, 205);
-  }
+public class constants
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        harness.check(1001, 1001);
+        harness.check(8, 8);
+        harness.check(8, 8);
+        harness.check(1022, 1022);
+        harness.check(2, 2);
+        harness.check(127, 127);
+        harness.check(1005, 1005);
+        harness.check(1001, 1001);
+        harness.check(10, 10);
+        harness.check(27, 27);
+        harness.check(1008, 1008);
+        harness.check(1017, 1017);
+        harness.check(1018, 1018);
+        harness.check(1019, 1019);
+        harness.check(1009, 1009);
+        harness.check(1010, 1010);
+        harness.check(1011, 1011);
+        harness.check(1012, 1012);
+        harness.check(1013, 1013);
+        harness.check(1014, 1014);
+        harness.check(1015, 1015);
+        harness.check(1016, 1016);
+        harness.check(1004, 1004);
+        harness.check(1000, 1000);
+        harness.check(1025, 1025);
+        harness.check(403, 403);
+        harness.check(404, 404);
+        harness.check(401, 401);
+        harness.check(402, 402);
+        harness.check(1006, 1006);
+        harness.check(702, 702);
+        harness.check(701, 701);
+        harness.check(1002, 1002);
+        harness.check(1005, 1005);
+        harness.check(4, 4);
+        harness.check(501, 501);
+        harness.check(506, 506);
+        harness.check(504, 504);
+        harness.check(505, 505);
+        harness.check(503, 503);
+        harness.check(502, 502);
+        harness.check(1023, 1023);
+        harness.check(1024, 1024);
+        harness.check(1003, 1003);
+        harness.check(1002, 1002);
+        harness.check(1020, 1020);
+        harness.check(1007, 1007);
+        harness.check(1003, 1003);
+        harness.check(605, 605);
+        harness.check(606, 606);
+        harness.check(607, 607);
+        harness.check(602, 602);
+        harness.check(601, 601);
+        harness.check(1021, 1021);
+        harness.check(604, 604);
+        harness.check(603, 603);
+        harness.check(1, 1);
+        harness.check(9, 9);
+        harness.check(1004, 1004);
+        harness.check(204, 204);
+        harness.check(201, 201);
+        harness.check(202, 202);
+        harness.check(203, 203);
+        harness.check(205, 205);
+    }
 }
+

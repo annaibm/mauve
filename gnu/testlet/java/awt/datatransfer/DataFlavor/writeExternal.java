@@ -1,26 +1,6 @@
-/* writeExternal.java -- Tests DataFlavor.writeExternal()
-   Copyright (C) 2006 Roman Kennke (kennke@aicas.com)
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to the
-Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301 USA.
-
-*/
-
-// Tags: JDK1.2
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.datatransfer.DataFlavor;
 
 import java.awt.datatransfer.DataFlavor;
@@ -28,184 +8,145 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.util.ArrayList;
-
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
-/**
- * Tests the DataFlavor.writeExternal() method.
- */
-public class writeExternal extends TestCase
-{
+public class writeExternal
+extends TestCase {
+    private TestObjectOutput output;
+    private ArrayList writtenObjects;
+    private ArrayList writtenStrings;
 
-  /**
-   * An ObjectOutput implementation suitable for testing.
-   */
-  private class TestObjectOutput
-    implements ObjectOutput
-  {
-
-    public void close() throws IOException
-    {
-      fail();
+    @Override
+    public void setUp() {
+        this.writtenObjects = new ArrayList();
+        this.writtenStrings = new ArrayList();
+        this.output = new TestObjectOutput();
     }
 
-    public void flush() throws IOException
-    {
-      fail();
+    @Override
+    public void tearDown() {
+        this.writtenObjects = null;
+        this.writtenStrings = null;
+        this.output = null;
     }
 
-    public void write(int b) throws IOException
-    {
-      fail();
+    public void testWriteBasic() {
+        DataFlavor f = new DataFlavor("application/text; param1=xyz", "Plain Text");
+        try {
+            f.writeExternal(this.output);
+        }
+        catch (IOException ex) {
+            writeExternal.fail();
+        }
+        writeExternal.assertEquals(2, this.writtenObjects.size());
+        writeExternal.assertEquals(0, this.writtenStrings.size());
+        writeExternal.assertEquals("java.awt.datatransfer.MimeType", this.writtenObjects.get(0).getClass().getName());
+        writeExternal.assertEquals("java.lang.Class", this.writtenObjects.get(1).getClass().getName());
+        writeExternal.assertSame(f.getRepresentationClass(), this.writtenObjects.get(1));
+        Object o = this.writtenObjects.get(0);
+        this.writtenObjects.clear();
+        writeExternal.assertTrue(o instanceof Externalizable);
+        try {
+            ((Externalizable)o).writeExternal(this.output);
+        }
+        catch (IOException ex) {
+            writeExternal.fail();
+        }
+        writeExternal.assertEquals(0, this.writtenObjects.size());
+        writeExternal.assertEquals(1, this.writtenStrings.size());
+        writeExternal.assertEquals((Object)"application/text; class=java.io.InputStream; param1=xyz", this.writtenStrings.get(0));
     }
 
-    public void write(byte[] buf) throws IOException
-    {
-      fail();
+    private class TestObjectOutput
+    implements ObjectOutput {
+        private TestObjectOutput() {
+        }
+
+        @Override
+        public void close() throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void flush() throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void write(byte[] buf) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void write(byte[] buf, int offset2, int len) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeObject(Object obj) throws IOException {
+            writeExternal.this.writtenObjects.add(obj);
+        }
+
+        @Override
+        public void writeBoolean(boolean value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeByte(int value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeBytes(String value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeChar(int value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeChars(String value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeDouble(double value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeFloat(float value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeInt(int value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeLong(long value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeShort(int value2) throws IOException {
+            Assert.fail();
+        }
+
+        @Override
+        public void writeUTF(String value2) throws IOException {
+            writeExternal.this.writtenStrings.add(value2);
+        }
     }
-
-    public void write(byte[] buf, int offset, int len) throws IOException
-    {
-      fail();
-    }
-
-    public void writeObject(Object obj) throws IOException
-    {
-      writtenObjects.add(obj);
-    }
-
-    public void writeBoolean(boolean value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeByte(int value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeBytes(String value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeChar(int value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeChars(String value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeDouble(double value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeFloat(float value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeInt(int value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeLong(long value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeShort(int value) throws IOException
-    {
-      fail();
-    }
-
-    public void writeUTF(String value) throws IOException
-    {
-      writtenStrings.add(value);
-    }
-      
-  }
-
-  /**
-   * The ObjectOutput for testing.
-   */
-  private TestObjectOutput output;
-
-  /**
-   * Written objects, if any.
-   */
-  private ArrayList writtenObjects;
-
-  /**
-   * Written strings, if any.
-   */
-  private ArrayList writtenStrings;
-
-  /**
-   * Sets up the test case.
-   */
-  public void setUp()
-  {
-    writtenObjects = new ArrayList();
-    writtenStrings = new ArrayList();
-    output = new TestObjectOutput();
-  }
-
-  /**
-   * Tears down the testcase.
-   */
-  public void tearDown()
-  {
-    writtenObjects = null;
-    writtenStrings = null;
-    output = null;
-  }
-
-  /**
-   * Tests a basic serialization.
-   */
-  public void testWriteBasic()
-  {
-    DataFlavor f = new DataFlavor("application/text; param1=xyz",
-                                  "Plain Text");
-    try
-      {
-        f.writeExternal(output);
-      }
-    catch (IOException ex)
-      {
-        fail();
-      }
-    // Two objects are effectivly written to the stream.
-    assertEquals(2, writtenObjects.size());
-    assertEquals(0, writtenStrings.size());
-    // The RI writes a non-public class to the ObjectOutput.
-    assertEquals("java.awt.datatransfer.MimeType",
-                 writtenObjects.get(0).getClass().getName());
-    // And the representation class.
-    assertEquals("java.lang.Class", writtenObjects.get(1).getClass().getName());
-    assertSame(f.getRepresentationClass(), writtenObjects.get(1));
-
-    // Now check how the MimeType gets serialized.
-    Object o = writtenObjects.get(0);
-    writtenObjects.clear();
-    assertTrue(o instanceof Externalizable);
-    try
-      {
-        ((Externalizable) o).writeExternal(output);
-      }
-    catch (IOException ex)
-      {
-        fail();
-      }
-    assertEquals(0, writtenObjects.size());
-    assertEquals(1, writtenStrings.size());
-    assertEquals("application/text; class=java.io.InputStream; param1=xyz",
-                 writtenStrings.get(0));
-  }
 }
+

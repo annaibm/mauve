@@ -1,26 +1,6 @@
-/* TestKeyboardFocusManager.java -- A helper class for testing
-   Copyright (C) 2006 Roman Kennke (kennke@aicas.com)
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to the
-Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301 USA.
-
-*/
-
-// Tags: not-a-test
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.KeyboardFocusManager;
 
 import java.awt.AWTEvent;
@@ -29,105 +9,73 @@ import java.awt.Container;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
-public class TestKeyboardFocusManager extends KeyboardFocusManager
-{
+public class TestKeyboardFocusManager
+extends KeyboardFocusManager {
+    @Override
+    public void setGlobalFocusOwner(Component c) {
+        super.setGlobalFocusOwner(c);
+    }
 
-  /**
-   * Made public for testing.
-   */
-  public void setGlobalFocusOwner(Component c)
-  {
-    super.setGlobalFocusOwner(c);
-  }
+    @Override
+    public Component getGlobalFocusOwner() {
+        return super.getGlobalFocusOwner();
+    }
 
-  /**
-   * Made public for testing.
-   */
-  public Component getGlobalFocusOwner()
-  {
-    return super.getGlobalFocusOwner();
-  }
+    @Override
+    public void setGlobalPermanentFocusOwner(Component c) {
+        super.setGlobalPermanentFocusOwner(c);
+    }
 
-  /**
-   * Made public for testing.
-   */
-  public void setGlobalPermanentFocusOwner(Component c)
-  {
-    super.setGlobalPermanentFocusOwner(c);
-  }
+    @Override
+    public Component getGlobalPermanentFocusOwner() {
+        return super.getGlobalPermanentFocusOwner();
+    }
 
-  /**
-   * Made public for testing.
-   */
-  public Component getGlobalPermanentFocusOwner()
-  {
-    return super.getGlobalPermanentFocusOwner();
-  }
+    @Override
+    protected void dequeueKeyEvents(long after2, Component untilFocused) {
+    }
 
-  protected void dequeueKeyEvents(long after, Component untilFocused)
-  {
-    // TODO Auto-generated method stub
+    @Override
+    protected void discardKeyEvents(Component comp) {
+    }
 
-  }
+    @Override
+    public boolean dispatchEvent(AWTEvent e) {
+        return false;
+    }
 
-  protected void discardKeyEvents(Component comp)
-  {
-    // TODO Auto-generated method stub
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+        return false;
+    }
 
-  }
+    @Override
+    public void downFocusCycle(Container cont) {
+    }
 
-  public boolean dispatchEvent(AWTEvent e)
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
+    @Override
+    protected void enqueueKeyEvents(long after2, Component untilFocused) {
+    }
 
-  public boolean dispatchKeyEvent(KeyEvent e)
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
+    @Override
+    public void focusNextComponent(Component comp) {
+    }
 
-  public void downFocusCycle(Container cont)
-  {
-    // TODO Auto-generated method stub
+    @Override
+    public void focusPreviousComponent(Component comp) {
+    }
 
-  }
+    @Override
+    public boolean postProcessKeyEvent(KeyEvent e) {
+        return false;
+    }
 
-  protected void enqueueKeyEvents(long after, Component untilFocused)
-  {
-    // TODO Auto-generated method stub
+    @Override
+    public void processKeyEvent(Component focused, KeyEvent e) {
+    }
 
-  }
-
-  public void focusNextComponent(Component comp)
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void focusPreviousComponent(Component comp)
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public boolean postProcessKeyEvent(KeyEvent e)
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public void processKeyEvent(Component focused, KeyEvent e)
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void upFocusCycle(Component comp)
-  {
-    // TODO Auto-generated method stub
-
-  }
-
+    @Override
+    public void upFocusCycle(Component comp) {
+    }
 }
+

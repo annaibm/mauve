@@ -1,238 +1,144 @@
-/* exportToClipboard.java -- Tests TransferHandler.exportToClipboard()
-   Copyright (C) 2006 Roman Kennke (kennke@aicas.com)
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to the
-Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301 USA.
-
-*/
-
-// Tags: JDK1.4
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.javax.swing.TransferHandler;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
-
 import junit.framework.TestCase;
 
-/**
- * Tests TransferHandler.exportToClipboard().
- */
-public class exportToClipboard extends TestCase
-{
+public class exportToClipboard
+extends TestCase {
+    int sourceActions;
+    JComponent exportDoneSource;
+    Transferable exportDoneTransferable;
+    int exportDoneAction;
+    ClipboardOwner clipboardOwner;
+    private TransferHandler transferHandler;
+    private JComponent component;
+    private Clipboard clipboard;
 
-  /**
-   * Overrides setContents() to enable us to check what is passed to
-   * setContents().
-   */
-  private class TestClipboard
-    extends Clipboard
-  {
-    TestClipboard()
-    {
-      super("DEFAULT");
-    }
-    public void setContents(Transferable t, ClipboardOwner o)
-    {
-      super.setContents(t, o);
-      clipboardOwner = o;
-    }
-  }
-
-  /**
-   * Overrides exportDone() to enable checking when this is called and what
-   * is passed to it.
-   */
-  private class TestTransferHandler
-    extends TransferHandler
-  {
-    TestTransferHandler(String prop)
-    {
-      super(prop);
-    }
-    public void exportDone(JComponent c, Transferable t, int a)
-    {
-      exportDoneSource = c;
-      exportDoneTransferable = t;
-      exportDoneAction = a;
+    @Override
+    public void setUp() {
+        this.transferHandler = new TestTransferHandler("testProperty");
+        this.component = new TestComponent();
+        this.clipboard = new TestClipboard();
+        this.exportDoneAction = -1;
+        this.exportDoneSource = null;
+        this.exportDoneTransferable = null;
+        this.clipboardOwner = null;
     }
 
-    public int getSourceActions(JComponent c)
-    {
-      return sourceActions;
+    @Override
+    public void tearDown() {
+        this.transferHandler = null;
+        this.component = null;
+        this.clipboard = null;
+        this.exportDoneAction = -1;
+        this.exportDoneSource = null;
+        this.exportDoneTransferable = null;
+        this.clipboardOwner = null;
     }
-  }
 
-  /**
-   * Adds a readonly property that returns a fixed value.
-   */
-  public class TestComponent
-    extends JComponent
-  {
-    public String getTestProperty()
-    {
-      return "HelloWorld";
+    public void testIntersectingSourceActions() {
+        this.sourceActions = 1;
+        this.transferHandler.exportToClipboard(this.component, this.clipboard, 2);
+        exportToClipboard.assertNull(this.clipboard.getContents(this));
+        exportToClipboard.assertEquals(this.component, this.exportDoneSource);
+        exportToClipboard.assertNull(this.exportDoneTransferable);
+        exportToClipboard.assertEquals(0, this.exportDoneAction);
     }
-  }
 
-  // The value that will be returned by getSourceActions(), for testing.
-  int sourceActions;
+    public void testMissingGetter() {
+        this.component = new JComponent(){};
+        this.sourceActions = 1;
+        this.transferHandler.exportToClipboard(this.component, this.clipboard, 1);
+        exportToClipboard.assertNull(this.clipboard.getContents(this));
+        exportToClipboard.assertEquals(this.component, this.exportDoneSource);
+        exportToClipboard.assertNull(this.exportDoneTransferable);
+        exportToClipboard.assertEquals(0, this.exportDoneAction);
+    }
 
-  // The values passed into exportDone for testing.
-  JComponent exportDoneSource;
-  Transferable exportDoneTransferable;
-  int exportDoneAction;
+    public void testNormalTransfer() {
+        this.sourceActions = 1;
+        this.transferHandler.exportToClipboard(this.component, this.clipboard, 1);
+        exportToClipboard.assertEquals(this.component, this.exportDoneSource);
+        exportToClipboard.assertNotNull(this.exportDoneTransferable);
+        exportToClipboard.assertSame(this.exportDoneTransferable, this.clipboard.getContents(this));
+        try {
+            DataFlavor flavor2 = new DataFlavor("application/x-java-jvm-local-objectref; class=java.lang.String");
+            exportToClipboard.assertEquals((Object)"HelloWorld", this.exportDoneTransferable.getTransferData(flavor2));
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            exportToClipboard.fail(ex.getMessage());
+        }
+        exportToClipboard.assertEquals(1, this.exportDoneAction);
+        exportToClipboard.assertNull(this.clipboardOwner);
+    }
 
-  /**
-   * The clipboard owner beeing passed to Clipboard.stContents().
-   */
-  ClipboardOwner clipboardOwner;
+    public void testIllegalStateException() {
+        this.sourceActions = 1;
+        this.clipboard = new Clipboard("DEFAULT"){
 
-  /**
-   * The transfer handler used in these tests.
-   */
-  private TransferHandler transferHandler;
+            @Override
+            public void setContents(Transferable t, ClipboardOwner o) {
+                throw new IllegalStateException();
+            }
+        };
+        try {
+            this.transferHandler.exportToClipboard(this.component, this.clipboard, 1);
+            exportToClipboard.fail("IllegalStateException must be thrown");
+        }
+        catch (IllegalStateException illegalStateException2) {
+            // empty catch block
+        }
+        exportToClipboard.assertEquals(this.component, this.exportDoneSource);
+        exportToClipboard.assertNotNull(this.exportDoneTransferable);
+        exportToClipboard.assertEquals(0, this.exportDoneAction);
+    }
 
-  /**
-   * The component from which we export a property.
-   */
-  private JComponent component;
+    public class TestComponent
+    extends JComponent {
+        public String getTestProperty() {
+            return "HelloWorld";
+        }
+    }
 
-  /**
-   * The clipboard to use.
-   */
-  private Clipboard clipboard;
+    private class TestTransferHandler
+    extends TransferHandler {
+        TestTransferHandler(String prop) {
+            super(prop);
+        }
 
-  /**
-   * Sets up the testcase.
-   */
-  public void setUp()
-  {
-    transferHandler = new TestTransferHandler("testProperty");
-    component = new TestComponent();
-    clipboard = new TestClipboard();
-    exportDoneAction = -1;
-    exportDoneSource = null;
-    exportDoneTransferable = null;
-    clipboardOwner = null;
-  }
+        @Override
+        public void exportDone(JComponent c, Transferable t, int a) {
+            exportToClipboard.this.exportDoneSource = c;
+            exportToClipboard.this.exportDoneTransferable = t;
+            exportToClipboard.this.exportDoneAction = a;
+        }
 
-  /**
-   * Tears down the testcase.
-   */
-  public void tearDown()
-  {
-    transferHandler = null;
-    component = null;
-    clipboard = null;
-    exportDoneAction = -1;
-    exportDoneSource = null;
-    exportDoneTransferable = null;
-    clipboardOwner = null;
-  }
+        @Override
+        public int getSourceActions(JComponent c) {
+            return exportToClipboard.this.sourceActions;
+        }
+    }
 
-  /**
-   * Checks how 'intersecting' source actions are handled.
-   */
-  public void testIntersectingSourceActions()
-  {
-    sourceActions = TransferHandler.COPY;
-    transferHandler.exportToClipboard(component, clipboard,
-                                      TransferHandler.MOVE);
-    assertNull(clipboard.getContents(this));
-    assertEquals(component, exportDoneSource);
-    assertNull(exportDoneTransferable);
-    assertEquals(TransferHandler.NONE, exportDoneAction);
-  }
+    private class TestClipboard
+    extends Clipboard {
+        TestClipboard() {
+            super("DEFAULT");
+        }
 
-
-  /**
-   * Tests how a missing property getter method is handled.
-   */
-  public void testMissingGetter()
-  {
-    component = new JComponent(){};
-    sourceActions = TransferHandler.COPY;
-    transferHandler.exportToClipboard(component, clipboard,
-                                      TransferHandler.COPY);
-    assertNull(clipboard.getContents(this));
-    assertEquals(component, exportDoneSource);
-    assertNull(exportDoneTransferable);
-    assertEquals(TransferHandler.NONE, exportDoneAction);
-  }
-
-  /**
-   * Tests how a normal transfer is performed.
-   */
-  public void testNormalTransfer()
-  {
-    sourceActions = TransferHandler.COPY;
-    transferHandler.exportToClipboard(component, clipboard,
-                                      TransferHandler.COPY);
-    assertEquals(component, exportDoneSource);
-    assertNotNull(exportDoneTransferable);
-    assertSame(exportDoneTransferable, clipboard.getContents(this));
-
-    try
-      {
-        DataFlavor flavor = new DataFlavor("application/x-java-jvm-local-objectref; class=java.lang.String");
-        assertEquals("HelloWorld",
-                     exportDoneTransferable.getTransferData(flavor));
-      }
-    catch (Exception ex)
-      {
-        ex.printStackTrace();
-        fail(ex.getMessage());
-      }
-    assertEquals(TransferHandler.COPY, exportDoneAction);
-    assertNull(clipboardOwner);
-  }
-
-  /**
-   * Tests how an IllegalStateException from the ClipBoard is handled.
-   */
-  public void testIllegalStateException()
-  {
-    sourceActions = TransferHandler.COPY;
-    clipboard = new Clipboard("DEFAULT")
-    {
-      public void setContents(Transferable t, ClipboardOwner o)
-      {
-        throw new IllegalStateException();
-      }
-    };
-    try
-      {
-        transferHandler.exportToClipboard(component, clipboard,
-                                          TransferHandler.COPY);
-        fail("IllegalStateException must be thrown");
-      }
-    catch (IllegalStateException ex)
-      {
-        // Ok.
-      }
-
-    assertEquals(component, exportDoneSource);
-    assertNotNull(exportDoneTransferable);
-    assertEquals(TransferHandler.NONE, exportDoneAction);
-  }
-
+        @Override
+        public void setContents(Transferable t, ClipboardOwner o) {
+            super.setContents(t, o);
+            exportToClipboard.this.clipboardOwner = o;
+        }
+    }
 }
+

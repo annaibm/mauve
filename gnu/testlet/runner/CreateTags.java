@@ -1,152 +1,125 @@
 /*
-Copyright (c) 2005 Thomas Zander <zander@kde.org>
-
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to
-the Free Software Foundation, 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA. */
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.runner;
 
-import java.util.*;
-import java.io.*;
+import gnu.testlet.runner.Tags;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateTags {
-    private File base, output;
+    private File base;
+    private File output;
     private List classes = new ArrayList();
 
     public CreateTags(File base, File output) {
-        if(!base.exists())
+        if (!base.exists()) {
             throw new IllegalArgumentException("base dir does not exist");
-        if(!base.isDirectory())
+        }
+        if (!base.isDirectory()) {
             throw new IllegalArgumentException("base dir is not a directory");
-        if(output.exists())
+        }
+        if (output.exists()) {
             output.delete();
+        }
         this.base = base;
         this.output = output;
     }
 
     public void create() throws IOException {
-        append(base);
-
-        FileWriter writer = new FileWriter(output);
-
-        // JDK
+        boolean first2;
+        this.append(this.base);
+        FileWriter writer = new FileWriter(this.output);
         String start = "1.0";
-        String next;
-        boolean first;
         do {
-            first = true;
-            next = "9.9";
-            Iterator iter = classes.iterator();
-            while(iter.hasNext()) {
-                TestCase testCase = (TestCase) iter.next();
+            first2 = true;
+            String next2 = "9.9";
+            for (TestCase testCase : this.classes) {
                 int from = testCase.tags.fromJDK.compareTo(start);
-                if(from < 0) {
-                    if(testCase.tags.toJDK.compareTo(start) == 0) { // write tests not to be used
-                        if(first) {
-                            writer.write("[JDK"+ start +"]\n");
-                            first = false;
-                        }
-                        writer.write("-");
-                        writer.write(testCase.className);
-                        writer.write("\n");
+                if (from < 0) {
+                    if (testCase.tags.toJDK.compareTo(start) != 0) continue;
+                    if (first2) {
+                        writer.write("[JDK" + start + "]\n");
+                        first2 = false;
                     }
+                    writer.write("-");
+                    writer.write(testCase.className);
+                    writer.write("\n");
+                    continue;
                 }
-                else if(from == 0) {
-                    if(first) {
-                        writer.write("[JDK"+ start +"]\n");
-                        first = false;
+                if (from == 0) {
+                    if (first2) {
+                        writer.write("[JDK" + start + "]\n");
+                        first2 = false;
                     }
                     writer.write(testCase.className);
                     writer.write("\n");
+                    continue;
                 }
-                else if(from > 0) { // can't use, too old.
-                    if(testCase.tags.fromJDK.compareTo(next) < 0)
-                        next = testCase.tags.fromJDK;
-                }
+                if (from <= 0 || testCase.tags.fromJDK.compareTo(next2) >= 0) continue;
+                next2 = testCase.tags.fromJDK;
             }
-            start = next;
+            start = next2;
             writer.write("\n");
-        } while(!first);
-
-        first=true;
-        Iterator iter = classes.iterator();
-        while(iter.hasNext()) {
-            TestCase testCase = (TestCase) iter.next();
-            if(testCase.tags.gui) {
-                if(first) {
-                    writer.write("\n[GUI]\n");
-                    first = false;
-                }
-                writer.write(testCase.className);
-                writer.write("\n");
+        } while (!first2);
+        first2 = true;
+        for (TestCase testCase : this.classes) {
+            if (!testCase.tags.gui) continue;
+            if (first2) {
+                writer.write("\n[GUI]\n");
+                first2 = false;
             }
+            writer.write(testCase.className);
+            writer.write("\n");
         }
-
         writer.close();
     }
 
     private void append(File dir) {
-        File[] children = dir.listFiles();
-        testCase: for(int i=0; i < children.length; i++) {
-            File file = children[i];
-            if(file.isDirectory()) {
-                append(file);
+        File[] children2 = dir.listFiles();
+        block2: for (int i = 0; i < children2.length; ++i) {
+            File file = children2[i];
+            if (file.isDirectory()) {
+                this.append(file);
                 continue;
             }
-            if(! file.getName().endsWith(".java"))
-                continue;
-
-            String tags = null, pckage = null;
+            if (!file.getName().endsWith(".java")) continue;
+            String tags = null;
+            String pckage = null;
             try {
-                Reader reader = new FileReader(file);
+                int character;
+                FileReader reader = new FileReader(file);
                 StringBuffer buf = new StringBuffer();
-                int maxLines=30;
-                line: while(maxLines > 0 && (tags == null || pckage == null)) {
-                    int character = reader.read();
-                    if(character == -1)
-                        break;
-                    if(character == '\n') {
-                        int index = buf.indexOf("Tags:") + 5; // 5 == length of string
-                        if(index > 5 && buf.length() > index) {
+                int maxLines = 30;
+                while (maxLines > 0 && (tags == null || pckage == null) && (character = ((Reader)reader).read()) != -1) {
+                    if (character == 10) {
+                        int index = buf.indexOf("Tags:") + 5;
+                        if (index > 5 && buf.length() > index) {
                             String line = buf.substring(index).trim().toLowerCase();
-                            if("not-a-test".equals(line))
-                                continue testCase;
-                            if(tags != null)
-                                tags += " "+ line;
-                            else
-                                tags = line;
-                        }
-                        else if(buf.indexOf("package ") == 0)
-                        {
+                            if ("not-a-test".equals(line)) continue block2;
+                            tags = tags != null ? tags + " " + line : line;
+                        } else if (buf.indexOf("package ") == 0) {
                             int idx = buf.lastIndexOf(";");
                             pckage = buf.substring(8, idx);
                         }
                         buf = new StringBuffer();
-                        maxLines--;
+                        --maxLines;
+                        continue;
                     }
-                    else
-                        buf.append((char) character);
+                    buf.append((char)character);
                 }
-                if(pckage != null && tags != null) {
-                    String className = pckage +"."+ file.getName().substring(0,
-                            file.getName().length()-5);
-                    classes.add(new TestCase(className, tags));
-                }
-            } catch(IOException e) {
-                e.printStackTrace(); // TODO nicer??
+                if (pckage == null || tags == null) continue;
+                String className = pckage + "." + file.getName().substring(0, file.getName().length() - 5);
+                this.classes.add(new TestCase(className, tags));
+                continue;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -158,9 +131,11 @@ public class CreateTags {
     private static class TestCase {
         public final String className;
         public final Tags tags;
+
         public TestCase(String className, String tags) {
             this.className = className;
             this.tags = new Tags(tags);
         }
     }
 }
+

@@ -1,177 +1,48 @@
-// Tags: JDK1.5
-
-//  This file is part of Mauve.
-//  update for strictfp modifier Pavel Tisnovsky <ptisnovs@redhat.com>
-
-//  Mauve is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2, or (at your option)
-//  any later version.
-
-//  Mauve is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-
-//  You should have received a copy of the GNU General Public License
-//  along with Mauve; see the file COPYING.  If not, write to
-//  the Free Software Foundation, 59 Temple Place - Suite 330,
-//  Boston, MA 02111-1307, USA.
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.Math.strictfp_modifier;
 
-import gnu.testlet.Testlet;
 import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
 
-/**
-  * Test for a static method Math.expm1()
-  * by using strictfp modifier.
-  */
-public strictfp class expm1 implements Testlet
-{
-  /**
-   * Function (=static method) checked by this test.
-   */
-  private static double testedFunction(double input)
-    {
-      return Math.expm1(input);
+public strictfp class expm1
+implements Testlet {
+    private static double[] inputValues = new double[]{0.0, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 2.7755575615628914E-17, -2.7755575615628914E-17, 0.46588830833596717, -0.46588830833596717, 0.20328679513998632, -0.20328679513998632, 0.44, -0.44, 1.644238515287874, -1.644238515287874, 4.882030263919617, -6.268324625039508, 20.131268236238416, -18.744973875118525, 709.782712893384, 709.782747123384, 709.782678663384, -709.782712893384, -709.782747123384, -709.782678663384};
+    private static double[] outputValues = new double[]{0.0, Double.NaN, Double.POSITIVE_INFINITY, -1.0, 2.7755575615628914E-17, -2.7755575615628914E-17, 0.5934290166706889, -0.3724226247056801, 0.22542386346433524, -0.1839558296400811, 0.5527072185113361, -0.35596357891685865, 4.177066148857307, -0.806840405116183, 130.89818034605017, -0.9981045985672881, 5.532210644181606E8, -0.9999999927696174, 1.7976931348622732E308, Double.POSITIVE_INFINITY, 1.7976316008794578E308, -1.0, -1.0, -1.0};
+    private static long[] NaNValues = new long[]{9223231299366420480L, -140737488355328L, 9223232550370790895L, -139486483984913L, 9223090561878065153L, -281474976710655L, 9223220665868348875L, -151370986426933L};
+
+    private static double testedFunction(double input) {
+        return Math.expm1(input);
     }
 
-  /**
-   * These values are used as arguments to expm1.
-   * The values are somewhat arbitrary, but ensure that all code paths
-   * are tested.
-   */
-  private static double[] inputValues =
-    {
-      0.0,
-      Double.NaN,
-      Double.POSITIVE_INFINITY,
-      Double.NEGATIVE_INFINITY,
-      0.0000000000000000277555756156289135105,   // ~ 2^-55
-      -0.0000000000000000277555756156289135105,  // ~ -2^55
-      0.6 * 0.6931471805599453 + 0.05,           // 0.6 * ln(2) + 0.05
-      -0.6 * 0.6931471805599453 - 0.05,          // -0.6 * ln(2) - 0.05
-      0.25 * 0.6931471805599453 + 0.03,          // 0.25 * ln(2) + 0.03
-      -0.25 * 0.6931471805599453 - 0.03,         // -0.25 * ln(2) - 0.03
-      0.44,
-      -0.44,
-      2.3 * 0.6931471805599453 + 0.05,           // 2.3 * ln(2) + 0.05
-      -2.3 * 0.6931471805599453 - 0.05,          // -2.3 * ln(2) - 0.05
-      7 * 0.6931471805599453 + 0.03,             // 7 * ln(2) + 0.03
-      -9 * 0.6931471805599453 - 0.03,            // -9 * ln(2) - 0.03
-      29 * 0.6931471805599453 + 0.03,            // 29 * ln(2) + 0.03
-      -27 * 0.6931471805599453 - 0.03,           // -27 * ln(2) - 0.03
-      709.782712893384,                          //  EXP_LIMIT_H
-      709.782712893384 + 3.423e-5,               //  EXP_LIMIT_H + 3.423e-5
-      709.782712893384 - 3.423e-5,               //  EXP_LIMIT_H - 3.423e-5
-      -709.782712893384,                         // -EXP_LIMIT_H
-      -709.782712893384 - 3.423e-5,              // -EXP_LIMIT_H - 3.423e-5
-      -709.782712893384 + 3.423e-5               // -EXP_LIMIT_H + 3.423e-5
-    };
+    private void testInputValues(TestHarness harness) {
+        for (int i = 0; i < inputValues.length; ++i) {
+            double res = expm1.testedFunction(inputValues[i]);
+            harness.check(Double.doubleToLongBits(res), Double.doubleToLongBits(outputValues[i]));
+        }
+    }
 
-  /**
-   * These values are the expected results, obtained from the RI.
-   */
-  private static double[] outputValues =
-    {
-      0.0,
-      Double.NaN,
-      Double.POSITIVE_INFINITY,
-      -1.0,
-      2.7755575615628914E-17,
-      -2.7755575615628914E-17,
-      0.5934290166706889,
-      -0.3724226247056801,
-      0.22542386346433524,
-      -0.1839558296400811,
-      0.5527072185113361,
-      -0.35596357891685865,
-      4.177066148857307,
-      -0.806840405116183,
-      130.89818034605017,
-      -0.9981045985672881,
-      5.532210644181606E8,
-      -0.9999999927696174,
-      1.7976931348622732E308,
-      Double.POSITIVE_INFINITY,
-      1.7976316008794578E308,
-      -1.0,
-      -1.0,
-      -1.0
-    };
+    private void testNaN(TestHarness harness) {
+        for (int i = 0; i < NaNValues.length; ++i) {
+            long bitsNaN = NaNValues[i];
+            double valNaN = Double.longBitsToDouble(bitsNaN);
+            harness.check(Double.doubleToRawLongBits(expm1.testedFunction(valNaN)), bitsNaN);
+        }
+    }
 
-  /**
-    * These values represent various NaN
-    */
-  private static long[] NaNValues =
-    {
-      0x7fff800000000000L,
-      0xffff800000000000L,
-      0x7fff812345abcdefL,
-      0xffff812345abcdefL,
+    @Override
+    public void test(TestHarness harness) {
+        this.testInputValues(harness);
+        this.testNaN(harness);
+    }
 
-      0x7fff000000000001L,
-      0xffff000000000001L,
-      0x7fff7654321fedcbL,
-      0xffff7654321fedcbL
-    };
-
-  /**
-   * Test not NaN values.
-   */
-  private void testInputValues(TestHarness harness)
-  {
-    double res;
-
-    for (int i = 0; i < inputValues.length; ++i)
-      {
-	res = testedFunction(inputValues[i]);
-
-	// exact equality
-	harness.check(Double.doubleToLongBits(res), Double.doubleToLongBits(outputValues[i]));
-      }
-  }
-
-  /**
-   * Test if input NaN is returned unchanged.
-   */
-  private void testNaN(TestHarness harness)
-  {
-    long   bitsNaN;
-    double valNaN;
-
-    for (int i = 0; i < NaNValues.length; ++i)
-      {
-	bitsNaN = NaNValues[i];
-	valNaN  = Double.longBitsToDouble(bitsNaN);
-
-	// exact equality
-	harness.check(Double.doubleToRawLongBits(testedFunction(valNaN)),
-		      bitsNaN);
-      }
-  }
-
-  /**
-    * Entry point to a test.
-    */
-  public void test(TestHarness harness)
-  {
-    testInputValues(harness);
-    testNaN(harness);
-  }
-
-  /**
-   * Run this on the RI to obtain the expected output values.
-   */
-  public static void main(String[] argv)
-  {
-    for (int i = 0; i < inputValues.length; ++i)
-      {
-    double input = inputValues[i];
-    double output = testedFunction(inputValues[i]);
-	System.out.println("      " + Double.toString(output) + ", // " + input);
-      }
-  }
+    public static void main(String[] argv) {
+        for (int i = 0; i < inputValues.length; ++i) {
+            double input = inputValues[i];
+            double output = expm1.testedFunction(inputValues[i]);
+            System.out.println("      " + Double.toString(output) + ", // " + input);
+        }
+    }
 }
 

@@ -1,19 +1,24 @@
-// Tags: not-a-test
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.io.ObjectStreamClass;
 
-abstract class B extends A
-{
-  private B (int[] ar) {}
-  public B () {}
-  public static void foo () {}
-  public abstract void absfoo ();
+import gnu.testlet.java.io.ObjectStreamClass.A;
 
-  private static String s;
-  public int[] a;
+abstract class B
+extends A {
+    private static String s = "hello";
+    public int[] a;
 
-  static
-  {
-    s = "hello";
-  }
+    private B(int[] ar) {
+    }
+
+    public B() {
+    }
+
+    public static void foo() {
+    }
+
+    public abstract void absfoo();
 }
+

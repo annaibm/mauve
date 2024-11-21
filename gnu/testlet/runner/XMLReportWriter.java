@@ -1,380 +1,213 @@
-// Copyright (c) 2008 Fabien DUMINY (fduminy@jnode.org)
-// Modified by Levente S\u00e1ntha (lsantha@jnode.org)
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.runner;
 
+import gnu.testlet.runner.CheckResult;
+import gnu.testlet.runner.ClassResult;
+import gnu.testlet.runner.PackageResult;
+import gnu.testlet.runner.RunResult;
+import gnu.testlet.runner.TestResult;
+import gnu.testlet.runner.XMLReportConstants;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
 
-/**
- * XML Writer for mauve reports.
- * 
- * @author fabien
- *
- */
-public class XMLReportWriter implements XMLReportConstants {
+public class XMLReportWriter
+implements XMLReportConstants {
     private static final String INDENT = "  ";
     private static final String NOT_APPLIABLE = "n/a";
-    
-    /**
-     * Do we write the xml report in compact mode ?
-     * The compact mode is producing unformatted xml, which means that there
-     * is no indentations nor carriage returns (except in <code>log</code>
-     * attributes because they can contain stacktraces).
-     */
     private final boolean compactMode;
 
-    /**
-     * Constructor to write a formatted xml report.
-     */
     public XMLReportWriter() {
-        // by default, not in compact mode
         this(false);
     }
 
-    /**
-     * Constructor to write an xml report.
-     * @param compactMode true to write the xml report in compact mode.
-     */
     public XMLReportWriter(boolean compactMode) {
         this.compactMode = compactMode;
     }
-    
-    /**
-     * Write the given result in xml format.
-     * 
-     * @param result
-     * @param output
-     * @throws FileNotFoundException
+
+    /*
+     * WARNING - Removed try catching itself - possible behaviour change.
      */
     public void write(RunResult result, File output) throws FileNotFoundException {
-        PrintWriter ps = null;
-
-        try {
+        try (PrintWriter ps = null;){
             ps = new PrintWriter(new FileOutputStream(output));
-            write(result, ps);
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
+            this.write(result, ps);
         }
     }
-    
-    /**
-     * Write the given result in xml format.
-     * 
-     * @param result
-     * @param ps
-     */
+
     public void write(RunResult result, PrintWriter ps) {
-        int level = 0;        
-        runResult(ps, level, result);
-        level++;
-        for (Iterator itPackage = result.getPackageIterator(); itPackage.hasNext(); ) {
-            PackageResult pkg = (PackageResult) itPackage.next();
-
-            packageResult(ps, level, pkg);
-            level++;
-            for (Iterator itClass = pkg.getClassIterator(); itClass.hasNext(); ) {
-                ClassResult cls = (ClassResult) itClass.next();
-
-                classResult(ps, level, cls);
-                level++;
-                for (Iterator itTest = cls.getTestIterator(); itTest.hasNext(); ) {
-                    TestResult test = (TestResult) itTest.next();
-                    
-                    test(ps, level, test);
-                    level++;
-                    for (Iterator itCheck = test.getCheckIterator(); itCheck.hasNext(); ) {
-                        CheckResult check = (CheckResult) itCheck.next();
-
-                        check(ps, level, check);
+        int level = 0;
+        this.runResult(ps, level, result);
+        ++level;
+        Iterator itPackage = result.getPackageIterator();
+        while (itPackage.hasNext()) {
+            PackageResult pkg = (PackageResult)itPackage.next();
+            this.packageResult(ps, level, pkg);
+            ++level;
+            Iterator itClass = pkg.getClassIterator();
+            while (itClass.hasNext()) {
+                ClassResult cls = (ClassResult)itClass.next();
+                this.classResult(ps, level, cls);
+                ++level;
+                Iterator itTest = cls.getTestIterator();
+                while (itTest.hasNext()) {
+                    TestResult test = (TestResult)itTest.next();
+                    this.test(ps, level, test);
+                    ++level;
+                    Iterator itCheck = test.getCheckIterator();
+                    while (itCheck.hasNext()) {
+                        CheckResult check2 = (CheckResult)itCheck.next();
+                        this.check(ps, level, check2);
                     }
-                    level--;
-                    endTag(ps, level, TEST_RESULT);
-                    
+                    this.endTag(ps, --level, "test");
                 }
-                level--;
-                endTag(ps, level, CLASS_RESULT);
+                this.endTag(ps, --level, "class");
             }
-            level--;
-            endTag(ps, level, PACKAGE_RESULT);
-            
+            this.endTag(ps, --level, "package");
         }
-        level--;
-        endTag(ps, level, RUN_RESULT);
-        
+        this.endTag(ps, --level, "run");
         ps.flush();
     }
-    
-    /**
-     * Write a check tag.
-     * @param ps
-     * @param level
-     * @param check
-     */
-    private void check(PrintWriter ps, int level, CheckResult check) {
-        String log = getNullIfBlank(check.getLog());
-        boolean closeTag = (log == null);
-        
-        beginTag(ps, level, CHECK_RESULT, closeTag, new Object[]{CHECK_NUMBER, Integer.valueOf(check.getNumber()), 
-                CHECK_POINT, check.getCheckPoint(), 
-                CHECK_PASSED, Boolean.valueOf(check.getPassed()), 
-                CHECK_EXPECTED, check.getExpected(), 
-                CHECK_ACTUAL, check.getActual()});
-        
+
+    private void check(PrintWriter ps, int level, CheckResult check2) {
+        String log = this.getNullIfBlank(check2.getLog());
+        boolean closeTag = log == null;
+        this.beginTag(ps, level, "check", closeTag, new Object[]{"number", check2.getNumber(), "check-point", check2.getCheckPoint(), "passed", check2.getPassed(), "expected", check2.getExpected(), "actual", check2.getActual()});
         if (!closeTag) {
-            text(ps, level + 1, CHECK_LOG, log);
-            
-            endTag(ps, level, CHECK_RESULT);
+            this.text(ps, level + 1, "log", log);
+            this.endTag(ps, level, "check");
         }
     }
 
-    /**
-     * Write a test tag.
-     * @param ps
-     * @param level
-     * @param test
-     */
     private void test(PrintWriter ps, int level, TestResult test) {
-        beginTag(ps, level, TEST_RESULT, false, new Object[]{TEST_NAME, test.getName()});
-        text(ps, level + 1, TEST_ERROR, test.getFailedMessage());
+        this.beginTag(ps, level, "test", false, new Object[]{"name", test.getName()});
+        this.text(ps, level + 1, "error", test.getFailedMessage());
     }
 
-    /**
-     * Write a classresult tag.
-     * @param ps
-     * @param level
-     * @param cr
-     */
     private void classResult(PrintWriter ps, int level, ClassResult cr) {
-        beginTag(ps, level, CLASS_RESULT, false, new Object[]{CLASS_NAME, cr.getName()});
+        this.beginTag(ps, level, "class", false, new Object[]{"name", cr.getName()});
     }
 
-    /**
-     * Write a package result tag.
-     * @param ps
-     * @param level
-     * @param pr
-     */
     private void packageResult(PrintWriter ps, int level, PackageResult pr) {
-        beginTag(ps, level, PACKAGE_RESULT, false, new Object[]{PACKAGE_NAME, pr.getName()});
+        this.beginTag(ps, level, "package", false, new Object[]{"name", pr.getName()});
     }
 
-    /**
-     * Write a run result tag.
-     * @param ps
-     * @param level
-     * @param rr
-     */
     private void runResult(PrintWriter ps, int level, RunResult rr) {
-        beginTag(ps, level, RUN_RESULT, false, new Object[]{RUN_NAME, rr.getName()});
-        
+        this.beginTag(ps, level, "run", false, new Object[]{"name", rr.getName()});
         String[] propertyNames = rr.getSystemPropertyNames();
         int subLevel = level + 1;
-        for (int i = 0; i < propertyNames.length; i++) {
-            String name = propertyNames[i];
-            String value = rr.getSystemProperty(name);
-            beginTag(ps, subLevel, PROPERTY, true, new Object[]{PROPERTY_NAME, name, PROPERTY_VALUE, value});
+        for (int i = 0; i < propertyNames.length; ++i) {
+            String name2 = propertyNames[i];
+            String value2 = rr.getSystemProperty(name2);
+            this.beginTag(ps, subLevel, "property", true, new Object[]{"name", name2, "value", value2});
         }
     }
-    
-    /**
-     * Write a tag with the provided content (text parameter), if any.
-     * @param ps
-     * @param level
-     * @param tag
-     * @param text
-     * @return
-     */
-    private PrintWriter text(PrintWriter ps, int level, String tag, String text) {
-        text = getNullIfBlank(text);
-        if (text != null) {
-            beginTag(ps, level, tag, false, new Object[0]);                
-            ps.append(protect(text));
-            appendCarriageReturn(ps);
-            endTag(ps, level, tag);
+
+    private PrintWriter text(PrintWriter ps, int level, String tag, String text2) {
+        if ((text2 = this.getNullIfBlank(text2)) != null) {
+            this.beginTag(ps, level, tag, false, new Object[0]);
+            ps.append(XMLReportWriter.protect(text2));
+            this.appendCarriageReturn(ps);
+            this.endTag(ps, level, tag);
         }
-        
         return ps;
     }
 
-    /**
-     * Write the begin of a tag with the given attributes and optionally close the tag.
-     * @param ps
-     * @param level The level of indentation of the tag (ignored if {@link XMLReportWriter#compactMode} is true).
-     * @param tag The name of the tag.
-     * @param closeTag true to also close the tag.
-     * @param attributes The attributes of the tag.
-     * @return
-     */
     private PrintWriter beginTag(PrintWriter ps, int level, String tag, boolean closeTag, Object[] attributes) {
-        tag(ps, level, tag, true);
+        this.tag(ps, level, tag, true);
         for (int i = 0; i < attributes.length; i += 2) {
-            String value = getNullIfBlank(attributes[i + 1]);
-            
-            if (value != null) {
-                ps.append(' ').append(String.valueOf(attributes[i]));
-                
-                ps.append("=\"").append(protect(value)).append('\"');
-            }
+            String value2 = this.getNullIfBlank(attributes[i + 1]);
+            if (value2 == null) continue;
+            ps.append(' ').append(String.valueOf(attributes[i]));
+            ps.append("=\"").append(XMLReportWriter.protect(value2)).append('\"');
         }
-        
         ps.append(closeTag ? "/>" : ">");
-        
-        appendCarriageReturn(ps);
+        this.appendCarriageReturn(ps);
         return ps;
     }
-    
-    /**
-     * Replace all characters with the appropriate xml escape sequences when needed. 
-     * @param text
-     * @return
-     */
-    public static String protect(String text) {
-        if (text == null) {
-            return text;
-        }
 
-        final int size = text.length();
-        final StringBuilder sb = new StringBuilder(size);
+    public static String protect(String text2) {
+        if (text2 == null) {
+            return text2;
+        }
+        int size2 = text2.length();
+        StringBuilder sb = new StringBuilder(size2);
         boolean changed = false;
-        for (int i = 0; i < size; i++) {
-            final char c = text.charAt(i);
+        block7: for (int i = 0; i < size2; ++i) {
+            char c = text2.charAt(i);
             switch (c) {
-                case '&' :
+                case '&': {
                     sb.append("&amp;");
                     changed = true;
-                    break;
-
-                case '<' :
+                    continue block7;
+                }
+                case '<': {
                     sb.append("&lt;");
                     changed = true;
-                    break;
-
-                case '>' :
+                    continue block7;
+                }
+                case '>': {
                     sb.append("&gt;");
                     changed = true;
-                    break;
-
-                case '\'' :
+                    continue block7;
+                }
+                case '\'': {
                     sb.append("&apos;");
                     changed = true;
-                    break;
-
-                case '"' :
+                    continue block7;
+                }
+                case '\"': {
                     sb.append("&quot;");
                     changed = true;
-                    break;
-
-                default:
+                    continue block7;
+                }
+                default: {
                     sb.append(c);
+                }
             }
         }
+        return changed ? sb.toString() : text2;
+    }
 
-        return changed ? sb.toString() : text;
-    }
-    
-    /**
-     * Write the end of a tag.
-     * @param ps
-     * @param level
-     * @param tag
-     * @return
-     */
     private PrintWriter endTag(PrintWriter ps, int level, String tag) {
-        return tag(ps, level, tag, false);
+        return this.tag(ps, level, tag, false);
     }
-    
-    /**
-     * Write the end or the begin of a tag.
-     * @param ps
-     * @param level
-     * @param tag
-     * @param begin
-     * @return
-     */
+
     private PrintWriter tag(PrintWriter ps, int level, String tag, boolean begin) {
-        indent(ps, level).append(begin ? "<" : "</").append(tag);
+        this.indent(ps, level).append(begin ? "<" : "</").append(tag);
         if (!begin) {
             ps.append('>');
-            appendCarriageReturn(ps);
+            this.appendCarriageReturn(ps);
         }
-        
         return ps;
     }
-    
-    /**
-     * Write a carriage return if {@link XMLReportWriter#compactMode} is false.
-     * @param pw
-     * @return
-     */
+
     private PrintWriter appendCarriageReturn(PrintWriter pw) {
-        if (!compactMode) {
+        if (!this.compactMode) {
             pw.append('\n');
         }
-        
         return pw;
     }
 
-    /**
-     * Write an indentation if {@link XMLReportWriter#compactMode} is false.
-     * @param ps
-     * @param level
-     * @return
-     */
     private PrintWriter indent(PrintWriter ps, int level) {
-        if (!compactMode) {
-            for (int i = 0; i < level; i++) {
+        if (!this.compactMode) {
+            for (int i = 0; i < level; ++i) {
                 ps.print(INDENT);
             }
         }
-        
         return ps;
     }
-    
-    /**
-     * Return null if the given string is blank.
-     * @param text
-     * @return
-     */
-    private String getNullIfBlank(Object text) {
+
+    private String getNullIfBlank(Object text2) {
         String result = null;
-        
-        if (text != null) {
-            result = text.toString().trim();
-            
-            // We assume here that the corresponding attribute
-            // is defaulted to NOT_APPLIABLE when it's null.
-            //
-            // It's the case for CheckResult.getExpected() and 
-            // CheckResult.getActual())   
-            if (result.isEmpty() || NOT_APPLIABLE.equals(result)) {
-                result = null;
-            }
+        if (text2 != null && ((result = text2.toString().trim()).isEmpty() || NOT_APPLIABLE.equals(result))) {
+            result = null;
         }
-        
         return result;
     }
-    
 }
+

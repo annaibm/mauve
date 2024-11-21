@@ -1,37 +1,12 @@
-// Test the basic usage of RC4 crypto algorithm.
-
-// Copyright (C) 2013, 2014 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.javax.crypto.Cipher;
 
 import gnu.testlet.TestHarness;
-import gnu.testlet.Testlet;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-
-
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -39,308 +14,93 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-
-
-/**
- * Test the basic usage of RC4 crypto algorithm.
- * 
- * @author Pavel Tisnovsky (ptisnovs@redhat.com)
- */
 public class RC4CipherTest {
+    private static final String ORIGINAL_TEXT_1 = "";
+    private static final String ORIGINAL_TEXT_2 = "\u0000";
+    private static final String ORIGINAL_TEXT_3 = " ";
+    private static final String ORIGINAL_TEXT_4 = "a";
+    private static final String ORIGINAL_TEXT_5 = "Hello World!";
+    private static final String ORIGINAL_TEXT_6 = "The quick brown fox jumps over the lazy dog";
+    private static final String ORIGINAL_TEXT_7 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    private static final byte[] EXPECTED_CIPHER_TEXT_1 = new byte[0];
+    private static final byte[] EXPECTED_CIPHER_TEXT_2 = new byte[]{-107};
+    private static final byte[] EXPECTED_CIPHER_TEXT_3 = new byte[]{-75};
+    private static final byte[] EXPECTED_CIPHER_TEXT_4 = new byte[]{-12};
+    private static final byte[] EXPECTED_CIPHER_TEXT_5 = new byte[]{-35, 126, 52, 114, 111, 94, 34, 29, 96, 62, 82, 27};
+    private static final byte[] EXPECTED_CIPHER_TEXT_6 = new byte[]{-63, 115, 61, 62, 113, 11, 28, 17, 121, 114, 84, 72, -120, 81, -57, -116, 73, -121, -105, -112, 126, 43, -21, 31, -114, 124, 111, 99, 37, 22, 12, -72, -62, 39, 25, -39, 95, 15, -111, 98, -88, 39, 65};
+    private static final byte[] EXPECTED_CIPHER_TEXT_7 = new byte[]{-39, 116, 42, 123, 109, 94, 28, 2, 97, 39, 91, 26, -125, 73, -59, -61, 93, -56, -100, -39, 96, 126, -25, 2, -104, 40, 44, 53, 35, 11, 66, -65, -49, 33, 77, -48, 74, 0, -102, 98, -83, 44, 79, 12, -94, 25, 78, -100, 30, 19, 5, 11, -112, -127, -77, 61, -38, 84, 43, -27, -29, 82, -50, -29, 111, 69, 7, -65, -105, 82, 16, -65, -1, -39, 110, 16, -107, -86, 60, 126, -76, -128, 81, 75, -29, -92, -22, 42, -73, 17, 94, -10, -104, 3, -28, -32, 31, -112, -28, 40, -59, 0, -33, -51, 32, 82, 7, -13, 14, 98, 123, 86, -95, 104, -120, 53, -45, -62, 45, 76, -124, -107, -35, -6, -26, -89, -80, 112, -111, 65, 78, 44, 101, 38, 7, -55, -124, -52, -65, -89, -123, 41, -107, -120, -117, 95, 126, 24, -36, 50, -33, 64, -44, 65, 56, 52, -108, 26, -98, -128, -94, 84, -122, -24, -109, -12, -10, 115, -114, -15, 17, -30, -106, 106, -78, 87, 41, -91, 88, -9, 35, 89, 99, 40, 41, 17, -2, -33, -91, 21, -46, -78, -43, 0, 27, -28, -18, -118, -84, 29, -101, -95, -2, -91, 77, 98, -37, -24, 90, 122, -25, -123, 78, 100, 56, 106, 100, -86, -44, 83, 98, 100, -100, -65, 127, 70, 94, 101, 120, 118, 12, -52, 93, -4, 112, 124, 45, -110, 77, 81, -8, -3, -33, 46, -66, 1, 81, -110, -27, -128, 17, 116, 21, -95, 1, -47, 43, 70, 68, 12, -59, 40, -25, -16, -76, 70, -126, -49, -128, 66, -95, -21, -91, 114, 9, -36, 8, -128, 37, -6, -28, 3, 90, 78, -45, -28, 82, -47, 32, 103, -86, -51, -25, -72, 2, -88, 17, -9, 19, 66, -12, -76, 105, 11, 55, -27, -7, -38, 68, -19, 43, 105, 62, 106, -31, -45, 81, 33, 73, 10, -45, -17, -10, -23, 25, -52, 123, -57, 75, 90, -74, -103, 62, 29, 61, -72, 96, 36, 42, 106, 50, -118, 43, -51, 53, -74, -65, 57, 93, -30, -96, -110, 74, -114, -110, 105, 92, -95, 85, -26, -65, 11, 24, 91, 34, 51, 109, 45, 111, -8, -82, 78, 88, 109, -25, 55, 1, 57, -18, 4, 75, -115, -100, 119, -77, 77, 81, -24, -55, 38, 20, 16, -8, 15, -75, -46, 4, 48, 4, 37, -99, -95, 65, -83, 120, -19, -78, -6, -70, 99, 10, 60, -128, -87, -47, 94, 3, 15, 91, 120, 101, 61, 11, -15, -116, 6, 45, 34, 82, 112, 58, -89, 15, -31, 122, 13, 63, 117, 37, 22, -34, -53, 8, -102, 12, -72};
+    private static final byte[] RC4_KEY = new byte[]{47, -27, -73, 64, 12, -40, -91, -17, -121, 35, -74, 48, 80, -61, 79, -89};
 
-    /**
-     * Text which should be crypted into byte stream stored in EXPECTED_CIPHER_TEXT_1.
-     */
-    static final private String ORIGINAL_TEXT_1 = "";
-
-    /**
-     * Text which should be crypted into byte stream stored in EXPECTED_CIPHER_TEXT_2.
-     */
-    static final private String ORIGINAL_TEXT_2 = "\0";
-
-    /**
-     * Text which should be crypted into byte stream stored in EXPECTED_CIPHER_TEXT_3.
-     */
-    static final private String ORIGINAL_TEXT_3 = " ";
-
-    /**
-     * Text which should be crypted into byte stream stored in EXPECTED_CIPHER_TEXT_4.
-     */
-    static final private String ORIGINAL_TEXT_4 = "a";
-
-    /**
-     * Text which should be crypted into byte stream stored in EXPECTED_CIPHER_TEXT_5.
-     */
-    static final private String ORIGINAL_TEXT_5 = "Hello World!";
-
-    /**
-     * Text which should be crypted into byte stream stored in EXPECTED_CIPHER_TEXT_6.
-     */
-    static final private String ORIGINAL_TEXT_6 = "The quick brown fox jumps over the lazy dog";
-
-    /**
-     * Text which should be crypted into byte stream stored in EXPECTED_CIPHER_TEXT_7.
-     */
-    static final private String ORIGINAL_TEXT_7 = "Lorem ipsum dolor sit amet, consectetur " +
-                                                  "adipisicing elit, sed do eiusmod tempor " +
-                                                  "incididunt ut labore et dolore magna aliqua. " +
-                                                  "Ut enim ad minim veniam, quis nostrud " +
-                                                  "exercitation ullamco laboris nisi ut aliquip " +
-                                                  "ex ea commodo consequat. Duis aute irure " +
-                                                  "dolor in reprehenderit in voluptate velit " +
-                                                  "esse cillum dolore eu fugiat nulla pariatur. " +
-                                                  "Excepteur sint occaecat cupidatat non proident, " +
-                                                  "sunt in culpa qui officia deserunt mollit anim " +
-                                                  "id est laborum.";
-
-    /**
-     * Byte stream for the original text ORIGINAL_TEXT_1.
-     */
-    static final private byte[] EXPECTED_CIPHER_TEXT_1 = new byte[] {
-        // empty!
-    };
-
-    /**
-     * Byte stream for the original text ORIGINAL_TEXT_2.
-     */
-    static final private byte[] EXPECTED_CIPHER_TEXT_2 = new byte[] {
-        (byte)0x95, 
-    };
-
-    /**
-     * Byte stream for the original text ORIGINAL_TEXT_3.
-     */
-    static final private byte[] EXPECTED_CIPHER_TEXT_3 = new byte[] {
-        (byte)0xb5, 
-    };
-
-    /**
-     * Byte stream for the original text ORIGINAL_TEXT_4.
-     */
-    static final private byte[] EXPECTED_CIPHER_TEXT_4 = new byte[] {
-        (byte)0xf4, 
-    };
-
-    /**
-     * Byte stream for the original text ORIGINAL_TEXT_5.
-     */
-    static final private byte[] EXPECTED_CIPHER_TEXT_5 = new byte[] {
-        (byte)0xdd, (byte)0x7e, (byte)0x34, (byte)0x72, (byte)0x6f, (byte)0x5e, (byte)0x22, (byte)0x1d, 
-        (byte)0x60, (byte)0x3e, (byte)0x52, (byte)0x1b, 
-    };
-
-    /**
-     * Byte stream for the original text ORIGINAL_TEXT_6.
-     */
-    static final private byte[] EXPECTED_CIPHER_TEXT_6 = new byte[] {
-        (byte)0xc1, (byte)0x73, (byte)0x3d, (byte)0x3e, (byte)0x71, (byte)0x0b, (byte)0x1c, (byte)0x11, 
-        (byte)0x79, (byte)0x72, (byte)0x54, (byte)0x48, (byte)0x88, (byte)0x51, (byte)0xc7, (byte)0x8c, 
-        (byte)0x49, (byte)0x87, (byte)0x97, (byte)0x90, (byte)0x7e, (byte)0x2b, (byte)0xeb, (byte)0x1f, 
-        (byte)0x8e, (byte)0x7c, (byte)0x6f, (byte)0x63, (byte)0x25, (byte)0x16, (byte)0x0c, (byte)0xb8, 
-        (byte)0xc2, (byte)0x27, (byte)0x19, (byte)0xd9, (byte)0x5f, (byte)0x0f, (byte)0x91, (byte)0x62, 
-        (byte)0xa8, (byte)0x27, (byte)0x41, 
-    };
-
-    /**
-     * Byte stream for the original text ORIGINAL_TEXT_7.
-     */
-    static final private byte[] EXPECTED_CIPHER_TEXT_7 = new byte[] {
-        (byte)0xd9, (byte)0x74, (byte)0x2a, (byte)0x7b, (byte)0x6d, (byte)0x5e, (byte)0x1c, (byte)0x02, 
-        (byte)0x61, (byte)0x27, (byte)0x5b, (byte)0x1a, (byte)0x83, (byte)0x49, (byte)0xc5, (byte)0xc3, 
-        (byte)0x5d, (byte)0xc8, (byte)0x9c, (byte)0xd9, (byte)0x60, (byte)0x7e, (byte)0xe7, (byte)0x02, 
-        (byte)0x98, (byte)0x28, (byte)0x2c, (byte)0x35, (byte)0x23, (byte)0x0b, (byte)0x42, (byte)0xbf, 
-        (byte)0xcf, (byte)0x21, (byte)0x4d, (byte)0xd0, (byte)0x4a, (byte)0x00, (byte)0x9a, (byte)0x62, 
-        (byte)0xad, (byte)0x2c, (byte)0x4f, (byte)0x0c, (byte)0xa2, (byte)0x19, (byte)0x4e, (byte)0x9c, 
-        (byte)0x1e, (byte)0x13, (byte)0x05, (byte)0x0b, (byte)0x90, (byte)0x81, (byte)0xb3, (byte)0x3d, 
-        (byte)0xda, (byte)0x54, (byte)0x2b, (byte)0xe5, (byte)0xe3, (byte)0x52, (byte)0xce, (byte)0xe3, 
-        (byte)0x6f, (byte)0x45, (byte)0x07, (byte)0xbf, (byte)0x97, (byte)0x52, (byte)0x10, (byte)0xbf, 
-        (byte)0xff, (byte)0xd9, (byte)0x6e, (byte)0x10, (byte)0x95, (byte)0xaa, (byte)0x3c, (byte)0x7e, 
-        (byte)0xb4, (byte)0x80, (byte)0x51, (byte)0x4b, (byte)0xe3, (byte)0xa4, (byte)0xea, (byte)0x2a, 
-        (byte)0xb7, (byte)0x11, (byte)0x5e, (byte)0xf6, (byte)0x98, (byte)0x03, (byte)0xe4, (byte)0xe0, 
-        (byte)0x1f, (byte)0x90, (byte)0xe4, (byte)0x28, (byte)0xc5, (byte)0x00, (byte)0xdf, (byte)0xcd, 
-        (byte)0x20, (byte)0x52, (byte)0x07, (byte)0xf3, (byte)0x0e, (byte)0x62, (byte)0x7b, (byte)0x56, 
-        (byte)0xa1, (byte)0x68, (byte)0x88, (byte)0x35, (byte)0xd3, (byte)0xc2, (byte)0x2d, (byte)0x4c, 
-        (byte)0x84, (byte)0x95, (byte)0xdd, (byte)0xfa, (byte)0xe6, (byte)0xa7, (byte)0xb0, (byte)0x70, 
-        (byte)0x91, (byte)0x41, (byte)0x4e, (byte)0x2c, (byte)0x65, (byte)0x26, (byte)0x07, (byte)0xc9, 
-        (byte)0x84, (byte)0xcc, (byte)0xbf, (byte)0xa7, (byte)0x85, (byte)0x29, (byte)0x95, (byte)0x88, 
-        (byte)0x8b, (byte)0x5f, (byte)0x7e, (byte)0x18, (byte)0xdc, (byte)0x32, (byte)0xdf, (byte)0x40, 
-        (byte)0xd4, (byte)0x41, (byte)0x38, (byte)0x34, (byte)0x94, (byte)0x1a, (byte)0x9e, (byte)0x80, 
-        (byte)0xa2, (byte)0x54, (byte)0x86, (byte)0xe8, (byte)0x93, (byte)0xf4, (byte)0xf6, (byte)0x73, 
-        (byte)0x8e, (byte)0xf1, (byte)0x11, (byte)0xe2, (byte)0x96, (byte)0x6a, (byte)0xb2, (byte)0x57, 
-        (byte)0x29, (byte)0xa5, (byte)0x58, (byte)0xf7, (byte)0x23, (byte)0x59, (byte)0x63, (byte)0x28, 
-        (byte)0x29, (byte)0x11, (byte)0xfe, (byte)0xdf, (byte)0xa5, (byte)0x15, (byte)0xd2, (byte)0xb2, 
-        (byte)0xd5, (byte)0x00, (byte)0x1b, (byte)0xe4, (byte)0xee, (byte)0x8a, (byte)0xac, (byte)0x1d, 
-        (byte)0x9b, (byte)0xa1, (byte)0xfe, (byte)0xa5, (byte)0x4d, (byte)0x62, (byte)0xdb, (byte)0xe8, 
-        (byte)0x5a, (byte)0x7a, (byte)0xe7, (byte)0x85, (byte)0x4e, (byte)0x64, (byte)0x38, (byte)0x6a, 
-        (byte)0x64, (byte)0xaa, (byte)0xd4, (byte)0x53, (byte)0x62, (byte)0x64, (byte)0x9c, (byte)0xbf, 
-        (byte)0x7f, (byte)0x46, (byte)0x5e, (byte)0x65, (byte)0x78, (byte)0x76, (byte)0x0c, (byte)0xcc, 
-        (byte)0x5d, (byte)0xfc, (byte)0x70, (byte)0x7c, (byte)0x2d, (byte)0x92, (byte)0x4d, (byte)0x51, 
-        (byte)0xf8, (byte)0xfd, (byte)0xdf, (byte)0x2e, (byte)0xbe, (byte)0x01, (byte)0x51, (byte)0x92, 
-        (byte)0xe5, (byte)0x80, (byte)0x11, (byte)0x74, (byte)0x15, (byte)0xa1, (byte)0x01, (byte)0xd1, 
-        (byte)0x2b, (byte)0x46, (byte)0x44, (byte)0x0c, (byte)0xc5, (byte)0x28, (byte)0xe7, (byte)0xf0, 
-        (byte)0xb4, (byte)0x46, (byte)0x82, (byte)0xcf, (byte)0x80, (byte)0x42, (byte)0xa1, (byte)0xeb, 
-        (byte)0xa5, (byte)0x72, (byte)0x09, (byte)0xdc, (byte)0x08, (byte)0x80, (byte)0x25, (byte)0xfa, 
-        (byte)0xe4, (byte)0x03, (byte)0x5a, (byte)0x4e, (byte)0xd3, (byte)0xe4, (byte)0x52, (byte)0xd1, 
-        (byte)0x20, (byte)0x67, (byte)0xaa, (byte)0xcd, (byte)0xe7, (byte)0xb8, (byte)0x02, (byte)0xa8, 
-        (byte)0x11, (byte)0xf7, (byte)0x13, (byte)0x42, (byte)0xf4, (byte)0xb4, (byte)0x69, (byte)0x0b, 
-        (byte)0x37, (byte)0xe5, (byte)0xf9, (byte)0xda, (byte)0x44, (byte)0xed, (byte)0x2b, (byte)0x69, 
-        (byte)0x3e, (byte)0x6a, (byte)0xe1, (byte)0xd3, (byte)0x51, (byte)0x21, (byte)0x49, (byte)0x0a, 
-        (byte)0xd3, (byte)0xef, (byte)0xf6, (byte)0xe9, (byte)0x19, (byte)0xcc, (byte)0x7b, (byte)0xc7, 
-        (byte)0x4b, (byte)0x5a, (byte)0xb6, (byte)0x99, (byte)0x3e, (byte)0x1d, (byte)0x3d, (byte)0xb8, 
-        (byte)0x60, (byte)0x24, (byte)0x2a, (byte)0x6a, (byte)0x32, (byte)0x8a, (byte)0x2b, (byte)0xcd, 
-        (byte)0x35, (byte)0xb6, (byte)0xbf, (byte)0x39, (byte)0x5d, (byte)0xe2, (byte)0xa0, (byte)0x92, 
-        (byte)0x4a, (byte)0x8e, (byte)0x92, (byte)0x69, (byte)0x5c, (byte)0xa1, (byte)0x55, (byte)0xe6, 
-        (byte)0xbf, (byte)0x0b, (byte)0x18, (byte)0x5b, (byte)0x22, (byte)0x33, (byte)0x6d, (byte)0x2d, 
-        (byte)0x6f, (byte)0xf8, (byte)0xae, (byte)0x4e, (byte)0x58, (byte)0x6d, (byte)0xe7, (byte)0x37, 
-        (byte)0x01, (byte)0x39, (byte)0xee, (byte)0x04, (byte)0x4b, (byte)0x8d, (byte)0x9c, (byte)0x77, 
-        (byte)0xb3, (byte)0x4d, (byte)0x51, (byte)0xe8, (byte)0xc9, (byte)0x26, (byte)0x14, (byte)0x10, 
-        (byte)0xf8, (byte)0x0f, (byte)0xb5, (byte)0xd2, (byte)0x04, (byte)0x30, (byte)0x04, (byte)0x25, 
-        (byte)0x9d, (byte)0xa1, (byte)0x41, (byte)0xad, (byte)0x78, (byte)0xed, (byte)0xb2, (byte)0xfa, 
-        (byte)0xba, (byte)0x63, (byte)0x0a, (byte)0x3c, (byte)0x80, (byte)0xa9, (byte)0xd1, (byte)0x5e, 
-        (byte)0x03, (byte)0x0f, (byte)0x5b, (byte)0x78, (byte)0x65, (byte)0x3d, (byte)0x0b, (byte)0xf1, 
-        (byte)0x8c, (byte)0x06, (byte)0x2d, (byte)0x22, (byte)0x52, (byte)0x70, (byte)0x3a, (byte)0xa7, 
-        (byte)0x0f, (byte)0xe1, (byte)0x7a, (byte)0x0d, (byte)0x3f, (byte)0x75, (byte)0x25, (byte)0x16, 
-        (byte)0xde, (byte)0xcb, (byte)0x08, (byte)0x9a, (byte)0x0c, (byte)0xb8, 
-    };
-
-    /**
-     * RC4 key.
-     */
-    static final private byte[] RC4_KEY = new byte[] {
-        (byte)0x2f, (byte)0xe5, (byte)0xb7, (byte)0x40, (byte)0x0c, (byte)0xd8, (byte)0xa5, (byte)0xef,
-        (byte)0x87, (byte)0x23, (byte)0xb6, (byte)0x30, (byte)0x50, (byte)0xc3, (byte)0x4f, (byte)0xa7
-    };
-
-    /**
-     * Generate secret key for RC4 crypto algorithm.
-     * @return secret key for RC4 crypto algorithm.
-     *
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws InvalidKeySpecException
-     */
-    private static SecretKey generateSecretKey() throws NoSuchAlgorithmException, InvalidKeyException,
-                    InvalidKeySpecException {
-        // create a SecretKeySpec from key material
+    private static SecretKey generateSecretKey() throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException {
         return new SecretKeySpec(RC4_KEY, "RC4");
     }
 
-    /**
-     * Check if RC4 crypting and decrypting works as expected.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     * @param secretKey RC4 secret key
-     * @param rc4 instance of class which implements RC4 crypto algorithm.
-     * @param expectedCipherText expected byte stream.
-     * @throws InvalidKeyException
-     * @throws IllegalBlockSizeException
-     * @throws BadPaddingException
-     */
     private static void checkCipher(TestHarness harness, SecretKey secretKey, Cipher rc4, String originalText, byte[] expectedCipherText) {
-        try
-        {
-            rc4.init(Cipher.ENCRYPT_MODE, secretKey);
-            byte[] ciphertext;
-            ciphertext = rc4.doFinal(originalText.getBytes());
-            rc4.init(Cipher.DECRYPT_MODE, secretKey);
+        try {
+            rc4.init(1, secretKey);
+            byte[] ciphertext = rc4.doFinal(originalText.getBytes());
+            rc4.init(2, secretKey);
             String cleartext = new String(rc4.doFinal(ciphertext));
-
-            //printCipherTest(ciphertext);
-
-            // test if ENCRYPT_MODE is ok
-            for (int i = 0; i < expectedCipherText.length; i++)
-            {
-                if (expectedCipherText[i] != ciphertext[i])
-                {
-                    harness.fail("cipher text differ at index " + i);
-                }
+            for (int i = 0; i < expectedCipherText.length; ++i) {
+                if (expectedCipherText[i] == ciphertext[i]) continue;
+                harness.fail("cipher text differ at index " + i);
             }
-
-            // test if DECRYPT_MODE is ok
-            if (!originalText.equals(cleartext))
-            {
+            if (!originalText.equals(cleartext)) {
                 harness.fail("Decrypted text is different from the original!");
             }
         }
-        catch (InvalidKeyException e)
-        {
-          harness.fail("Failure: " + e.getMessage());
-          harness.debug(e);
-        }
-        catch (IllegalBlockSizeException e)
-        {
+        catch (InvalidKeyException e) {
             harness.fail("Failure: " + e.getMessage());
             harness.debug(e);
         }
-        catch (BadPaddingException e)
-        {
+        catch (IllegalBlockSizeException e) {
+            harness.fail("Failure: " + e.getMessage());
+            harness.debug(e);
+        }
+        catch (BadPaddingException e) {
             harness.fail("Failure: " + e.getMessage());
             harness.debug(e);
         }
     }
 
-    @SuppressWarnings({ "boxing", "unused" })
     private static void printCipherTest(byte[] ciphertext) {
-        for (int i=0; i < ciphertext.length; i++) {
+        for (int i = 0; i < ciphertext.length; ++i) {
             System.out.format("(byte)0x%02x, ", ciphertext[i]);
-            if ((i+1)%8 == 0) {
-                System.out.println();
-            }
+            if ((i + 1) % 8 != 0) continue;
+            System.out.println();
         }
     }
 
-    /**
-     * Run the test harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws InvalidKeySpecException
-     * @throws NoSuchPaddingException
-     * @throws IllegalBlockSizeException
-     * @throws BadPaddingException
-     */
     private static void run(TestHarness harness) {
-        SecretKey secretKey;
-        try
-        {
-            secretKey = generateSecretKey();
+        try {
+            SecretKey secretKey = RC4CipherTest.generateSecretKey();
             Cipher RC4 = Cipher.getInstance("RC4");
-
-            // check crypto for many open texts.
-            checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_1, EXPECTED_CIPHER_TEXT_1);
-            checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_2, EXPECTED_CIPHER_TEXT_2);
-            checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_3, EXPECTED_CIPHER_TEXT_3);
-            checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_4, EXPECTED_CIPHER_TEXT_4);
-            checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_5, EXPECTED_CIPHER_TEXT_5);
-            checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_6, EXPECTED_CIPHER_TEXT_6);
-            checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_7, EXPECTED_CIPHER_TEXT_7);
+            RC4CipherTest.checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_1, EXPECTED_CIPHER_TEXT_1);
+            RC4CipherTest.checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_2, EXPECTED_CIPHER_TEXT_2);
+            RC4CipherTest.checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_3, EXPECTED_CIPHER_TEXT_3);
+            RC4CipherTest.checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_4, EXPECTED_CIPHER_TEXT_4);
+            RC4CipherTest.checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_5, EXPECTED_CIPHER_TEXT_5);
+            RC4CipherTest.checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_6, EXPECTED_CIPHER_TEXT_6);
+            RC4CipherTest.checkCipher(harness, secretKey, RC4, ORIGINAL_TEXT_7, EXPECTED_CIPHER_TEXT_7);
         }
-        catch (InvalidKeyException e)
-        {
+        catch (InvalidKeyException e) {
             harness.fail("Failure: " + e.getMessage());
             harness.debug(e);
         }
-        catch (NoSuchAlgorithmException e)
-        {
+        catch (NoSuchAlgorithmException e) {
             harness.fail("Failure: " + e.getMessage());
             harness.debug(e);
         }
-        catch (InvalidKeySpecException e)
-        {
+        catch (InvalidKeySpecException e) {
             harness.fail("Failure: " + e.getMessage());
             harness.debug(e);
         }
-        catch (NoSuchPaddingException e)
-        {
+        catch (NoSuchPaddingException e) {
             harness.fail("Failure: " + e.getMessage());
             harness.debug(e);
         }
     }
 
-    /**
-     * Test if RC4 crypto algorithm is available on given JVM.
-     */
     public boolean isRC4CipherAvailable() {
         try {
             Cipher.getInstance("RC4");
@@ -354,26 +114,15 @@ public class RC4CipherTest {
         return true;
     }
 
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
     public void test(TestHarness harness) {
-        if (!isRC4CipherAvailable()) {
+        if (!this.isRC4CipherAvailable()) {
             return;
         }
-        run(harness);
+        RC4CipherTest.run(harness);
     }
 
-    /**
-     * Runs the test from CLI.
-     *
-     * @param args
-     * @throws Exception
-     */
     public static void main(String[] args) throws Exception {
-        run(null);
+        RC4CipherTest.run(null);
     }
-
 }
+

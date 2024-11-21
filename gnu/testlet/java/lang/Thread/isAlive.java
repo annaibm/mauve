@@ -1,71 +1,65 @@
-// Tags: JDK1.0
-
-// Copyright (C) 2002 Free Software Foundation, Inc.
-// Written by Mark Wielaard (mark@klomp.org)
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.Thread;
 
-import gnu.testlet.Testlet;
 import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
 
-public class isAlive extends Thread implements Testlet
-{
+public class isAlive
+extends Thread
+implements Testlet {
+    boolean started = false;
+    boolean please_stop = false;
 
-  boolean started = false;
-  boolean please_stop = false;
+    /*
+     * WARNING - Removed try catching itself - possible behaviour change.
+     */
+    @Override
+    public void run() {
+        isAlive isAlive2 = this;
+        synchronized (isAlive2) {
+            this.started = true;
+            this.notify();
+            while (!this.please_stop) {
+                try {
+                    this.wait();
+                }
+                catch (InterruptedException interruptedException) {}
+            }
+        }
+    }
 
-  public void run()
-  {
-    synchronized(this)
-      {
-	started = true;
-	notify();
-	while(!please_stop)
-	  try { this.wait(); } catch (InterruptedException ignore) { }
-      }
-  }
-
-  public void test (TestHarness harness)
-  {
-    Thread current = Thread.currentThread();
-
-    boolean alive = current.isAlive();
-    harness.check(alive, "Current running thread is always alive");
-
-    isAlive t  = new isAlive();
-    harness.check(!t.isAlive(), "Newly created threads are not alive");
-
-    t.start();
-    synchronized(t)
-      {
-	while (!t.started)
-	  try { t.wait(); } catch (InterruptedException ignore) { }
-
-	harness.check(t.isAlive(), "Running threads are alive");
-
-	t.please_stop = true;
-	t.notify();
-      }
-    try { t.join(); } catch (InterruptedException ignore) { }
-
-    harness.check(!t.isAlive(), "Stopped threads are not alive");
-  }
+    /*
+     * WARNING - Removed try catching itself - possible behaviour change.
+     */
+    @Override
+    public void test(TestHarness harness) {
+        Thread current2 = Thread.currentThread();
+        boolean alive = current2.isAlive();
+        harness.check(alive, "Current running thread is always alive");
+        isAlive t = new isAlive();
+        harness.check(!t.isAlive(), "Newly created threads are not alive");
+        t.start();
+        isAlive isAlive2 = t;
+        synchronized (isAlive2) {
+            while (!t.started) {
+                try {
+                    t.wait();
+                }
+                catch (InterruptedException interruptedException) {}
+            }
+            harness.check(t.isAlive(), "Running threads are alive");
+            t.please_stop = true;
+            t.notify();
+        }
+        try {
+            t.join();
+        }
+        catch (InterruptedException interruptedException) {
+            // empty catch block
+        }
+        harness.check(!t.isAlive(), "Stopped threads are not alive");
+    }
 }
 

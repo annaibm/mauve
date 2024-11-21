@@ -1,32 +1,25 @@
-/* AllCertificatesSamePolicyTest1_4.java
-   Copyright (C) 2003  Free Software Foundation, Inc.
-
-   Distributed under the GPL; see the file `COPYING' */
-
-// Tags: JDK1.4
-// Uses: BaseValidTest
-// Files: data/certs/ValidCertificatePathTest1EE.crt data/certs/GoodCACert.crt data/crls/GoodCACRL.crl
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.security.cert.pkix.pkits;
 
+import gnu.testlet.java.security.cert.pkix.pkits.BaseValidTest;
 import java.security.cert.PKIXParameters;
 import java.util.HashSet;
 
-public class AllCertificatesSamePolicyTest1_4 extends BaseValidTest
-{
-  public AllCertificatesSamePolicyTest1_4()
-  {
-    super (new String[] { "data/certs/ValidCertificatePathTest1EE.crt",
-                          "data/certs/GoodCACert.crt" },
-           new String[] { "data/crls/GoodCACRL.crl" });
-  }
+public class AllCertificatesSamePolicyTest1_4
+extends BaseValidTest {
+    public AllCertificatesSamePolicyTest1_4() {
+        super(new String[]{"data/certs/ValidCertificatePathTest1EE.crt", "data/certs/GoodCACert.crt"}, new String[]{"data/crls/GoodCACRL.crl"});
+    }
 
-  protected void setupAdditionalParams (PKIXParameters params)
-  {
-    params.setExplicitPolicyRequired (true);
-    HashSet policies = new HashSet();
-    policies.add (NIST_TEST_POLICY_1);
-    policies.add (NIST_TEST_POLICY_2);
-    params.setInitialPolicies (policies);
-  }
+    @Override
+    protected void setupAdditionalParams(PKIXParameters params) {
+        params.setExplicitPolicyRequired(true);
+        HashSet<String> policies = new HashSet<String>();
+        policies.add("2.16.840.1.101.3.2.1.48.1");
+        policies.add("2.16.840.1.101.3.2.1.48.2");
+        params.setInitialPolicies(policies);
+    }
 }
+

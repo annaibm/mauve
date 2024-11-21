@@ -1,51 +1,29 @@
-// Test of Double method doubleToLongBits(double).
-
-// Copyright 2012 Red Hat, Inc.
-// Written by Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software Foundation
-// Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307 USA
-
-package gnu.testlet.java.lang.Double;
-import gnu.testlet.Testlet;
-import gnu.testlet.TestHarness;
-
-/**
- * Test the method Double.doubleToLongBits(double);
+/*
+ * Decompiled with CFR 0.152.
  */
-public class doubleToLongBits implements Testlet
-{
+package gnu.testlet.java.lang.Double;
 
-  /**
-   * Entry point to this test.
-   */
-  public void test(TestHarness harness)
-  {
-     harness.check(0x0000000000000000L, Double.doubleToLongBits(0));
-     harness.check(0x3ff0000000000000L, Double.doubleToLongBits(1));
-     harness.check(0x4000000000000000L, Double.doubleToLongBits(2));
-     harness.check(0x408f400000000000L, Double.doubleToLongBits(1000));
-     harness.check(0xbff0000000000000L, Double.doubleToLongBits(-1));
-     harness.check(0xc000000000000000L, Double.doubleToLongBits(-2));
-     harness.check(0xc08f400000000000L, Double.doubleToLongBits(-1000));
-     harness.check(0x7ff0000000000000L, Double.doubleToLongBits(Double.POSITIVE_INFINITY));
-     harness.check(0xfff0000000000000L, Double.doubleToLongBits(Double.NEGATIVE_INFINITY));
-     harness.check(0x7fefffffffffffffL, Double.doubleToLongBits(Double.MAX_VALUE));
-     harness.check(0x0000000000000001L, Double.doubleToLongBits(Double.MIN_VALUE));
-     harness.check(0xffefffffffffffffL, Double.doubleToLongBits(-Double.MAX_VALUE));
-     harness.check(0x8000000000000001L, Double.doubleToLongBits(-Double.MIN_VALUE));
-     harness.check(0x7ff8000000000000L, Double.doubleToLongBits(Double.NaN));
-  }
+import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
+
+public class doubleToLongBits
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        harness.check(0L, Double.doubleToLongBits(0.0));
+        harness.check(0x3FF0000000000000L, Double.doubleToLongBits(1.0));
+        harness.check(0x4000000000000000L, Double.doubleToLongBits(2.0));
+        harness.check(4652007308841189376L, Double.doubleToLongBits(1000.0));
+        harness.check(-4616189618054758400L, Double.doubleToLongBits(-1.0));
+        harness.check(-4611686018427387904L, Double.doubleToLongBits(-2.0));
+        harness.check(-4571364728013586432L, Double.doubleToLongBits(-1000.0));
+        harness.check(0x7FF0000000000000L, Double.doubleToLongBits(Double.POSITIVE_INFINITY));
+        harness.check(-4503599627370496L, Double.doubleToLongBits(Double.NEGATIVE_INFINITY));
+        harness.check(0x7FEFFFFFFFFFFFFFL, Double.doubleToLongBits(Double.MAX_VALUE));
+        harness.check(1L, Double.doubleToLongBits(Double.MIN_VALUE));
+        harness.check(-4503599627370497L, Double.doubleToLongBits(-1.7976931348623157E308));
+        harness.check(-9223372036854775807L, Double.doubleToLongBits(-4.9E-324));
+        harness.check(9221120237041090560L, Double.doubleToLongBits(Double.NaN));
+    }
 }
 

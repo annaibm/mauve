@@ -1,87 +1,53 @@
-// Tags: JDK1.4
-
-// Copyright (C) 2004 Free Software Foundation, Inc.
-// Written by Michael Koch (konqueror@gmx.de)
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.nio.charset.Charset;
 
-import gnu.testlet.Testlet;
 import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
-import java.nio.charset.*;
-
-public class forName implements Testlet
-{
-  private void checkCharset(TestHarness h, String name)
-  {
-    boolean supported = false;
-    
-    try
-      {
-	Charset cs = Charset.forName(name);
-	
-	if (cs != null)
-	  supported = true;
-      }
-    catch (Throwable t)
-      {
-	// Ignore.
-      }
-
-    h.check(supported, "Charset '" + name + "' supported");
-  }
-  
-  public void test(TestHarness h)
-  {
-    // Check for non-existant encodings.
-    boolean works = false;
-
-    try
-      {
-	Charset cs = Charset.forName("foobar");
-      }
-    catch (UnsupportedCharsetException e)
-      {
-	works = true;
-      }
-
-    h.check(works, "UnsupportedCharsetException expected");
-	  
-    // Checks for standard encodings.
-    checkCharset(h, "ISO-8859-1");
-    checkCharset(h, "US-ASCII");
-    checkCharset(h, "UTF-8");
-    checkCharset(h, "UTF-16");
-    checkCharset(h, "UTF-16BE");
-    checkCharset(h, "UTF-16LE");
-    
-    /* Checks for IllegalArgumentException being thrown
-     * when given charset name is null.
-     */
-    works = false;
-    try {
-    	Charset.forName(null);
-    } catch(Exception e) {
-    	works = e instanceof IllegalArgumentException;
+public class forName
+implements Testlet {
+    private void checkCharset(TestHarness h, String name2) {
+        boolean supported = false;
+        try {
+            Charset cs = Charset.forName(name2);
+            if (cs != null) {
+                supported = true;
+            }
+        }
+        catch (Throwable throwable) {
+            // empty catch block
+        }
+        h.check(supported, "Charset '" + name2 + "' supported");
     }
-    h.check(works, "IllegalArgumentException thrown");
-  }
-  
+
+    @Override
+    public void test(TestHarness h) {
+        boolean works = false;
+        try {
+            Charset charset = Charset.forName("foobar");
+        }
+        catch (UnsupportedCharsetException e) {
+            works = true;
+        }
+        h.check(works, "UnsupportedCharsetException expected");
+        this.checkCharset(h, "ISO-8859-1");
+        this.checkCharset(h, "US-ASCII");
+        this.checkCharset(h, "UTF-8");
+        this.checkCharset(h, "UTF-16");
+        this.checkCharset(h, "UTF-16BE");
+        this.checkCharset(h, "UTF-16LE");
+        works = false;
+        try {
+            Charset.forName(null);
+        }
+        catch (Exception e) {
+            works = e instanceof IllegalArgumentException;
+        }
+        h.check(works, "IllegalArgumentException thrown");
+    }
 }
+

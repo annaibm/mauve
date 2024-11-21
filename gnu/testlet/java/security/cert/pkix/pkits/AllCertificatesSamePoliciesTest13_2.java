@@ -1,28 +1,21 @@
-/* AllCertificatesSamePoliciesTest13_2.java
-   Copyright (C) 2004  Free Software Foundation, Inc.
-
-   Distributed under the GPL; see the file `COPYING' */
-
-// Tags: JDK1.4
-// Uses: BaseValidTest
-// Files: data/certs/AllCertificatesSamePoliciesTest13EE.crt data/certs/PoliciesP123CACert.crt data/crls/PoliciesP123CACRL.crl
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.security.cert.pkix.pkits;
 
+import gnu.testlet.java.security.cert.pkix.pkits.BaseValidTest;
 import java.security.cert.PKIXParameters;
 import java.util.Collections;
 
-public class AllCertificatesSamePoliciesTest13_2 extends BaseValidTest
-{
-  public AllCertificatesSamePoliciesTest13_2()
-  {
-    super (new String[] { "data/certs/AllCertificatesSamePoliciesTest13EE.crt",
-                          "data/certs/PoliciesP123CACert.crt" },
-           new String[] { "data/crls/PoliciesP123CACRL.crl" });
-  }
+public class AllCertificatesSamePoliciesTest13_2
+extends BaseValidTest {
+    public AllCertificatesSamePoliciesTest13_2() {
+        super(new String[]{"data/certs/AllCertificatesSamePoliciesTest13EE.crt", "data/certs/PoliciesP123CACert.crt"}, new String[]{"data/crls/PoliciesP123CACRL.crl"});
+    }
 
-  protected void setupAdditionalParams (PKIXParameters params)
-  {
-    params.setInitialPolicies (Collections.singleton (NIST_TEST_POLICY_2));
-  }
+    @Override
+    protected void setupAdditionalParams(PKIXParameters params) {
+        params.setInitialPolicies(Collections.singleton("2.16.840.1.101.3.2.1.48.2"));
+    }
 }
+

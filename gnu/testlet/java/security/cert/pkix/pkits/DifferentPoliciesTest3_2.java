@@ -1,29 +1,20 @@
-/* DifferentPoliciesTest3_2.java
-   Copyright (C) 2004  Free Software Foundation, Inc.
-
-   Distributed under the GPL; see the file `COPYING' */
-
-// Tags: JDK1.4
-// Uses: BaseValidTest
-// Files: data/certs/DifferentPoliciesTest3EE.crt data/certs/PoliciesP2subCACert.crt data/certs/GoodCACert.crt data/crls/PoliciesP2subCACRL.crl data/crls/GoodCACRL.crl
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.security.cert.pkix.pkits;
 
+import gnu.testlet.java.security.cert.pkix.pkits.BaseInvalidTest;
 import java.security.cert.PKIXParameters;
 
-public class DifferentPoliciesTest3_2 extends BaseInvalidTest
-{
-  public DifferentPoliciesTest3_2()
-  {
-    super (new String[] { "data/certs/DifferentPoliciesTest3EE.crt",
-                          "data/certs/PoliciesP2subCACert.crt",
-                          "data/certs/GoodCACert.crt" },
-           new String[] { "data/crls/PoliciesP2subCACRL.crl",
-                          "data/crls/GoodCACRL.crl" });
-  }
+public class DifferentPoliciesTest3_2
+extends BaseInvalidTest {
+    public DifferentPoliciesTest3_2() {
+        super(new String[]{"data/certs/DifferentPoliciesTest3EE.crt", "data/certs/PoliciesP2subCACert.crt", "data/certs/GoodCACert.crt"}, new String[]{"data/crls/PoliciesP2subCACRL.crl", "data/crls/GoodCACRL.crl"});
+    }
 
-  protected void setupAdditionalParams (PKIXParameters params)
-  {
-    params.setExplicitPolicyRequired (true);
-  }
+    @Override
+    protected void setupAdditionalParams(PKIXParameters params) {
+        params.setExplicitPolicyRequired(true);
+    }
 }
+

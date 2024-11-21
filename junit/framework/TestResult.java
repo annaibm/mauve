@@ -1,300 +1,132 @@
-/* TestResult.java -- Collects test results
-   Copyright (C) 2006 Roman Kennke (kennke@aicas.com)
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to the
-Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301 USA.
-
-*/
-
-// Tags: not-a-test
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package junit.framework;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
+import junit.framework.AssertionFailedError;
+import junit.framework.Protectable;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestFailure;
+import junit.framework.TestListener;
 
-/**
- * Collects the results of a test run.
- */
-public class TestResult
-{
+public class TestResult {
+    protected List<TestFailure> fErrors = new ArrayList<TestFailure>();
+    protected List<TestFailure> fFailures = new ArrayList<TestFailure>();
+    protected List<TestListener> fListeners = new ArrayList<TestListener>();
+    protected int fRunTests = 0;
+    private boolean fStop = false;
 
-  /**
-   * The errors from the test run.
-   */
-  protected List<TestFailure> fErrors;
+    protected void run(final TestCase test) {
+        this.startTest(test);
+        Protectable protectable = new Protectable(){
 
-  /**
-   * The failures from the test run.
-   */
-  protected List<TestFailure> fFailures;
+            @Override
+            public void protect() throws Throwable {
+                test.runBare();
+            }
+        };
+        this.runProtected(test, protectable);
+        this.endTest(test);
+    }
 
-  /**
-   * The test listeners.
-   */
-  protected List<TestListener> fListeners;
+    public void runProtected(TestCase test, Protectable p) {
+        try {
+            p.protect();
+        }
+        catch (AssertionFailedError e) {
+            this.addFailure(test, e);
+        }
+        catch (ThreadDeath e) {
+            throw e;
+        }
+        catch (Throwable e) {
+            this.addError(test, e);
+        }
+    }
 
-  /**
-   * The number of tests that have been run.
-   */
-  protected int fRunTests;
+    /*
+     * WARNING - Removed try catching itself - possible behaviour change.
+     */
+    public void startTest(Test test) {
+        int count = test.countTestCases();
+        TestResult testResult = this;
+        synchronized (testResult) {
+            this.fRunTests += count;
+        }
+        for (TestListener l : this.cloneListeners()) {
+            l.startTest(test);
+        }
+    }
 
-  /**
-   * Indicates if the test run should stop.
-   */
-  private boolean fStop;
+    public void endTest(Test test) {
+        for (TestListener l : this.cloneListeners()) {
+            l.endTest(test);
+        }
+    }
 
-  /**
-   * Creates a new TestResult object.
-   */
-  public TestResult()
-  {
-    fErrors = new ArrayList<TestFailure>();
-    fFailures = new ArrayList<TestFailure>();
-    fListeners = new ArrayList<TestListener>();
-    fRunTests = 0;
-    fStop = false;
-  }
+    public synchronized void addFailure(Test test, AssertionFailedError failure) {
+        this.fFailures.add(new TestFailure(test, failure));
+        for (TestListener l : this.cloneListeners()) {
+            l.addFailure(test, failure);
+        }
+    }
 
-  /**
-   * Runs the specified TestCase.
-   *
-   * @param test the test case to run
-   */
-  protected void run(final TestCase test)
-  {
-    startTest(test);
-    Protectable protectable = new Protectable()
-    {
-      public void protect()
-        throws Throwable
-      {
-        test.runBare();
-      }
-    };
-    runProtected(test, protectable);
-    endTest(test);
-  }
+    public synchronized void addError(Test test, Throwable failure) {
+        this.fErrors.add(new TestFailure(test, failure));
+        for (TestListener l : this.cloneListeners()) {
+            l.addError(test, failure);
+        }
+    }
 
-  /**
-   * Runs a test in a protected environment.
-   *
-   * @param test the test to run
-   * @param p the protectable
-   */
-  public void runProtected(final TestCase test, Protectable p)
-  {
-    try
-      {
-        p.protect();
-      }
-    catch (AssertionFailedError e)
-      {
-        addFailure(test, e);
-      }
-    catch (ThreadDeath e)
-      {
-        throw e;
-      }
-    catch (Throwable e)
-      {
-        addError(test, e);
-      }
-  }
+    public synchronized void addListener(TestListener l) {
+        this.fListeners.add(l);
+    }
 
-  /**
-   * Starts the specified test. This counts the tests and informs
-   * interested listeners.
-   *
-   * @param test the test to start
-   */
-  public void startTest(Test test)
-  {
-    final int count = test.countTestCases();
-    synchronized (this)
-      {
-        fRunTests += count;
-      }
-    for (Iterator<TestListener> i = cloneListeners().iterator(); i.hasNext();)
-      {
-        TestListener l = i.next();
-        l.startTest(test);
-      }
-  }
+    public synchronized void removeListener(TestListener l) {
+        this.fListeners.remove(l);
+    }
 
-  /**
-   * Ends the specified test. This informs interested listeners.
-   *
-   * @param test the test to end
-   */
-  public void endTest(Test test)
-  {
-    for (Iterator<TestListener> i = cloneListeners().iterator(); i.hasNext();)
-      {
-        TestListener l = i.next();
-        l.endTest(test);
-      }
-  }
+    public synchronized int errorCount() {
+        return this.fErrors.size();
+    }
 
-  /**
-   * Adds a failure to the test result.
-   *
-   * @param test the failed test
-   * @param failure the test failure
-   */
-  public synchronized void addFailure(Test test, AssertionFailedError failure)
-  {
-    fFailures.add(new TestFailure(test, failure));
-    for (Iterator<TestListener> i = cloneListeners().iterator(); i.hasNext();)
-      {
-        TestListener l = i.next();
-        l.addFailure(test, failure);
-      }
-  }
+    public synchronized Enumeration<TestFailure> errors() {
+        return Collections.enumeration(this.fErrors);
+    }
 
-  /**
-   * Adds an error to the test result.
-   *
-   * @param test the err'ed test
-   * @param failure the test error
-   */
-  public synchronized void addError(Test test, Throwable failure)
-  {
-    fErrors.add(new TestFailure(test, failure));
-    for (Iterator<TestListener> i = cloneListeners().iterator(); i.hasNext();)
-      {
-        TestListener l = i.next();
-        l.addError(test, failure);
-      }
-  }
+    public synchronized int failureCount() {
+        return this.fFailures.size();
+    }
 
-  /**
-   * Adds a test listener.
-   *
-   * @param l the listener to add
-   */
-  public synchronized void addListener(TestListener l)
-  {
-    fListeners.add(l);
-  }
+    public synchronized Enumeration<TestFailure> failures() {
+        return Collections.enumeration(this.fFailures);
+    }
 
-  /**
-   * Removes a test listener.
-   *
-   * @param l the listener to be removed
-   */
-  public synchronized void removeListener(TestListener l)
-  {
-    fListeners.remove(l);
-  }
+    public synchronized int runCount() {
+        return this.fRunTests;
+    }
 
-  /**
-   * Returns the number of errors.
-   *
-   * @return the number of errors
-   */
-  public synchronized int errorCount()
-  {
-    return fErrors.size();
-  }
+    public synchronized boolean shouldStop() {
+        return this.fStop;
+    }
 
-  /**
-   * Returns the errors in this test result.
-   *
-   * @return the errors in this test result
-   */
-  public synchronized Enumeration<TestFailure> errors()
-  {
-    return Collections.enumeration(fErrors);
-  }
+    public synchronized void stop() {
+        this.fStop = true;
+    }
 
-  /**
-   * Returns the number of failures.
-   *
-   * @return the number of failures
-   */
-  public synchronized int failureCount()
-  {
-    return fFailures.size();
-  }
+    public synchronized boolean wasSuccessful() {
+        return this.failureCount() == 0 && this.errorCount() == 0;
+    }
 
-  /**
-   * Returns the failures in this test result.
-   *
-   * @return the failures in this test result
-   */
-  public synchronized Enumeration<TestFailure> failures()
-  {
-    return Collections.enumeration(fFailures);
-  }
-
-  /**
-   * Returns the number of tests that have been run.
-   *
-   * @return the number of tests that have been run
-   */
-  public synchronized int runCount()
-  {
-    return fRunTests;
-  }
-
-  /**
-   * Returns <code>true</code> when the test should stop, <code>false</code>
-   * otherwise.
-   *
-   * @return <code>true</code> when the test should stop, <code>false</code>
-   *         otherwise
-   */
-  public synchronized boolean shouldStop()
-  {
-    return fStop;
-  }
-
-  /**
-   * Stops the test.
-   */
-  public synchronized void stop()
-  {
-    fStop = true;
-  }
-
-  /**
-   * Returns <code>true</code> when the test had no errors and no failures,
-   * <code>false</code> otherwise.
-   *
-   * @return <code>true</code> when the test had no errors and no failures,
-   *         <code>false</code> otherwise
-   */
-  public synchronized boolean wasSuccessful()
-  {
-    return failureCount() == 0 && errorCount() == 0;
-  }
-
-  /**
-   * Returns a cloned listener list.
-   *
-   * @return a cloned listener list
-   */
-  private synchronized List<TestListener> cloneListeners()
-  {
-    List<TestListener> copy = new ArrayList<TestListener>();
-    copy.addAll(fListeners);
-    return copy;
-  }
+    private synchronized List<TestListener> cloneListeners() {
+        ArrayList<TestListener> copy2 = new ArrayList<TestListener>();
+        copy2.addAll(this.fListeners);
+        return copy2;
+    }
 }
+

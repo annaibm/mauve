@@ -1,76 +1,74 @@
-// Tags: not-a-test
 /*
-Copyright (c) 2004, 2005 Thomas Zander <zander@kde.org>
-
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to
-the Free Software Foundation, 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA. */
-
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.runner;
 
 class Tags {
     boolean gui = false;
-    String fromJDK="1.0", toJDK="99.0";
-    String fromJDBC="1.0", toJDBC="99.0";
+    String fromJDK = "1.0";
+    String toJDK = "99.0";
+    String fromJDBC = "1.0";
+    String toJDBC = "99.0";
+
     public Tags(String line) {
-        int start=0;
-        for(int i=0; i <= line.length();i++) {
-            if(i == line.length() || line.charAt(i) == ' ') {
-                if(start < i)
-                    process(line.substring(start, i));
-                start = i+1;
+        int start = 0;
+        for (int i = 0; i <= line.length(); ++i) {
+            if (i != line.length() && line.charAt(i) != ' ') continue;
+            if (start < i) {
+                this.process(line.substring(start, i));
+            }
+            start = i + 1;
+        }
+    }
+
+    public void process(String token) {
+        boolean end2 = token.startsWith("!");
+        if (end2) {
+            token = token.substring(1);
+        }
+        if (token.startsWith("jls") || token.startsWith("jdk")) {
+            String value2 = token.substring(3);
+            if (end2) {
+                this.toJDK = value2;
+            } else {
+                this.fromJDK = value2;
+            }
+        } else if (token.startsWith("jdbc")) {
+            String value3 = token.substring(4);
+            if (end2) {
+                this.toJDBC = value3;
+            } else {
+                this.fromJDBC = value3;
+            }
+        } else if (token.startsWith("gui")) {
+            this.gui = true;
+        }
+    }
+
+    public boolean isValid(double javaVersion, double JDBCVersion) throws NumberFormatException {
+        double end2;
+        double from;
+        if (javaVersion != 0.0) {
+            from = Double.parseDouble(this.fromJDK);
+            if (from > javaVersion) {
+                return false;
+            }
+            end2 = Double.parseDouble(this.toJDK);
+            if (end2 < javaVersion) {
+                return false;
             }
         }
-
-    }
-    public void process(String token) {
-//System.out.println("     +-- '"+ token +"'");
-        boolean end = token.startsWith("!");
-        if(end)
-            token = token.substring(1);
-        if(token.startsWith("jls") || token.startsWith("jdk")) {
-            String value = token.substring(3);
-            if(end)
-                toJDK = value;
-            else
-                fromJDK = value;
-        }
-        else if(token.startsWith("jdbc")) {
-            String value = token.substring(4);
-            if(end)
-                toJDBC = value;
-            else
-                fromJDBC = value;
-        }
-        else if(token.startsWith("gui"))
-            gui = true;
-    }
-    public boolean isValid(double javaVersion, double JDBCVersion) throws NumberFormatException {
-        if(javaVersion != 0d) {
-            double from = Double.parseDouble(fromJDK);
-            if(from > javaVersion)  return false;
-            double end = Double.parseDouble(toJDK);
-            if(end < javaVersion)  return false;
-        }
-        if(JDBCVersion != 0d) {
-            double from = Double.parseDouble(fromJDBC);
-            if(from < JDBCVersion)  return false;
-            double end = Double.parseDouble(toJDBC);
-            if(end > JDBCVersion)  return false;
+        if (JDBCVersion != 0.0) {
+            from = Double.parseDouble(this.fromJDBC);
+            if (from < JDBCVersion) {
+                return false;
+            }
+            end2 = Double.parseDouble(this.toJDBC);
+            if (end2 > JDBCVersion) {
+                return false;
+            }
         }
         return true;
     }
 }
+

@@ -1,86 +1,28 @@
-// Test for method java.lang.String.getClass().getDeclaredField()
-
-// Copyright (C) 2012, 2013, 2014, 2015 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.String.classInfo;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
+import java.lang.reflect.Field;
 
-import java.lang.String;
-import java.util.Map;
-import java.util.HashMap;
-
-
-
-/**
- * Test for method java.lang.String.getClass().getDeclaredField()
- */
-public class getDeclaredField implements Testlet
-{
-
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
-    public void test(TestHarness harness)
-    {
-        // following declared fields should exists
-        final String[] fieldsThatShouldExist_jdk6 = {
-            "value",
-            "offset",
-            "count",
-            "hash",
-            "serialVersionUID",
-            "serialPersistentFields",
-            "CASE_INSENSITIVE_ORDER",
-        };
-        final String[] fieldsThatShouldExist_jdk7 = {
-            "value",
-            "hash",
-            "serialVersionUID",
-            "serialPersistentFields",
-            "CASE_INSENSITIVE_ORDER",
-            "HASHING_SEED",
-            "hash32",
-        };
-
-        final String[] fieldsThatShouldExist = getJavaVersion() < 7 ? fieldsThatShouldExist_jdk6 : fieldsThatShouldExist_jdk7;
-
-        // create instance of a class String
-        final Object o = new String();
-
-        // get a runtime class of an object "o"
-        final Class c = o.getClass();
-
-        // check if all required fields really exists
+public class getDeclaredField
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        String[] fieldsThatShouldExist_jdk6 = new String[]{"value", "offset", "count", "hash", "serialVersionUID", "serialPersistentFields", "CASE_INSENSITIVE_ORDER"};
+        String[] fieldsThatShouldExist_jdk7 = new String[]{"value", "hash", "serialVersionUID", "serialPersistentFields", "CASE_INSENSITIVE_ORDER", "HASHING_SEED", "hash32"};
+        String[] fieldsThatShouldExist = this.getJavaVersion() < 7 ? fieldsThatShouldExist_jdk6 : fieldsThatShouldExist_jdk7;
+        String o = new String();
+        Class<?> c = o.getClass();
         for (String fieldThatShouldExists : fieldsThatShouldExist) {
             try {
-                java.lang.reflect.Field field = c.getDeclaredField(fieldThatShouldExists);
+                Field field = c.getDeclaredField(fieldThatShouldExists);
                 harness.check(field != null);
                 String fieldName = field.getName();
                 harness.check(fieldName != null);
-                harness.check(fieldName, fieldThatShouldExists);
+                harness.check(fieldName, (Object)fieldThatShouldExists);
             }
             catch (Exception e) {
                 harness.check(false);
@@ -88,12 +30,6 @@ public class getDeclaredField implements Testlet
         }
     }
 
-    /**
-     * Returns version of Java. The input could have the following form: "1.7.0_06"
-     * and we are interested only in "7" in this case.
-     * 
-     * @return Java version
-     */
     protected int getJavaVersion() {
         String javaVersionStr = System.getProperty("java.version");
         String[] parts = javaVersionStr.split("\\.");

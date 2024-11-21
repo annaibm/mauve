@@ -1,72 +1,28 @@
-// Test for method java.lang.NoSuchFieldError.getClass().getField()
-
-// Copyright (C) 2012, 2013, 2014 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.NoSuchFieldError.classInfo;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
+import java.lang.reflect.Field;
 
-import java.lang.NoSuchFieldError;
-import java.util.Map;
-import java.util.HashMap;
-
-
-
-/**
- * Test for method java.lang.NoSuchFieldError.getClass().getField()
- */
-public class getField implements Testlet
-{
-
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
-    public void test(TestHarness harness)
-    {
-        // following fields should exists
-        final String[] fieldsThatShouldExist_jdk6 = {
-        };
-        final String[] fieldsThatShouldExist_jdk7 = {
-        };
-
-        final String[] fieldsThatShouldExist = getJavaVersion() < 7 ? fieldsThatShouldExist_jdk6 : fieldsThatShouldExist_jdk7;
-
-        // create instance of a class NoSuchFieldError
-        final Object o = new NoSuchFieldError("NoSuchFieldError");
-
-        // get a runtime class of an object "o"
-        final Class c = o.getClass();
-
-        // check if all required fields really exists
+public class getField
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        String[] fieldsThatShouldExist_jdk6 = new String[]{};
+        String[] fieldsThatShouldExist_jdk7 = new String[]{};
+        String[] fieldsThatShouldExist = this.getJavaVersion() < 7 ? fieldsThatShouldExist_jdk6 : fieldsThatShouldExist_jdk7;
+        NoSuchFieldError o = new NoSuchFieldError("NoSuchFieldError");
+        Class<?> c = o.getClass();
         for (String fieldThatShouldExists : fieldsThatShouldExist) {
             try {
-                java.lang.reflect.Field field = c.getField(fieldThatShouldExists);
+                Field field = c.getField(fieldThatShouldExists);
                 harness.check(field != null);
                 String fieldName = field.getName();
                 harness.check(fieldName != null);
-                harness.check(fieldName, fieldThatShouldExists);
+                harness.check(fieldName, (Object)fieldThatShouldExists);
             }
             catch (Exception e) {
                 harness.check(false);
@@ -74,12 +30,6 @@ public class getField implements Testlet
         }
     }
 
-    /**
-     * Returns version of Java. The input could have the following form: "1.7.0_06"
-     * and we are interested only in "7" in this case.
-     * 
-     * @return Java version
-     */
     protected int getJavaVersion() {
         String javaVersionStr = System.getProperty("java.version");
         String[] parts = javaVersionStr.split("\\.");

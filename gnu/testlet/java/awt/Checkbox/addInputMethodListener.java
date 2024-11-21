@@ -1,88 +1,40 @@
-// addInputMethodListener.java -- 
-
-// Copyright (C) 2011 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: GUI
-// Uses: ../LocationTests
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.Checkbox;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-import gnu.testlet.java.awt.LocationTests;
+import java.awt.Checkbox;
+import java.awt.Color;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
 
-import java.awt.*;
-import java.awt.event.*;
-
-/**
-  * Check if InputMethodListener could be registered for an AWT Checkbox.
-  */
 public class addInputMethodListener
-    implements Testlet
-{
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        Checkbox checkbox = new Checkbox("xyzzy");
+        checkbox.setBackground(Color.blue);
+        InputMethodListener[] inputMethodListeners = checkbox.getInputMethodListeners();
+        harness.check(inputMethodListeners.length, 0);
+        checkbox.addInputMethodListener(new InputMethodListener(){
 
-  /**
-   * Runs the test using the specified harness. 
-   * 
-   * @param harness  the test harness (<code>null</code> not permitted).
-   */
-  public void test(TestHarness harness)
-  {
-    Checkbox checkbox = new Checkbox("xyzzy");
-    checkbox.setBackground(Color.blue);
+            @Override
+            public void caretPositionChanged(InputMethodEvent event) {
+            }
 
-    // array which will be filled by registered listeners
-    InputMethodListener[] inputMethodListeners;
+            @Override
+            public void inputMethodTextChanged(InputMethodEvent event) {
+            }
 
-    // get all registered listeners
-    inputMethodListeners = checkbox.getInputMethodListeners();
-    harness.check(inputMethodListeners.length, 0);
-
-    // register new listener
-    checkbox.addInputMethodListener(
-      new InputMethodListener() {
-
-        public void caretPositionChanged(InputMethodEvent event) 
-        {
-          // empty
-        }
-
-        public void inputMethodTextChanged(InputMethodEvent event) 
-        {
-          // empty
-        }
-
-        @Override
-        public String toString()
-        {
-          return "myInputMethodListener";
-        }
-      }
-    );
-
-    // get all registered listeners
-    inputMethodListeners = checkbox.getInputMethodListeners();
-    harness.check(inputMethodListeners.length, 1);
-
-    // check if the proper listener is used
-    harness.check(inputMethodListeners[0].toString(), "myInputMethodListener");
-  }
+            public String toString() {
+                return "myInputMethodListener";
+            }
+        });
+        inputMethodListeners = checkbox.getInputMethodListeners();
+        harness.check(inputMethodListeners.length, 1);
+        harness.check(inputMethodListeners[0].toString(), (Object)"myInputMethodListener");
+    }
 }
 

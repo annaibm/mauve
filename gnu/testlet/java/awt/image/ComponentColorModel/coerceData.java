@@ -1,167 +1,110 @@
-// Tags: JDK1.2 
-
-// Copyright (C) 2006 Francis Kung <fkung@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version. 
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.image.ComponentColorModel;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
 import java.awt.Point;
 import java.awt.color.ColorSpace;
 import java.awt.image.BandedSampleModel;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.ComponentSampleModel;
-import java.awt.image.DataBuffer;
 import java.awt.image.PixelInterleavedSampleModel;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 
-/**
- * Some checks for the coerceData method in the {@link ComponentColorModel}
- * class.
- */
-public class coerceData implements Testlet 
-{
+public class coerceData
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        harness.checkPoint("coerceData with BandedSampleModel");
+        this.runTest(harness, new BandedSampleModel(0, 50, 50, 4));
+        harness.checkPoint("coerceData with ComponentSampleModel");
+        this.runTest(harness, new ComponentSampleModel(0, 50, 50, 4, 200, new int[]{0, 1, 2, 3}));
+        harness.checkPoint("coerceData with PixelInterleavedSampleModel");
+        this.runTest(harness, new PixelInterleavedSampleModel(0, 50, 50, 4, 200, new int[]{0, 1, 2, 3}));
+    }
 
-  /**
-   * Runs the test using the specified harness.
-   * 
-   * @param harness  the test harness (<code>null</code> not permitted).
-   */
-  public void test(TestHarness harness)  
-  {
-    harness.checkPoint("coerceData with BandedSampleModel");
-    runTest(harness, new BandedSampleModel(DataBuffer.TYPE_BYTE,
-                                           50, 50, 4));
-
-    harness.checkPoint("coerceData with ComponentSampleModel");
-    runTest(harness, new ComponentSampleModel(DataBuffer.TYPE_BYTE,
-                                              50, 50, 4, 200,
-                                              new int[]{0, 1, 2, 3}));
-
-    // MultiPixelPackedSampleModel not allowed, since that sample model can
-    // only represent one-banded images.  We should check to ensure failure
-    // is consistent.
-    
-    harness.checkPoint("coerceData with PixelInterleavedSampleModel");
-    runTest(harness, new PixelInterleavedSampleModel(DataBuffer.TYPE_BYTE,
-                                                     50, 50, 4, 200,
-                                                     new int[]{0, 1, 2, 3}));
-    
-    // Combinations of a ComponentColorModel with SinglePixelPackedSampleModel
-    // are not allowed.
-  }
-  
-  private void runTest(TestHarness harness, SampleModel sample)
-  {
-    // Create and popular raster for testing
-    WritableRaster rast = Raster.createWritableRaster(sample, new Point(0,0));
-    
-    for (int x = 0; x < 50; x++)
-      for (int y = 0; y < 50; y++)
-        for (int b = 0; b < 4; b++)
-          if (b < 3)
-            rast.setSample(x, y, b, (float)x+y+b);
-          else
-            rast.setSample(x, y, b, (float)(x+y));
-    
-    ComponentColorModel ccm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
-                                                      true, false,
-                                                      ColorModel.BITMASK,
-                                                      DataBuffer.TYPE_BYTE);
-    
-    harness.check(ccm.isAlphaPremultiplied(), false);
-    
-    // Check to ensure data is not changed needlessly
-    ColorModel resultCM = ccm.coerceData(rast, false);
-    harness.check(resultCM.getClass().equals(ccm.getClass()));
-    harness.check(resultCM.isAlphaPremultiplied(), false);
-    harness.check(ccm, resultCM);
-    for (int x = 0; x < 50; x++)
-      for (int y = 0; y < 50; y++)
-        for (int b = 0; b < 4; b++)
-          {
-            if (b < 3)
-              harness.check(rast.getSample(x, y, b), (x+y+b));
-            else
-              harness.check(rast.getSampleFloat(x, y, b), (x+y));
-          }
-    
-    // Coerce data into a premultiplied state
-    resultCM = ccm.coerceData(rast, true);
-    
-    // Ensure we're still using the same color model!
-    harness.check(resultCM.getClass().equals(ccm.getClass()));
-    harness.check(resultCM.isAlphaPremultiplied(), true);
-    harness.check(! (ccm == resultCM));     // object is cloned...
-    
-    // Check values
-    for (int x = 0; x < 50; x++)
-      for (int y = 0; y < 50; y++)
-        for (int b = 0; b < 4; b++)
-          {
-            if (b < 3)
-              harness.check(rast.getSample(x, y, b),
-                            Math.round((x+y+b)*((x+y)/(float)255)));
-            else
-              harness.check(rast.getSampleFloat(x, y, b), x+y);
-          }
-
-    // Make a copy of the raster, to compare against for the next test
-    WritableRaster rast2 = Raster.createWritableRaster(sample, new Point(0,0));
-    for (int x = 0; x < 50; x++)
-      for (int y = 0; y < 50; y++)
-        for (int b = 0; b < 4; b++)
-          rast2.setSample(x, y, b,
-                          rast.getSample(x, y, b));
-    
-    // And do the reverse.. un-multiply
-    harness.check(resultCM.isAlphaPremultiplied(), true);
-    ColorModel resultCM2 = resultCM.coerceData(rast, false);
-    harness.check(resultCM2.getClass().equals(resultCM.getClass()));
-    harness.check(resultCM2.isAlphaPremultiplied(), false);
-    harness.check(! (resultCM == resultCM2));
-    
-    // Check values
-    for (int x = 0; x < 50; x++)
-      for (int y = 0; y < 50; y++)
-        for (int b = 0; b < 4; b++)
-          {
-              if (b < 3) 
-                {
-                  // Do some trickery to work around differing floating-point
-                  // precision (a division equalling 0.49999 will round up or
-                  // down unpredictably)
-                  float expected = rast2.getSample(x, y, b)/((x+y)/((float)255));
-                  if (expected - (int)expected > 0.49
-                      && expected - (int)expected < 0.51)
-                    harness.check(rast.getSample(x, y, b) == (int)expected
-                                  || rast.getSample(x, y, b) == (int)expected + 1);
-                  else
-                    harness.check(rast.getSample(x, y, b),Math.round(expected));
-              }
-              else
-                harness.check(rast.getSampleFloat(x, y, b), (x+y));
-          }
-  }
+    private void runTest(TestHarness harness, SampleModel sample) {
+        int b;
+        int y;
+        int x;
+        WritableRaster rast = Raster.createWritableRaster(sample, new Point(0, 0));
+        for (int x2 = 0; x2 < 50; ++x2) {
+            for (int y2 = 0; y2 < 50; ++y2) {
+                for (int b2 = 0; b2 < 4; ++b2) {
+                    if (b2 < 3) {
+                        rast.setSample(x2, y2, b2, (float)x2 + (float)y2 + (float)b2);
+                        continue;
+                    }
+                    rast.setSample(x2, y2, b2, (float)(x2 + y2));
+                }
+            }
+        }
+        ComponentColorModel ccm = new ComponentColorModel(ColorSpace.getInstance(1000), true, false, 2, 0);
+        harness.check(ccm.isAlphaPremultiplied(), false);
+        ColorModel resultCM = ccm.coerceData(rast, false);
+        harness.check(resultCM.getClass().equals(ccm.getClass()));
+        harness.check(resultCM.isAlphaPremultiplied(), false);
+        harness.check(ccm, resultCM);
+        for (x = 0; x < 50; ++x) {
+            for (y = 0; y < 50; ++y) {
+                for (b = 0; b < 4; ++b) {
+                    if (b < 3) {
+                        harness.check(rast.getSample(x, y, b), x + y + b);
+                        continue;
+                    }
+                    harness.check(rast.getSampleFloat(x, y, b), (double)(x + y));
+                }
+            }
+        }
+        resultCM = ccm.coerceData(rast, true);
+        harness.check(resultCM.getClass().equals(ccm.getClass()));
+        harness.check(resultCM.isAlphaPremultiplied(), true);
+        harness.check(ccm != resultCM);
+        for (x = 0; x < 50; ++x) {
+            for (y = 0; y < 50; ++y) {
+                for (b = 0; b < 4; ++b) {
+                    if (b < 3) {
+                        harness.check(rast.getSample(x, y, b), Math.round((float)(x + y + b) * ((float)(x + y) / 255.0f)));
+                        continue;
+                    }
+                    harness.check(rast.getSampleFloat(x, y, b), (double)(x + y));
+                }
+            }
+        }
+        WritableRaster rast2 = Raster.createWritableRaster(sample, new Point(0, 0));
+        for (int x3 = 0; x3 < 50; ++x3) {
+            for (int y3 = 0; y3 < 50; ++y3) {
+                for (int b3 = 0; b3 < 4; ++b3) {
+                    rast2.setSample(x3, y3, b3, rast.getSample(x3, y3, b3));
+                }
+            }
+        }
+        harness.check(resultCM.isAlphaPremultiplied(), true);
+        ColorModel resultCM2 = resultCM.coerceData(rast, false);
+        harness.check(resultCM2.getClass().equals(resultCM.getClass()));
+        harness.check(resultCM2.isAlphaPremultiplied(), false);
+        harness.check(resultCM != resultCM2);
+        for (int x4 = 0; x4 < 50; ++x4) {
+            for (int y4 = 0; y4 < 50; ++y4) {
+                for (int b4 = 0; b4 < 4; ++b4) {
+                    if (b4 < 3) {
+                        float expected = (float)rast2.getSample(x4, y4, b4) / ((float)(x4 + y4) / 255.0f);
+                        if ((double)(expected - (float)((int)expected)) > 0.49 && (double)(expected - (float)((int)expected)) < 0.51) {
+                            harness.check(rast.getSample(x4, y4, b4) == (int)expected || rast.getSample(x4, y4, b4) == (int)expected + 1);
+                            continue;
+                        }
+                        harness.check(rast.getSample(x4, y4, b4), Math.round(expected));
+                        continue;
+                    }
+                    harness.check(rast.getSampleFloat(x4, y4, b4), (double)(x4 + y4));
+                }
+            }
+        }
+    }
 }
+

@@ -1,88 +1,49 @@
-// Tags: JDK1.2
-
-// Copyright (C) 2003 Sascha Brawer <brawer@dandelis.ch>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.geom.QuadCurve2D.Double;
 
-import gnu.testlet.Testlet;
 import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
 import java.awt.geom.QuadCurve2D;
 
-
-/**
- * Checks whether the QuadCurve2D.Double constructors works correctly.
- *
- * @author Sascha Brawer (brawer@dandelis.ch)
- */
 public class Double
-  implements Testlet
-{
-  private TestHarness h;
+implements Testlet {
+    private TestHarness h;
 
-  public void test(TestHarness harness)
-  {
-    this.h = harness;
-    testZeroArgs();
-    testSixArgs();
-  }
+    @Override
+    public void test(TestHarness harness) {
+        this.h = harness;
+        this.testZeroArgs();
+        this.testSixArgs();
+    }
 
+    public void testZeroArgs() {
+        this.h.checkPoint("noArgs");
+        QuadCurve2D.Double curve = new QuadCurve2D.Double();
+        this.h.check(((QuadCurve2D)curve).getX1(), 0.0);
+        this.h.check(((QuadCurve2D)curve).getY1(), 0.0);
+        this.h.check(((QuadCurve2D)curve).getCtrlX(), 0.0);
+        this.h.check(((QuadCurve2D)curve).getCtrlY(), 0.0);
+        this.h.check(((QuadCurve2D)curve).getX2(), 0.0);
+        this.h.check(((QuadCurve2D)curve).getY2(), 0.0);
+    }
 
-  /**
-   * Checks whether the zero-argument constructor works as specified.
-   */
-  public void testZeroArgs()
-  {
-    QuadCurve2D curve;
-
-    h.checkPoint("noArgs");
-    curve = new QuadCurve2D.Double();
-    h.check(curve.getX1(), 0);     // 1
-    h.check(curve.getY1(), 0);     // 2
-    h.check(curve.getCtrlX(), 0);  // 3
-    h.check(curve.getCtrlY(), 0);  // 4
-    h.check(curve.getX2(), 0);     // 5
-    h.check(curve.getY2(), 0);     // 6
-  }
-
-
-  /**
-   * Checks whether the six-argument constructor works as specified.
-   */
-  public void testSixArgs()
-  {
-    QuadCurve2D.Double curve;
-
-    h.checkPoint("sixArgs");
-    curve = new QuadCurve2D.Double(1e1, 2e2, 3e3, 4e4, 5e5, 6e6);
-    h.check(curve.getX1(), 1e1);     // 1
-    h.check(curve.getY1(), 2e2);     // 2
-    h.check(curve.getCtrlX(), 3e3);  // 3
-    h.check(curve.getCtrlY(), 4e4);  // 4
-    h.check(curve.getX2(), 5e5);     // 5
-    h.check(curve.getY2(), 6e6);     // 6
-
-    h.check(curve.x1, 1e1);          // 7
-    h.check(curve.y1, 2e2);          // 8
-    h.check(curve.ctrlx, 3e3);       // 9
-    h.check(curve.ctrly, 4e4);       // 10
-    h.check(curve.x2, 5e5);          // 11
-    h.check(curve.y2, 6e6);          // 12
-  }
+    public void testSixArgs() {
+        this.h.checkPoint("sixArgs");
+        QuadCurve2D.Double curve = new QuadCurve2D.Double(10.0, 200.0, 3000.0, 40000.0, 500000.0, 6000000.0);
+        this.h.check(curve.getX1(), 10.0);
+        this.h.check(curve.getY1(), 200.0);
+        this.h.check(curve.getCtrlX(), 3000.0);
+        this.h.check(curve.getCtrlY(), 40000.0);
+        this.h.check(curve.getX2(), 500000.0);
+        this.h.check(curve.getY2(), 6000000.0);
+        this.h.check(curve.x1, 10.0);
+        this.h.check(curve.y1, 200.0);
+        this.h.check(curve.ctrlx, 3000.0);
+        this.h.check(curve.ctrly, 40000.0);
+        this.h.check(curve.x2, 500000.0);
+        this.h.check(curve.y2, 6000000.0);
+    }
 }
+

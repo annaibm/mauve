@@ -1,44 +1,20 @@
-/*************************************************************************
-/* Test.java -- Test java.text.ParseException
 /*
-/* Copyright (c) 1998 Free Software Foundation, Inc.
-/* Written by Aaron M. Renn (arenn@urbanophile.com)
-/*
-/* This program is free software; you can redistribute it and/or modify
-/* it under the terms of the GNU General Public License as published 
-/* by the Free Software Foundation, either version 2 of the License, or
-/* (at your option) any later version.
-/*
-/* This program is distributed in the hope that it will be useful, but
-/* WITHOUT ANY WARRANTY; without even the implied warranty of
-/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/* GNU General Public License for more details.
-/*
-/* You should have received a copy of the GNU General Public License
-/* along with this program; if not, write to the Free Software Foundation
-/* Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307 USA
-/*************************************************************************/
-
-// Tags: JDK1.1
-
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.text.ParseException;
 
-import gnu.testlet.Testlet;
 import gnu.testlet.TestHarness;
-import java.text.*;
+import gnu.testlet.Testlet;
+import java.text.ParseException;
 
-public class Test implements Testlet
-{
-
-public void 
-test(TestHarness harness)
-{
-  ParseException pe = new ParseException("My Parse Exception", 13);
-
-  harness.check(pe.getErrorOffset(), 13, "getErrorOffset");
-  harness.debug("Dumping exception info.  This is NOT an error");
-  harness.debug(pe);
+public class Test
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        ParseException pe = new ParseException("My Parse Exception", 13);
+        harness.check(pe.getErrorOffset(), 13, "getErrorOffset");
+        harness.debug("Dumping exception info.  This is NOT an error");
+        harness.debug(pe);
+    }
 }
-
-} // class Test
 

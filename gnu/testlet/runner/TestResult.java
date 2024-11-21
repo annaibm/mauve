@@ -1,121 +1,65 @@
-// Tags: not-a-test
-// Copyright (C) 2004 by Object Refinery Limited
-// Written by David Gilbert (david.gilbert@object-refinery.com)
-// Modified by Fabien DUMINY (fduminy@jnode.org)
-
-// This file is part of Mauve Reporter.
-
-// Mauve Reporter is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-
-// Mauve Reporter is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve Reporter; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.runner;
 
-import java.util.*;
-import java.io.*;
+import gnu.testlet.runner.CheckResult;
+import gnu.testlet.runner.Result;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-/**
- * Represents the result of running one test.  A test usually contains multiple
- * checks and corresponds to a single method in the API being tested.  There
- * are exceptions of course.
- */
-public class TestResult implements Comparable, Result  {
-
-    /** The name of the test (usually the method name). */
+public class TestResult
+implements Comparable,
+Result {
     private String name;
-
-    /** A list containing results for each of the checks applied by the test. */
     private List checkResults;
-
     private String error = null;
 
-    /**
-     * Creates a new result, initially empty.
-     * @param name
-     */
-    TestResult(String name) {
-        this.name = name;
-        checkResults = new ArrayList();
+    TestResult(String name2) {
+        this.name = name2;
+        this.checkResults = new ArrayList();
     }
 
-    /**
-     * Returns the test name (this is most often the name of the method
-     * being tested).
-     *
-     * @return The test name.
-     */
+    @Override
     public String getName() {
-        return name;
+        return this.name;
     }
 
-    /**
-     * Sets the test name.
-     *
-     * @param name  the name.
-     */
-    void setName(String name) {
-        this.name = name;
+    void setName(String name2) {
+        this.name = name2;
     }
 
-    /**
-     * Adds a check result.
-     *
-     * @param result  the check result.
-     */
     void add(CheckResult result) {
-        checkResults.add(result);
+        this.checkResults.add(result);
     }
 
-    /**
-     * Returns an iterator that provides access to all the check results.
-     *
-     * @return An iterator.
-     */
     public Iterator getCheckIterator() {
-        return checkResults.iterator();
+        return this.checkResults.iterator();
     }
 
-    /**
-     * Returns the total number of checks performed by this test.
-     *
-     * @return The check count.
-     */
     public int getCheckCount() {
-        return checkResults.size();
+        return this.checkResults.size();
     }
 
-    /**
-     * Returns the number of checks with the specified status.
-     *
-     * @param passed  the check status.
-     *
-     * @return The number of checks passed or failed.
-     */
     public int getCheckCount(boolean passed) {
         int result = 0;
-        Iterator iterator = checkResults.iterator();
-        while (iterator.hasNext()) {
-            CheckResult check = (CheckResult) iterator.next();
-            if (check.getPassed() == passed)
-                result++;
+        for (CheckResult check2 : this.checkResults) {
+            if (check2.getPassed() != passed) continue;
+            ++result;
         }
-        if(!passed && error != null)
-            result++; // count stacktrace as a failure
+        if (!passed && this.error != null) {
+            ++result;
+        }
         return result;
     }
 
     public int compareTo(Object obj) {
-        TestResult that = (TestResult) obj;
-        return getName().compareTo(that.getName());
+        TestResult that = (TestResult)obj;
+        return this.getName().compareTo(that.getName());
     }
 
     void failed(Throwable t) {
@@ -125,20 +69,23 @@ public class TestResult implements Comparable, Result  {
         w.close();
         try {
             out.close();
-            error = out.toString();
-        } catch(IOException e) { // this should never happen..
+            this.error = out.toString();
+        }
+        catch (IOException iOException) {
+            // empty catch block
         }
     }
 
     public boolean isFailed() {
-        return error != null;
+        return this.error != null;
     }
 
     public String getFailedMessage() {
-        return error;
+        return this.error;
     }
 
     public void setFailedMessage(String error) {
-        this.error = error;        
+        this.error = error;
     }
 }
+

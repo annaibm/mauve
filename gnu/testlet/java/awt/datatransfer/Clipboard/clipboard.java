@@ -1,114 +1,88 @@
-// Tags: JDK1.1
-
-// Copyright (C) 2005 Mark J. Wielaard <mark@klomp.org>
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version. 
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-// Boston, MA 02110-1301 USA.
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.datatransfer.Clipboard;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
-import java.awt.datatransfer.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 
 public class clipboard
-  extends Clipboard
-  implements Testlet, Transferable, ClipboardOwner
-{
+extends Clipboard
+implements Testlet,
+Transferable,
+ClipboardOwner {
+    private boolean lostOwnerCalled = false;
+    private Clipboard lostOwnerClipboard = null;
+    private Transferable lostOwnerTransferable = null;
 
-  public clipboard()
-  {
-    super("mauve");
-  }
+    public clipboard() {
+        super("mauve");
+    }
 
-  private clipboard(String name)
-  {
-    super(name);
-  }
+    private clipboard(String name2) {
+        super(name2);
+    }
 
-  public void test(TestHarness harness)      
-  {
-    harness.check(this.getName(), "mauve");
-    harness.check(this.contents, null);
-    harness.check(this.getContents(null), this.contents);
-    harness.check(this.owner, null);
+    @Override
+    public void test(TestHarness harness) {
+        harness.check(this.getName(), (Object)"mauve");
+        harness.check(this.contents, null);
+        harness.check(this.getContents(null), this.contents);
+        harness.check(this.owner, null);
+        this.setContents(this, this);
+        harness.check(this.contents, this);
+        harness.check(this.getContents(null), this.contents);
+        harness.check(this.owner, this);
+        harness.check(this.lostOwnerCalled, false);
+        clipboard cp2 = new clipboard("dummy2");
+        this.setContents(cp2, cp2);
+        harness.check(this.lostOwnerCalled, true);
+        harness.check(this.contents, cp2);
+        harness.check(this.getContents(null), this.contents);
+        harness.check(this.owner, cp2);
+        harness.check(this.lostOwnerClipboard, this);
+        harness.check(this.lostOwnerTransferable, this);
+        this.lostOwnerCalled = false;
+        this.setContents(this, this);
+        harness.check(this.lostOwnerCalled, false);
+        harness.check(this.contents, this);
+        harness.check(this.getContents(null), this.contents);
+        harness.check(this.owner, this);
+        this.setContents(cp2, this);
+        harness.check(this.lostOwnerCalled, false);
+        harness.check(this.contents, cp2);
+        harness.check(this.getContents(null), this.contents);
+        harness.check(this.owner, this);
+    }
 
-    // Claim ownership of the clipboard.
-    this.setContents(this, this);
-    harness.check(this.contents, this);
-    harness.check(this.getContents(null), this.contents);
-    harness.check(this.owner, this);
-    harness.check(lostOwnerCalled, false);
+    @Override
+    public DataFlavor[] getTransferDataFlavors() {
+        return new DataFlavor[0];
+    }
 
-    // Make someone else the owner.
-    clipboard cp2 = new clipboard("dummy2");
-    this.setContents(cp2, cp2);
-    harness.check(lostOwnerCalled, true);
-    harness.check(this.contents, cp2);
-    harness.check(this.getContents(null), this.contents);
-    harness.check(this.owner, cp2);
-    harness.check(lostOwnerClipboard, this);
-    harness.check(lostOwnerTransferable, this);
-  
-    // Set owner/content back to this.
-    lostOwnerCalled = false;
-    this.setContents(this, this);
-    harness.check(lostOwnerCalled, false);
-    harness.check(this.contents, this);
-    harness.check(this.getContents(null), this.contents);
-    harness.check(this.owner, this);
+    @Override
+    public boolean isDataFlavorSupported(DataFlavor flavor2) {
+        return false;
+    }
 
-    // Keep outself as owner, but change the content.
-    this.setContents(cp2, this);
-    harness.check(lostOwnerCalled, false);
-    harness.check(this.contents, cp2);
-    harness.check(this.getContents(null), this.contents);
-    harness.check(this.owner, this);
-  }
+    @Override
+    public Object getTransferData(DataFlavor flavor2) {
+        return null;
+    }
 
-  // Transferable 
-  public DataFlavor[] getTransferDataFlavors()
-  {
-    return new DataFlavor[0];
-  }
+    @Override
+    public void lostOwnership(Clipboard clipboard2, Transferable contents) {
+        this.lostOwnerCalled = true;
+        this.lostOwnerClipboard = clipboard2;
+        this.lostOwnerTransferable = contents;
+    }
 
-  public boolean isDataFlavorSupported(DataFlavor flavor)
-  {
-    return false;
-  }
-
-  public Object getTransferData(DataFlavor flavor)
-  {
-    return null;
-  }
-
-  // ClipboardOwner
-  private boolean lostOwnerCalled = false;
-  private Clipboard lostOwnerClipboard = null;
-  private Transferable lostOwnerTransferable = null;
-  public void lostOwnership(Clipboard clipboard, Transferable contents)
-  {
-    lostOwnerCalled = true;
-    lostOwnerClipboard = clipboard;
-    lostOwnerTransferable = contents;
-  }
-
-  // For debug readability
-  public String toString()
-  {
-    return "[name=" + getName() + "]";
-  }
+    public String toString() {
+        return "[name=" + this.getName() + "]";
+    }
 }
+

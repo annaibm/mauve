@@ -1,174 +1,110 @@
-// Tags: JDK1.2
-
-// Copyright (C) 2004, 2005 Audrius Meskauskas <audriusa@bluewin.ch>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.
-
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.util.TreeSet;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Basic TreeSet test.
- * @author Audrius Meskauskas (AudriusA@Bluewin.ch)
- */
-public class basic implements Testlet
-{
-  TreeSet set = new TreeSet();
+public class basic
+implements Testlet {
+    TreeSet set = new TreeSet();
 
-  void checkContent(Set forSet, String content, TestHarness h, String note)
-  {
-    StringBuffer b = new StringBuffer();
-    Iterator iter = forSet.iterator();
-    while (iter.hasNext())
-      {
-        b.append(iter.next());
-      }
+    void checkContent(Set forSet, String content, TestHarness h, String note) {
+        StringBuffer b = new StringBuffer();
+        Iterator iter2 = forSet.iterator();
+        while (iter2.hasNext()) {
+            b.append(iter2.next());
+        }
+        h.check(b.toString(), content, note);
+    }
 
-    h.check(b.toString(), content, note);
-  }
+    void checkContent(String content, TestHarness h, String note) {
+        this.checkContent(this.set, content, h, note);
+    }
 
-  void checkContent(String content, TestHarness h, String note)
-  {
-    checkContent(set, content, h, note);
-  }
+    TreeSet getSet(String content) {
+        TreeSet<String> t = new TreeSet<String>();
+        for (int i = 0; i < content.length(); ++i) {
+            t.add("" + content.charAt(i));
+        }
+        return t;
+    }
 
-  TreeSet getSet(String content)
-  {
-    TreeSet t = new TreeSet();
+    public void test_clone(TestHarness harness) {
+        TreeSet t = this.getSet("abcdef");
+        this.set = (TreeSet)t.clone();
+        this.checkContent("abcdef", harness, "clone");
+    }
 
-    for (int i = 0; i < content.length(); i++)
-      {
-        t.add("" + content.charAt(i));
-      }
+    public void test_add(TestHarness harness) {
+        this.set = this.getSet("bcdabcddabbccaabbccadbcdababbcdabcxabcxccda");
+        this.checkContent("abcdx", harness, "add");
+        harness.check(this.set.size(), 5, "size");
+        harness.check(this.set.first(), "a", "first");
+        harness.check(this.set.last(), "x", "last");
+        harness.check(this.set.comparator() == null, "null comparator expected");
+    }
 
-    return t;
-  }
+    public void test_addAll(TestHarness harness) {
+        this.set = this.getSet("dac");
+        TreeSet t = this.getSet("xay");
+        this.set.addAll(t);
+        this.checkContent("acdxy", harness, "addAll");
+    }
 
-  /* Test clone(). */
-  public void test_clone(TestHarness harness)
-  {
-    TreeSet t = getSet("abcdef");
-    set = (TreeSet) t.clone();
-    checkContent("abcdef", harness, "clone");
-  }
+    public void test_contains(TestHarness harness) {
+        String t = "abcdefghij";
+        this.set = this.getSet(t);
+        for (int i = 0; i < t.length(); ++i) {
+            String s = t.substring(i, i + 1);
+            harness.check(this.set.contains(s), "must contain '" + s + "'");
+        }
+        harness.check(!this.set.contains("aa"), "must not contain 'aa'");
+    }
 
-  /* Test add(Object). */
-  public void test_add(TestHarness harness)
-  {
-    set = getSet("bcdabcddabbccaabbccadbcdababbcdabcxabcxccda");
-    checkContent("abcdx", harness, "add");
-    harness.check(set.size(), 5, "size");
-    harness.check(set.first(), "a", "first");
-    harness.check(set.last(), "x", "last");
-    harness.check(set.comparator() == null, "null comparator expected");
-  }
+    public void test_remove(TestHarness harness) {
+        String t = "abcdefghij";
+        this.set = this.getSet(t);
+        for (int i = 0; i < t.length(); ++i) {
+            String s = t.substring(i, i + 1);
+            this.set.remove(s);
+            if (!this.set.contains(s)) continue;
+            harness.fail("Contains '" + s + "' after removing. ");
+        }
+        harness.check(this.set.size(), 0, "non zero size after removing all elements");
+        harness.check(this.set.isEmpty(), "non empty when it should be");
+    }
 
-  /* Test addAll(Collection). */
-  public void test_addAll(TestHarness harness)
-  {
-    set = getSet("dac");
+    public void test_clear(TestHarness harness) {
+        this.set = this.getSet("a");
+        this.set.clear();
+        harness.check(this.set.size(), 0, "clear");
+    }
 
-    TreeSet t = getSet("xay");
+    public void test_subsets(TestHarness harness) {
+        String content = "abcdefghijklmn";
+        this.set = this.getSet(content);
+        for (int i = 0; i < content.length() - 1; ++i) {
+            String s = content.substring(i, i + 1);
+            this.checkContent(this.set.headSet(s), content.substring(0, i), harness, "headSet");
+            this.checkContent(this.set.tailSet(s), content.substring(i), harness, "tailSet");
+            this.checkContent(this.set.subSet(s, "n"), content.substring(i, content.length() - 1), harness, "subset");
+        }
+    }
 
-    set.addAll(t);
-
-    checkContent("acdxy", harness, "addAll");
-  }
-
-  /* Test contains(Object). */
-  public void test_contains(TestHarness harness)
-  {
-    String t = "abcdefghij";
-    set = getSet(t);
-
-    for (int i = 0; i < t.length(); i++)
-      {
-        String s = t.substring(i, i + 1);
-        harness.check(set.contains(s), "must contain '" + s + "'");
-      }
-
-    harness.check(!set.contains("aa"), "must not contain 'aa'");
-  }
-
-  /* Test remove(Object). */
-  public void test_remove(TestHarness harness)
-  {
-    String t = "abcdefghij";
-    set = getSet(t);
-
-    for (int i = 0; i < t.length(); i++)
-      {
-        String s = t.substring(i, i + 1);
-        set.remove(s);
-
-        if (set.contains(s))
-          harness.fail("Contains '" + s + "' after removing. ");
-      }
-
-    harness.check(set.size(), 0, "non zero size after removing all elements");
-
-    harness.check(set.isEmpty(), "non empty when it should be");
-  }
-
-  /* Test clear(). */
-  public void test_clear(TestHarness harness)
-  {
-    set = getSet("a");
-    set.clear();
-    harness.check(set.size(), 0, "clear");
-  }
-
-  /* Test headSet(Object). */
-  public void test_subsets(TestHarness harness)
-  {
-    String content = "abcdefghijklmn";
-
-    set = getSet(content);
-
-    for (int i = 0; i < content.length() - 1; i++)
-      {
-        String s = content.substring(i, i + 1);
-        checkContent(set.headSet(s), content.substring(0, i), harness, "headSet");
-
-        checkContent(set.tailSet(s), content.substring(i), harness, "tailSet");
-
-        checkContent(set.subSet(s, "n"),
-                     content.substring(i, content.length() - 1), harness,
-                     "subset"
-                    );
-      }
-  }
-
-  public void test(TestHarness harness)
-  {
-    test_clone(harness);
-    test_add(harness);
-    test_addAll(harness);
-    test_contains(harness);
-    test_remove(harness);
-    test_clear(harness);
-    test_subsets(harness);
-  }
+    @Override
+    public void test(TestHarness harness) {
+        this.test_clone(harness);
+        this.test_add(harness);
+        this.test_addAll(harness);
+        this.test_contains(harness);
+        this.test_remove(harness);
+        this.test_clear(harness);
+        this.test_subsets(harness);
+    }
 }
+

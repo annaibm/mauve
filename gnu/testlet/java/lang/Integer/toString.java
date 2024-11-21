@@ -1,53 +1,29 @@
-// Test of Integer methods toString() and toString(integer).
-
-// Copyright 2012 Red Hat, Inc.
-// Written by Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software Foundation
-// Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307 USA
-
-// Tags: JDK1.4
-// Tags: CompileOptions: -source 1.4
-
-package gnu.testlet.java.lang.Integer;
-import gnu.testlet.Testlet;
-import gnu.testlet.TestHarness;
-
-/**
- * Test of Integer methods toString() and toString(integer).
+/*
+ * Decompiled with CFR 0.152.
  */
-public class toString implements Testlet
-{
-  public void test (TestHarness harness)
-  {
-    // test of method Integer.toString()
-    harness.check(new Integer(0).toString(), "0");
-    harness.check(new Integer(-1).toString(), "-1");
-    harness.check(new Integer(1).toString(), "1");
-    harness.check(new Integer(127).toString(), "127");
-    harness.check(new Integer(-128).toString(), "-128");
-    harness.check(new Integer(Integer.MAX_VALUE).toString(), "2147483647");
-    harness.check(new Integer(Integer.MIN_VALUE).toString(), "-2147483648");
+package gnu.testlet.java.lang.Integer;
 
-    // test of static method Integer.toString(Integer)
-    harness.check(Integer.toString(0), "0");
-    harness.check(Integer.toString(-1), "-1");
-    harness.check(Integer.toString(1), "1");
-    harness.check(Integer.toString(127), "127");
-    harness.check(Integer.toString(-128), "-128");
-    harness.check(Integer.toString(Integer.MAX_VALUE), "2147483647");
-    harness.check(Integer.toString(Integer.MIN_VALUE), "-2147483648");
-  }
+import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
+
+public class toString
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        harness.check(new Integer(0).toString(), (Object)"0");
+        harness.check(new Integer(-1).toString(), (Object)"-1");
+        harness.check(new Integer(1).toString(), (Object)"1");
+        harness.check(new Integer(127).toString(), (Object)"127");
+        harness.check(new Integer(-128).toString(), (Object)"-128");
+        harness.check(new Integer(Integer.MAX_VALUE).toString(), (Object)"2147483647");
+        harness.check(new Integer(Integer.MIN_VALUE).toString(), (Object)"-2147483648");
+        harness.check(Integer.toString(0), (Object)"0");
+        harness.check(Integer.toString(-1), (Object)"-1");
+        harness.check(Integer.toString(1), (Object)"1");
+        harness.check(Integer.toString(127), (Object)"127");
+        harness.check(Integer.toString(-128), (Object)"-128");
+        harness.check(Integer.toString(Integer.MAX_VALUE), (Object)"2147483647");
+        harness.check(Integer.toString(Integer.MIN_VALUE), (Object)"-2147483648");
+    }
 }
 

@@ -1,72 +1,45 @@
-// Test for method java.lang.EnumConstantNotPresentException.getClass().getAnnotation()
-
-// Copyright (C) 2012, 2013 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.EnumConstantNotPresentException.classInfo;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import java.lang.EnumConstantNotPresentException;
+public class getAnnotation
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        EnumConstantNotPresentException o = new EnumConstantNotPresentException(X.class, "EnumConstantNotPresentException");
+        Class<?> c = o.getClass();
+        Annotation annotation = c.getAnnotation(Annotation.class);
+        harness.check(annotation == null);
+        annotation = c.getAnnotation(Documented.class);
+        harness.check(annotation == null);
+        annotation = c.getAnnotation(Inherited.class);
+        harness.check(annotation == null);
+        annotation = c.getAnnotation(Retention.class);
+        harness.check(annotation == null);
+        annotation = c.getAnnotation(Target.class);
+        harness.check(annotation == null);
+        annotation = c.getAnnotation(Deprecated.class);
+        harness.check(annotation == null);
+        annotation = c.getAnnotation(Override.class);
+        harness.check(annotation == null);
+        annotation = c.getAnnotation(SuppressWarnings.class);
+        harness.check(annotation == null);
+    }
 
+    static enum X {
+        ONE,
+        TWO,
+        THREE;
 
-
-/**
- * Test for method java.lang.EnumConstantNotPresentException.getClass().getAnnotation()
- */
-public class getAnnotation implements Testlet
-{
-    enum X {ONE, TWO, THREE};
-
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
-    public void test(TestHarness harness)
-    {
-        // create instance of a class EnumConstantNotPresentException
-        final Object o = new EnumConstantNotPresentException(X.class, "EnumConstantNotPresentException");
-
-        // get a runtime class of an object "o"
-        final Class c = o.getClass();
-
-        java.lang.annotation.Annotation annotation;
-        annotation = c.getAnnotation(java.lang.annotation.Annotation.class);
-        harness.check(annotation == null);
-        annotation = c.getAnnotation(java.lang.annotation.Documented.class);
-        harness.check(annotation == null);
-        annotation = c.getAnnotation(java.lang.annotation.Inherited.class);
-        harness.check(annotation == null);
-        annotation = c.getAnnotation(java.lang.annotation.Retention.class);
-        harness.check(annotation == null);
-        annotation = c.getAnnotation(java.lang.annotation.Target.class);
-        harness.check(annotation == null);
-        annotation = c.getAnnotation(java.lang.Deprecated.class);
-        harness.check(annotation == null);
-        annotation = c.getAnnotation(java.lang.Override.class);
-        harness.check(annotation == null);
-        annotation = c.getAnnotation(java.lang.SuppressWarnings.class);
-        harness.check(annotation == null);
     }
 }
 

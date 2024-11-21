@@ -1,99 +1,63 @@
-// $Id$
-//
-// Copyright (C) 2003, Free Software Foundation, Inc.
-//
-// This file is part of Mauve.
-//
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-//
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.
-//
-// Tags: JDK1.4
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.security.Security;
-import gnu.testlet.Testlet;
+
 import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
 import java.security.Provider;
 import java.security.Security;
-import java.util.Set;
 import java.util.Iterator;
+import java.util.Set;
 
-/**
- * Test of <code>getAlgorithms(String)</code> method in {@link Security}.
- *
- * @version $Revision$
- * @see Security#getAlgorithms(String)
- */
-public class getAlgorithms extends Provider implements Testlet
-{
-  public getAlgorithms()
-  {
-    super("getAlgorithms", 1.0, "");
+public class getAlgorithms
+extends Provider
+implements Testlet {
+    public getAlgorithms() {
+        super("getAlgorithms", 1.0, "");
+        this.put("Coffee.Foo", "whatever");
+        this.put("Tea.Bar", "whatever");
+        this.put("Tea.Bar ImplementedIn", "Vapourware");
+        this.put("Tea.Bar MinCapacity", "100");
+        this.put("Tea.Baz", "whatever");
+        this.put("Tea.Baz ImplementedIn", "Vapourware");
+        this.put("Tea.Baz MinCapacity", "100");
+    }
 
-    put("Coffee.Foo", "whatever");
+    @Override
+    public void test(TestHarness harness) {
+        harness.checkPoint("getAlgorithms");
+        Set<String> set2 = null;
+        Security.addProvider(this);
+        String signature = "getAlgorithms(\"foo\")";
+        set2 = Security.getAlgorithms("foo");
+        harness.check(set2 != null && set2.size() == 0, signature);
+        signature = "getAlgorithms(\"Coffee\")";
+        set2 = Security.getAlgorithms("Coffee");
+        String key = "Foo";
+        if (set2 != null && set2.size() >= 1) {
+            harness.check(getAlgorithms.containsKey(set2, key), signature + ": " + key);
+        } else {
+            harness.check(false, signature + ": set.size() < 1");
+        }
+        signature = "getAlgorithms(\"Tea\")";
+        set2 = Security.getAlgorithms("Tea");
+        if (set2 != null && set2.size() >= 2) {
+            key = "Bar";
+            harness.check(getAlgorithms.containsKey(set2, key), signature + ": " + key);
+            key = "Baz";
+            harness.check(getAlgorithms.containsKey(set2, key), signature + ": " + key);
+        } else {
+            harness.check(false, signature + ": set.size() < 2");
+        }
+    }
 
-    put("Tea.Bar", "whatever");
-    put("Tea.Bar ImplementedIn", "Vapourware");
-    put("Tea.Bar MinCapacity", "100");
-
-    put("Tea.Baz", "whatever");
-    put("Tea.Baz ImplementedIn", "Vapourware");
-    put("Tea.Baz MinCapacity", "100");
-  }
-
-  public void test (TestHarness harness)
-  {
-    harness.checkPoint ("getAlgorithms");
-
-    String signature, key;
-    Set set = null;
-
-    Security.addProvider(this);
-
-    signature = "getAlgorithms(\"foo\")";
-    set = Security.getAlgorithms("foo");
-    harness.check(set != null && set.size() == 0, signature);
-
-    signature = "getAlgorithms(\"Coffee\")";
-    set = Security.getAlgorithms("Coffee");
-    key = "Foo";
-    if (set != null && set.size() >= 1)
-      harness.check(containsKey(set, key), signature+": "+key);
-    else
-      harness.check(false, signature + ": set.size() < 1");
-
-    signature = "getAlgorithms(\"Tea\")";
-    set = Security.getAlgorithms("Tea");
-    if (set != null && set.size() >= 2)
-      {
-        key = "Bar";
-        harness.check(containsKey(set, key), signature+": "+key);
-        key = "Baz";
-        harness.check(containsKey(set, key), signature+": "+key);
-      }
-    else
-      harness.check(false, signature + ": set.size() < 2");
-  }
-
-  private static final boolean containsKey(Set set, String key) {
-    boolean result = false;
-    for (Iterator it = set.iterator(); it.hasNext(); )
-      {
-        result = key.trim().equalsIgnoreCase(String.valueOf(it.next()).trim());
-        if (result)
-          break;
-      }
-    return result;
-  }
+    private static final boolean containsKey(Set set2, String key) {
+        boolean result = false;
+        Iterator it = set2.iterator();
+        while (it.hasNext() && !(result = key.trim().equalsIgnoreCase(String.valueOf(it.next()).trim()))) {
+        }
+        return result;
+    }
 }
+

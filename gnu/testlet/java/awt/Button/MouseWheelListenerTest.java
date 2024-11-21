@@ -1,135 +1,79 @@
-// MouseWheelListenerTest.java -- 
-
-// Copyright (C) 2011 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: GUI
-// Uses: ../LocationTests
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.Button;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-import gnu.testlet.java.awt.LocationTests;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Panel;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
-import java.awt.*;
-import java.awt.event.*;
-
-/**
-  * Check if MouseWheelListener could be registered for an AWT Button
-  * and if action is performed when mouse wheel is rotated up and down.
-  */
 public class MouseWheelListenerTest
-    extends Panel
-    implements Testlet
-{
-  // these flags are set by MouseWheelListener
-  boolean mouseWheelScrollUpFlag = false;
-  boolean mouseWheelScrollDownFlag = false;
+extends Panel
+implements Testlet {
+    boolean mouseWheelScrollUpFlag = false;
+    boolean mouseWheelScrollDownFlag = false;
 
-  /**
-   * Runs the test using the specified harness. 
-   * 
-   * @param harness  the test harness (<code>null</code> not permitted).
-   */
-  public void test(TestHarness harness)
-  {
-    setBackground(Color.red);
-    Frame frame = new Frame();
-    Button button = new Button("xyzzy");
-    button.setBackground(Color.blue);
-    add(button);
+    @Override
+    public void test(TestHarness harness) {
+        this.setBackground(Color.red);
+        Frame frame = new Frame();
+        Button button = new Button("xyzzy");
+        button.setBackground(Color.blue);
+        this.add(button);
+        button.addMouseWheelListener(new MouseWheelListener(){
 
-    // register new mouse wheel listener
-    button.addMouseWheelListener(
-      new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                MouseWheelListenerTest.this.mouseWheelScrollUpFlag = MouseWheelListenerTest.this.mouseWheelScrollUpFlag | e.getWheelRotation() < 0;
+                MouseWheelListenerTest.this.mouseWheelScrollDownFlag = MouseWheelListenerTest.this.mouseWheelScrollDownFlag | e.getWheelRotation() > 0;
+            }
+        });
+        frame.add(this);
+        frame.pack();
+        frame.show();
+        Robot robot = harness.createRobot();
+        robot.waitForIdle();
+        robot.delay(1000);
+        Rectangle bounds = button.getBounds();
+        Point loc = frame.getLocationOnScreen();
+        Insets i = frame.getInsets();
+        bounds.x += i.left + loc.x;
+        bounds.y += i.top + loc.y;
+        int checkedPixelX = bounds.x + bounds.width / 2;
+        int checkedPixelY = bounds.y + bounds.height / 2;
+        robot.mouseMove(checkedPixelX, checkedPixelY);
+        robot.waitForIdle();
+        robot.delay(250);
+        robot.mouseWheel(1);
+        robot.delay(250);
+        robot.mouseWheel(-1);
+        robot.delay(250);
+        robot.waitForIdle();
+        robot.delay(1000);
+        frame.dispose();
+        harness.check(this.mouseWheelScrollUpFlag);
+        harness.check(this.mouseWheelScrollDownFlag);
+    }
 
-        public void mouseWheelMoved(MouseWheelEvent e)
-        {
-          // figure out if mouse wheel is scrolled up or down
-          mouseWheelScrollUpFlag |= e.getWheelRotation() < 0;
-          mouseWheelScrollDownFlag |= e.getWheelRotation() > 0;
-        }
-
-      }
-    );
-
-    frame.add(this);
-    frame.pack();
-    frame.show();
-
-    // AWT robot is used performing some actions
-    // also to wait for all
-    // widgets to stabilize theirs size and position.
-    Robot robot = harness.createRobot();
-
-    // we should wait a moment before the computations
-    // and pixel checks
-    robot.waitForIdle();
-    robot.delay(1000);
-
-    // compute absolute coordinations of button on a screen
-    Rectangle bounds = button.getBounds();
-    Point loc = frame.getLocationOnScreen();
-    Insets i = frame.getInsets();
-    bounds.x += i.left + loc.x;
-    bounds.y += i.top + loc.y;
-
-    // position of checked pixel
-    int checkedPixelX = bounds.x + bounds.width / 2;
-    int checkedPixelY = bounds.y + bounds.height / 2;
-
-    // move the mouse cursor to a tested pixel to show users what's checked
-    robot.mouseMove(checkedPixelX, checkedPixelY);
-    robot.waitForIdle();
-    robot.delay(250);
-    robot.mouseWheel(+1);
-    robot.delay(250);
-    robot.mouseWheel(-1);
-    robot.delay(250);
-
-    // There is a delay to avoid any race conditions    
-    // and so user can see frame
-    robot.waitForIdle();
-    robot.delay(1000);
-
-    // it's necesarry to clean up the component from desktop
-    frame.dispose();
-
-    // check if all actions were performed
-    harness.check(mouseWheelScrollUpFlag);
-    harness.check(mouseWheelScrollDownFlag);
-  }
-
-  /**
-    * Paint method for our implementation of a Panel
-    */
-  public void paint(Graphics g)
-  {
-    Image offScr = createImage(getSize().width, getSize().height);
-    Graphics offG = offScr.getGraphics();
-    offG.setClip(0, 0, getSize().width, getSize().height);
-
-    super.paint(offG);
-    g.drawImage(offScr, 0, 0, null);
-
-    offG.dispose();
-  }
+    @Override
+    public void paint(Graphics g) {
+        Image offScr = this.createImage(this.getSize().width, this.getSize().height);
+        Graphics offG = offScr.getGraphics();
+        offG.setClip(0, 0, this.getSize().width, this.getSize().height);
+        super.paint(offG);
+        g.drawImage(offScr, 0, 0, null);
+        offG.dispose();
+    }
 }
 

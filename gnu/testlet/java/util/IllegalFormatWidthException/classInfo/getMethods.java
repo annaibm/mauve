@@ -1,60 +1,21 @@
-// Test for method java.util.IllegalFormatWidthException.getClass().getMethods()
-
-// Copyright (C) 2012 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.util.IllegalFormatWidthException.classInfo;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
-import java.util.IllegalFormatWidthException;
-import java.util.Map;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.IllegalFormatWidthException;
 
-
-
-/**
- * Test for method java.util.IllegalFormatWidthException.getClass().getMethods()
- */
-public class getMethods implements Testlet
-{
-
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
-    public void test(TestHarness harness)
-    {
-        // map of methods which should exists
-        Map<String, String> testedMethods = null;
-
-        // map of methods for (Open)JDK6
-        Map<String, String> testedMethods_jdk6 = new HashMap<String, String>();
-
-        // map of methods for (Open)JDK7
-        Map<String, String> testedMethods_jdk7 = new HashMap<String, String>();
-
-        // map for methods declared in (Open)JDK6
+public class getMethods
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        HashMap<String, String> testedMethods = null;
+        HashMap<String, String> testedMethods_jdk6 = new HashMap<String, String>();
+        HashMap<String, String> testedMethods_jdk7 = new HashMap<String, String>();
         testedMethods_jdk6.put("public java.lang.String java.util.IllegalFormatWidthException.getMessage()", "getMessage");
         testedMethods_jdk6.put("public int java.util.IllegalFormatWidthException.getWidth()", "getWidth");
         testedMethods_jdk6.put("public void java.lang.Throwable.printStackTrace()", "printStackTrace");
@@ -75,8 +36,6 @@ public class getMethods implements Testlet
         testedMethods_jdk6.put("public boolean java.lang.Object.equals(java.lang.Object)", "equals");
         testedMethods_jdk6.put("public final void java.lang.Object.notify()", "notify");
         testedMethods_jdk6.put("public final void java.lang.Object.notifyAll()", "notifyAll");
-
-        // map for methods declared in (Open)JDK7
         testedMethods_jdk7.put("public java.lang.String java.util.IllegalFormatWidthException.getMessage()", "getMessage");
         testedMethods_jdk7.put("public int java.util.IllegalFormatWidthException.getWidth()", "getWidth");
         testedMethods_jdk7.put("public void java.lang.Throwable.printStackTrace()", "printStackTrace");
@@ -99,42 +58,20 @@ public class getMethods implements Testlet
         testedMethods_jdk7.put("public final java.lang.Class java.lang.Object.getClass()", "getClass");
         testedMethods_jdk7.put("public final void java.lang.Object.notify()", "notify");
         testedMethods_jdk7.put("public final void java.lang.Object.notifyAll()", "notifyAll");
-
-        // create instance of a class IllegalFormatWidthException
-        final Object o = new IllegalFormatWidthException(42);
-
-        // get a runtime class of an object "o"
-        final Class c = o.getClass();
-
-        // get the right map containing method signatures
-        testedMethods = getJavaVersion() < 7 ? testedMethods_jdk6 : testedMethods_jdk7;
-
-        // get all methods for this class
-        java.lang.reflect.Method[] methods = c.getMethods();
-
-        // expected number of methods
-        final int expectedNumberOfMethods = testedMethods.size();
-
-        // basic check for a number of methods
+        IllegalFormatWidthException o = new IllegalFormatWidthException(42);
+        Class<?> c = o.getClass();
+        testedMethods = this.getJavaVersion() < 7 ? testedMethods_jdk6 : testedMethods_jdk7;
+        Method[] methods = c.getMethods();
+        int expectedNumberOfMethods = testedMethods.size();
         harness.check(methods.length, expectedNumberOfMethods);
-
-        // check if all methods exist
-        for (java.lang.reflect.Method method : methods) {
-            // method name should consists of package name + class name
+        for (Method method : methods) {
             String methodName = method.getName();
-            // modifiers + package + method name + parameter types
             String methodString = method.toString().replaceAll(" native ", " ");
             harness.check(testedMethods.containsKey(methodString));
-            harness.check(testedMethods.get(methodString), methodName);
+            harness.check(testedMethods.get(methodString), (Object)methodName);
         }
     }
 
-    /**
-     * Returns version of Java. The input could have the following form: "1.7.0_06"
-     * and we are interested only in "7" in this case.
-     * 
-     * @return Java version
-     */
     protected int getJavaVersion() {
         String javaVersionStr = System.getProperty("java.version");
         String[] parts = javaVersionStr.split("\\.");

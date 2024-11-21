@@ -1,154 +1,132 @@
-// Tags: JDK1.5
-
-// Copyright (C) 2006 Ito Kazumitsu (kaz@maczuka.gcd.org)
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.util.regex.Matcher;
 
-import gnu.testlet.*;
-import java.util.regex.*;
+import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
-public class hitEnd implements Testlet
-{
-  private TestHarness harness;
-  // There seems to be some bug in gnu.java.util.regex and
-  // Pattern object cannot be reused for more than one matchers.
-  // So we compile the pattern string every time.
-  private Pattern pattern;
-  private String patternStr;
-  private Matcher matcher;
+public class hitEnd
+implements Testlet {
+    private TestHarness harness;
+    private Pattern pattern;
+    private String patternStr;
+    private Matcher matcher;
 
-  public void test (TestHarness harness)
-  {
-    this.harness = harness;
-    try
-      {
-	patternStr = "abcd";
-        testFind("xyzabcd", false);
-        testFind("XYZabcdxyz", false);
-        testFind("xyzabc", true);
-        testFind("xyzxyz", true);
-        testMatches("abcd", false);
-	testMatches("abc", true);
-        testMatches("abcdxyz", false);
-	testMatches("xyzabcd", false);
-	testMatches("xyz", false);
-	testLookingAt("abcd", false);
-	testLookingAt("abcdxyz", false);
-	testLookingAt("abc", true);
-	testLookingAt("xyzabcd", false);
+    @Override
+    public void test(TestHarness harness) {
+        this.harness = harness;
+        try {
+            this.patternStr = "abcd";
+            this.testFind("xyzabcd", false);
+            this.testFind("XYZabcdxyz", false);
+            this.testFind("xyzabc", true);
+            this.testFind("xyzxyz", true);
+            this.testMatches("abcd", false);
+            this.testMatches("abc", true);
+            this.testMatches("abcdxyz", false);
+            this.testMatches("xyzabcd", false);
+            this.testMatches("xyz", false);
+            this.testLookingAt("abcd", false);
+            this.testLookingAt("abcdxyz", false);
+            this.testLookingAt("abc", true);
+            this.testLookingAt("xyzabcd", false);
+            this.patternStr = "abcd$";
+            this.testFind("xyzabcd", true);
+            this.testFind("XYZabcdxyz", true);
+            this.testFind("xyzabc", true);
+            this.testFind("xyzxyz", true);
+            this.testMatches("abcd", true);
+            this.testMatches("abc", true);
+            this.testMatches("abcdxyz", false);
+            this.testMatches("xyzabcd", false);
+            this.testMatches("xyz", false);
+            this.testLookingAt("abcd", true);
+            this.testLookingAt("abcdxyz", false);
+            this.testLookingAt("abc", true);
+            this.testLookingAt("xyzabcd", false);
+            this.patternStr = "a+b";
+            this.testFind("xyzaaab", false);
+            this.testFind("xyzaaabb", false);
+            this.testFind("xyzaaa", true);
+            this.testFind("xyzxyz", true);
+            this.testMatches("aaab", false);
+            this.testMatches("aaaa", true);
+            this.testMatches("aaabx", false);
+            this.testMatches("xaaab", false);
+            this.testLookingAt("aaab", false);
+            this.testLookingAt("aaaa", true);
+            this.testLookingAt("aaabxyz", false);
+            this.testLookingAt("xyzxyz", false);
+            this.patternStr = "(?:a+b)|(?:aa)";
+            this.testFind("xyzaaab", false);
+            this.testFind("xyzaa", true);
+            this.testFind("xyzaaa", true);
+            this.testFind("xyzaax", false);
+            this.testMatches("aaab", false);
+            this.testMatches("aaaa", true);
+            this.testMatches("aa", true);
+            this.testLookingAt("aaab", false);
+            this.testLookingAt("aaaa", true);
+            this.testLookingAt("aa", true);
+            this.testLookingAt("aax", false);
+            this.patternStr = "(?:aa)|(?:a+b)";
+            this.testFind("xyzaaab", false);
+            this.testFind("xyzaa", false);
+            this.testFind("xyzaaa", false);
+            this.testFind("xyzaax", false);
+            this.testMatches("aaab", false);
+            this.testMatches("aaaa", true);
+            this.testMatches("aa", false);
+            this.testLookingAt("aaab", false);
+            this.testLookingAt("aaaa", false);
+            this.testLookingAt("aa", false);
+            this.testLookingAt("aax", false);
+        }
+        catch (PatternSyntaxException pse) {
+            harness.debug(pse);
+            harness.check(false, pse.toString());
+        }
+    }
 
-	patternStr = "abcd$";
-        testFind("xyzabcd", true);
-        testFind("XYZabcdxyz", true);
-        testFind("xyzabc", true);
-        testFind("xyzxyz", true);
-        testMatches("abcd", true);
-	testMatches("abc", true);
-        testMatches("abcdxyz", false);
-	testMatches("xyzabcd", false);
-	testMatches("xyz", false);
-	testLookingAt("abcd", true);
-	testLookingAt("abcdxyz", false);
-	testLookingAt("abc", true);
-	testLookingAt("xyzabcd", false);
+    private void testFind(String s, boolean expected) {
+        this.pattern = Pattern.compile(this.patternStr);
+        this.matcher = this.pattern.matcher(s);
+        this.matcher.find();
+        boolean result = this.matcher.hitEnd();
+        if (result != expected) {
+            this.debugMsg(s, "find", expected, result);
+        }
+        this.harness.check(result == expected);
+    }
 
-	patternStr = "a+b";
-	testFind("xyzaaab", false);
-	testFind("xyzaaabb", false);
-	testFind("xyzaaa", true);
-	testFind("xyzxyz", true);
-	testMatches("aaab", false);
-	testMatches("aaaa", true);
-	testMatches("aaabx", false);
-	testMatches("xaaab", false);
-	testLookingAt("aaab", false);
-	testLookingAt("aaaa", true);
-	testLookingAt("aaabxyz", false);
-	testLookingAt("xyzxyz", false);
-	
-	patternStr = "(?:a+b)|(?:aa)";
-	testFind("xyzaaab", false);
-	testFind("xyzaa", true);
-	testFind("xyzaaa", true);
-	testFind("xyzaax", false);
-	testMatches("aaab", false);
-	testMatches("aaaa", true);
-	testMatches("aa", true);
-	testLookingAt("aaab", false);
-	testLookingAt("aaaa", true);
-	testLookingAt("aa", true);
-	testLookingAt("aax", false);
+    private void testMatches(String s, boolean expected) {
+        this.pattern = Pattern.compile(this.patternStr);
+        this.matcher = this.pattern.matcher(s);
+        this.matcher.matches();
+        boolean result = this.matcher.hitEnd();
+        if (result != expected) {
+            this.debugMsg(s, "matches", expected, result);
+        }
+        this.harness.check(result == expected);
+    }
 
-	patternStr = "(?:aa)|(?:a+b)";
-	testFind("xyzaaab", false);
-	testFind("xyzaa", false);
-	testFind("xyzaaa", false);
-	testFind("xyzaax", false);
-	testMatches("aaab", false);
-	testMatches("aaaa", true);
-	testMatches("aa", false);
-	testLookingAt("aaab", false);
-	testLookingAt("aaaa", false);
-	testLookingAt("aa", false);
-	testLookingAt("aax", false);
-      }
-    catch(PatternSyntaxException pse)
-      {
-	harness.debug(pse);
-	harness.check(false, pse.toString());
-      }
-  }
+    private void testLookingAt(String s, boolean expected) {
+        this.pattern = Pattern.compile(this.patternStr);
+        this.matcher = this.pattern.matcher(s);
+        this.matcher.lookingAt();
+        boolean result = this.matcher.hitEnd();
+        if (result != expected) {
+            this.debugMsg(s, "lookingAt", expected, result);
+        }
+        this.harness.check(result == expected);
+    }
 
-  private void testFind(String s, boolean expected)
-  {
-    pattern = Pattern.compile(patternStr);
-    matcher = pattern.matcher(s);
-    matcher.find();
-    boolean result = matcher.hitEnd();
-    if (result != expected) debugMsg(s, "find", expected, result);
-    harness.check(result == expected);
-  }
-
-  private void testMatches(String s, boolean expected)
-  {
-    pattern = Pattern.compile(patternStr);
-    matcher = pattern.matcher(s);
-    matcher.matches();
-    boolean result = matcher.hitEnd();
-    if (result != expected) debugMsg(s, "matches", expected, result);
-    harness.check(result == expected);
-  }
-
-  private void testLookingAt(String s, boolean expected)
-  {
-    pattern = Pattern.compile(patternStr);
-    matcher = pattern.matcher(s);
-    matcher.lookingAt();
-    boolean result = matcher.hitEnd();
-    if (result != expected) debugMsg(s, "lookingAt", expected, result);
-    harness.check(result == expected);
-  }
-
-  private void debugMsg(String s, String method, boolean expected, boolean result)
-  {
-    harness.debug("pattern=" + pattern.pattern() + " input=" + s + " method=" + method + " matcher=" + matcher + " expected=" + expected + " hitEnd=" + result);
-  }
-
+    private void debugMsg(String s, String method, boolean expected, boolean result) {
+        this.harness.debug("pattern=" + this.pattern.pattern() + " input=" + s + " method=" + method + " matcher=" + this.matcher + " expected=" + expected + " hitEnd=" + result);
+    }
 }
+

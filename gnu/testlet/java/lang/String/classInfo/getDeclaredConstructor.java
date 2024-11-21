@@ -1,103 +1,62 @@
-// Test for method java.lang.String.getClass().getDeclaredConstructor()
-
-// Copyright (C) 2012, 2013, 2014, 2015 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.String.classInfo;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
-import java.lang.String;
-import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map;
 
-
-
-/**
- * Test for method java.lang.String.getClass().getDeclaredConstructor()
- */
-public class getDeclaredConstructor implements Testlet
-{
-
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
-    public void test(TestHarness harness)
-    {
-        // following constructors should exist
-        Map<String, Class[]> constructorsThatShouldExist_jdk6 = new HashMap<String, Class[]>();
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class, int.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new byte[1]).getClass(), java.nio.charset.Charset.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new byte[1]).getClass(), java.lang.String.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class, int.class, java.nio.charset.Charset.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class, int.class, java.lang.String.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {int.class, int.class, (new char[1]).getClass()});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {java.lang.StringBuilder.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {java.lang.StringBuffer.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new byte[1]).getClass()});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new int[1]).getClass(), int.class, int.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new char[1]).getClass()});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {java.lang.String.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new char[1]).getClass(), int.class, int.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class});
-        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class, int.class, int.class});
-
-        Map<String, Class[]> constructorsThatShouldExist_jdk7 = new HashMap<String, Class[]>();
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new byte[1]).getClass()});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class, int.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new byte[1]).getClass(), java.nio.charset.Charset.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new byte[1]).getClass(), java.lang.String.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class, int.class, java.nio.charset.Charset.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {int.class, int.class, (new char[1]).getClass()});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new char[1]).getClass(), boolean.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {java.lang.StringBuilder.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {java.lang.StringBuffer.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new int[1]).getClass(), int.class, int.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new char[1]).getClass(), int.class, int.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new char[1]).getClass()});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {java.lang.String.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class, int.class, java.lang.String.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class});
-        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[] {(new byte[1]).getClass(), int.class, int.class, int.class});
-
-        // get the right map containing constructor signatures
-        Map<String, Class[]> constructorsThatShouldExist = getJavaVersion() < 7 ? constructorsThatShouldExist_jdk6 : constructorsThatShouldExist_jdk7;
-
-        // create instance of a class String
-        final Object o = new String();
-
-        // get a runtime class of an object "o"
-        final Class c = o.getClass();
-
-        // check if all required constructors really exist
-        for (Map.Entry<String, Class[]> constructorThatShouldExists : constructorsThatShouldExist.entrySet()) {
+public class getDeclaredConstructor
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        HashMap<String, Class[]> constructorsThatShouldExist_jdk6 = new HashMap<String, Class[]>();
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE, Integer.TYPE});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new byte[1].getClass(), Charset.class});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new byte[1].getClass(), String.class});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE, Integer.TYPE, Charset.class});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE, Integer.TYPE, String.class});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{Integer.TYPE, Integer.TYPE, new char[1].getClass()});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{StringBuilder.class});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{StringBuffer.class});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new byte[1].getClass()});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new int[1].getClass(), Integer.TYPE, Integer.TYPE});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[0]);
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new char[1].getClass()});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{String.class});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new char[1].getClass(), Integer.TYPE, Integer.TYPE});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE});
+        constructorsThatShouldExist_jdk6.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE, Integer.TYPE, Integer.TYPE});
+        HashMap<String, Class[]> constructorsThatShouldExist_jdk7 = new HashMap<String, Class[]>();
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new byte[1].getClass()});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE, Integer.TYPE});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new byte[1].getClass(), Charset.class});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new byte[1].getClass(), String.class});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE, Integer.TYPE, Charset.class});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{Integer.TYPE, Integer.TYPE, new char[1].getClass()});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new char[1].getClass(), Boolean.TYPE});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{StringBuilder.class});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{StringBuffer.class});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new int[1].getClass(), Integer.TYPE, Integer.TYPE});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new char[1].getClass(), Integer.TYPE, Integer.TYPE});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new char[1].getClass()});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{String.class});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[0]);
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE, Integer.TYPE, String.class});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE});
+        constructorsThatShouldExist_jdk7.put("java.lang.String", new Class[]{new byte[1].getClass(), Integer.TYPE, Integer.TYPE, Integer.TYPE});
+        HashMap<String, Class[]> constructorsThatShouldExist = this.getJavaVersion() < 7 ? constructorsThatShouldExist_jdk6 : constructorsThatShouldExist_jdk7;
+        String o = new String();
+        Class<?> c = o.getClass();
+        for (Map.Entry constructorThatShouldExists : constructorsThatShouldExist.entrySet()) {
             try {
-                java.lang.reflect.Constructor constructor = c.getDeclaredConstructor(constructorThatShouldExists.getValue());
-                harness.check(constructor != null);
-                String constructorName = constructor.getName();
+                Constructor<?> constructor2 = c.getDeclaredConstructor((Class[])constructorThatShouldExists.getValue());
+                harness.check(constructor2 != null);
+                String constructorName = constructor2.getName();
                 harness.check(constructorName != null);
                 harness.check(constructorName, constructorThatShouldExists.getKey());
             }
@@ -107,12 +66,6 @@ public class getDeclaredConstructor implements Testlet
         }
     }
 
-    /**
-     * Returns version of Java. The input could have the following form: "1.7.0_06"
-     * and we are interested only in "7" in this case.
-     * 
-     * @return Java version
-     */
     protected int getJavaVersion() {
         String javaVersionStr = System.getProperty("java.version");
         String[] parts = javaVersionStr.split("\\.");

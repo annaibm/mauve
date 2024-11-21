@@ -1,59 +1,43 @@
-// Tags: JDK1.0
-
-// Copyright (C) 1998 Cygnus Solutions
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.Character;
-import gnu.testlet.Testlet;
-import gnu.testlet.TestHarness;
 
-public class consts implements Testlet
-{
-  public void test (TestHarness harness)
-    {
-      harness.check (Character.SPACE_SEPARATOR, 12);
-      harness.check (Character.LINE_SEPARATOR, 13);
-      harness.check (Character.PARAGRAPH_SEPARATOR, 14);
-      harness.check (Character.UPPERCASE_LETTER, 1);
-      harness.check (Character.LOWERCASE_LETTER, 2);
-      harness.check (Character.TITLECASE_LETTER, 3);
-      harness.check (Character.MODIFIER_LETTER, 4);
-      harness.check (Character.OTHER_LETTER, 5);
-      harness.check (Character.DECIMAL_DIGIT_NUMBER, 9);
-      harness.check (Character.LETTER_NUMBER, 10);
-      harness.check (Character.OTHER_NUMBER, 11);
-      harness.check (Character.NON_SPACING_MARK, 6);
-      harness.check (Character.ENCLOSING_MARK, 7);
-      harness.check (Character.COMBINING_SPACING_MARK, 8);
-      harness.check (Character.DASH_PUNCTUATION, 20);
-      harness.check (Character.START_PUNCTUATION, 21);
-      harness.check (Character.END_PUNCTUATION, 22);
-      harness.check (Character.CONNECTOR_PUNCTUATION, 23);
-      harness.check (Character.OTHER_PUNCTUATION, 24);
-      harness.check (Character.MATH_SYMBOL, 25);
-      harness.check (Character.CURRENCY_SYMBOL, 26);
-      harness.check (Character.MODIFIER_SYMBOL, 27);
-      harness.check (Character.OTHER_SYMBOL, 28);
-      harness.check (Character.CONTROL, 15);
-      harness.check (Character.FORMAT, 16);
-      harness.check (Character.UNASSIGNED, 0);
-      harness.check (Character.PRIVATE_USE, 18);
-      harness.check (Character.SURROGATE, 19);
+import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
+
+public class consts
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        harness.check(12, 12);
+        harness.check(13, 13);
+        harness.check(14, 14);
+        harness.check(1, 1);
+        harness.check(2, 2);
+        harness.check(3, 3);
+        harness.check(4, 4);
+        harness.check(5, 5);
+        harness.check(9, 9);
+        harness.check(10, 10);
+        harness.check(11, 11);
+        harness.check(6, 6);
+        harness.check(7, 7);
+        harness.check(8, 8);
+        harness.check(20, 20);
+        harness.check(21, 21);
+        harness.check(22, 22);
+        harness.check(23, 23);
+        harness.check(24, 24);
+        harness.check(25, 25);
+        harness.check(26, 26);
+        harness.check(27, 27);
+        harness.check(28, 28);
+        harness.check(15, 15);
+        harness.check(16, 16);
+        harness.check(0, 0);
+        harness.check(18, 18);
+        harness.check(19, 19);
     }
 }
+

@@ -1,61 +1,40 @@
-// Tags: JDK1.0
-
-// Copyright (C) 1998, 1999 Cygnus Solutions
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.String;
-import gnu.testlet.Testlet;
+
 import gnu.testlet.TestHarness;
+import gnu.testlet.Testlet;
 
-public class indexOf implements Testlet
-{
-  public void test (TestHarness harness)
-    {
-      char[] cstr = { 'a', 'b', 'c', '\t', 'A', 'B', 'C', ' ', '1', '2', '3' };
-
-      String b = new String(" abc\tABC 123\t");
-      String d = new String(cstr);
-
-      harness.check (b.indexOf(' '), 0);
-      harness.check (b.indexOf(' ', 1), 8);
-      harness.check (b.indexOf(' ', 10), -1);
-      harness.check (b.indexOf(' ', -1), 0);
-      harness.check (b.indexOf(' ', b.length()), -1);
-      harness.check (b.indexOf("abc"), 1);
-      harness.check (b.indexOf("abc", 1), 1);
-      harness.check (b.indexOf("abc", 10), -1);
-
-      harness.check ("".indexOf(""), 0);
-      harness.check (b.indexOf(""), 0);
-      harness.check ("".indexOf(b), -1);
-
-      harness.check (b.lastIndexOf(' '), 8);
-      harness.check (b.lastIndexOf(' ', 1), 0);
-      harness.check (b.lastIndexOf(' ', 10), 8);
-      harness.check (b.lastIndexOf(' ', -1), -1);
-      harness.check (b.lastIndexOf(' ', b.length()), 8);
-      harness.check (b.lastIndexOf("abc"), 1);
-      harness.check (b.lastIndexOf("abc", 1), 1);
-      harness.check (b.lastIndexOf("abc", 10), 1);
-
-      harness.check ("".lastIndexOf(""), 0);
-      harness.check (b.lastIndexOf(""), b.length());
-      harness.check ("".lastIndexOf(b), -1);
+public class indexOf
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        char[] cstr = new char[]{'a', 'b', 'c', '\t', 'A', 'B', 'C', ' ', '1', '2', '3'};
+        String b = new String(" abc\tABC 123\t");
+        String d = new String(cstr);
+        harness.check(b.indexOf(32), 0);
+        harness.check(b.indexOf(32, 1), 8);
+        harness.check(b.indexOf(32, 10), -1);
+        harness.check(b.indexOf(32, -1), 0);
+        harness.check(b.indexOf(32, b.length()), -1);
+        harness.check(b.indexOf("abc"), 1);
+        harness.check(b.indexOf("abc", 1), 1);
+        harness.check(b.indexOf("abc", 10), -1);
+        harness.check("".indexOf(""), 0);
+        harness.check(b.indexOf(""), 0);
+        harness.check("".indexOf(b), -1);
+        harness.check(b.lastIndexOf(32), 8);
+        harness.check(b.lastIndexOf(32, 1), 0);
+        harness.check(b.lastIndexOf(32, 10), 8);
+        harness.check(b.lastIndexOf(32, -1), -1);
+        harness.check(b.lastIndexOf(32, b.length()), 8);
+        harness.check(b.lastIndexOf("abc"), 1);
+        harness.check(b.lastIndexOf("abc", 1), 1);
+        harness.check(b.lastIndexOf("abc", 10), 1);
+        harness.check("".lastIndexOf(""), 0);
+        harness.check(b.lastIndexOf(""), b.length());
+        harness.check("".lastIndexOf(b), -1);
     }
 }
+

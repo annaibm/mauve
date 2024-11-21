@@ -1,28 +1,30 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.javax.swing.JList.AccessibleJList;
-
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.JList;
 
-/**
- * Overrides JList in order to expose the AccssibleJList methods.
- */
-public class TestList extends JList
-{
-  public TestList()
-  {
-    super();
-  }
-  public TestList(Object[] values)
-  {
-    super(values);
-  }
-  public class AccessibleTestList extends AccessibleJList
-  {
-  }
-  public AccessibleContext getAccessibleContext()
-  {
-    return new AccessibleTestList();
-  }
+public class TestList
+extends JList {
+    public TestList() {
+    }
 
+    public TestList(Object[] values2) {
+        super(values2);
+    }
+
+    @Override
+    public AccessibleContext getAccessibleContext() {
+        return new AccessibleTestList();
+    }
+
+    public class AccessibleTestList
+    extends JList.AccessibleJList {
+        public AccessibleTestList() {
+            super(TestList.this);
+        }
+    }
 }
+

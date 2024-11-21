@@ -1,72 +1,47 @@
-//Tags: not-a-test
-
-//Copyright (C) 2004 Robert Schuster <thebohemian@gmx.net>
-
-//This file is part of Mauve.
-
-//Mauve is free software; you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation; either version 2, or (at your option)
-//any later version.
-
-//Mauve is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
-
-//You should have received a copy of the GNU General Public License
-//along with Mauve; see the file COPYING.  If not, write to
-//the Free Software Foundation, 59 Temple Place - Suite 330,
-//Boston, MA 02111-1307, USA.
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.javax.swing.JComboBox;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.AbstractListModel;
+import javax.swing.ComboBoxModel;
 
-/** A non-mutable ComboBoxModel implementation for use in a simple
- * selection test. The model supports unselection.
- * 
- * @author Robert Schuster
- */
-public class TestModel1 extends AbstractListModel implements ComboBoxModel {
+public class TestModel1
+extends AbstractListModel
+implements ComboBoxModel {
+    private String[] principle = new String[]{"Free", "As", "In", "Freedom"};
+    private String selected = this.principle[2];
 
-        private String[] principle = { "Free", "As", "In", "Freedom" };
-
-	/** The currently selected item. Defaults to "In". This is needed
-	 * for the test.
-	 */
-        private String selected = principle[2];
-
-        public void setSelectedItem(Object o) {
-        	if(o == null) {
-        		selected = null;
-        		return;
-        	}
-        	
-                if(!(o instanceof String))
-                         return;
-
-                String str = (String) o;
-
-                for(int i=0; i < principle.length; i++) {
-                        if(principle[i].equals(str)) {
-                                selected = principle[i];
-                                return;
-                        }
-                }
+    @Override
+    public void setSelectedItem(Object o) {
+        if (o == null) {
+            this.selected = null;
+            return;
         }
-
-        public Object getSelectedItem() {
-                return selected;
+        if (!(o instanceof String)) {
+            return;
         }
-
-        public Object getElementAt(int index) {
-                return principle[index];
+        String str = (String)o;
+        for (int i = 0; i < this.principle.length; ++i) {
+            if (!this.principle[i].equals(str)) continue;
+            this.selected = this.principle[i];
+            return;
         }
+    }
 
-        public int getSize() {
-                return principle.length;
-        }
-        
+    @Override
+    public Object getSelectedItem() {
+        return this.selected;
+    }
+
+    @Override
+    public Object getElementAt(int index) {
+        return this.principle[index];
+    }
+
+    @Override
+    public int getSize() {
+        return this.principle.length;
+    }
 }
+

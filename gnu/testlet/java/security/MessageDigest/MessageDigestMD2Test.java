@@ -1,184 +1,62 @@
-// Basic test of MD2 digest algorithm.
-
-// Copyright (C) 2013, 2014 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.security.MessageDigest;
 
-import gnu.testlet.Testlet;
 import gnu.testlet.TestHarness;
-
+import gnu.testlet.Testlet;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Test of MD2 digest algorithm.
- */
-public class MessageDigestMD2Test implements Testlet {
+public class MessageDigestMD2Test
+implements Testlet {
+    private static final byte[] EXPECTED_HASH_1 = new byte[]{-125, 80, -27, -93, -30, 76, 21, 61, -14, 39, 92, -97, -128, 105, 39, 115};
+    private static final byte[] EXPECTED_HASH_2 = new byte[]{-18, -115, -70, -29, -68, 98, -67, -55, 78, -90, 63, 105, -63, -68, 38, -55};
+    private static final byte[] EXPECTED_HASH_3 = new byte[]{-54, 68, 122, -122, 109, 64, 65, -82, 74, 16, 125, -79, 78, 40, -55, 19};
+    private static final byte[] EXPECTED_HASH_4 = new byte[]{50, -20, 1, -20, 74, 109, -84, 114, -64, -85, -106, -5, 52, -64, -75, -47};
+    private static final byte[] EXPECTED_HASH_5 = new byte[]{90, 49, 32, 34, -96, -17, 109, 124, -48, -87, -105, 97, 106, 67, 75, -35};
+    private static final byte[] EXPECTED_HASH_6 = new byte[]{99, 80, 61, 49, 23, -83, 51, -7, 65, -46, 15, 87, 20, 78, -50, 100};
+    private static final byte[] EXPECTED_HASH_7 = new byte[]{-89, 14, 44, 74, -13, -109, 5, 98, 108, -102, -81, 20, 92, -16, -41, 61};
+    private static final byte[] EXPECTED_HASH_8 = new byte[]{-82, -95, -91, -50, 44, -96, -113, -45, 107, -107, -10, -21, 111, -127, -55, 98};
 
-    /**
-     * Hash for the text "" (empty string).
-     *
-     * This hash was generated using MD2 algorithm.
-     */
-    private static final byte[] EXPECTED_HASH_1 = new byte[] {
-        (byte)0x83, (byte)0x50, (byte)0xe5, (byte)0xa3, (byte)0xe2, (byte)0x4c, (byte)0x15, (byte)0x3d, 
-        (byte)0xf2, (byte)0x27, (byte)0x5c, (byte)0x9f, (byte)0x80, (byte)0x69, (byte)0x27, (byte)0x73, 
-        
-    };
-
-    /**
-     * Hash for the text "\0".
-     *
-     * This hash was generated using MD2 algorithm.
-     */
-    private static final byte[] EXPECTED_HASH_2 = new byte[] {
-        (byte)0xee, (byte)0x8d, (byte)0xba, (byte)0xe3, (byte)0xbc, (byte)0x62, (byte)0xbd, (byte)0xc9, 
-        (byte)0x4e, (byte)0xa6, (byte)0x3f, (byte)0x69, (byte)0xc1, (byte)0xbc, (byte)0x26, (byte)0xc9, 
-        
-    };
-
-    /**
-     * Hash for the text " ".
-     *
-     * This hash was generated using MD2 algorithm.
-     */
-    private static final byte[] EXPECTED_HASH_3 = new byte[] {
-        (byte)0xca, (byte)0x44, (byte)0x7a, (byte)0x86, (byte)0x6d, (byte)0x40, (byte)0x41, (byte)0xae, 
-        (byte)0x4a, (byte)0x10, (byte)0x7d, (byte)0xb1, (byte)0x4e, (byte)0x28, (byte)0xc9, (byte)0x13, 
-        
-    };
-
-    /**
-     * Hash for the text "a".
-     *
-     * This hash was generated using MD2 algorithm.
-     */
-    private static final byte[] EXPECTED_HASH_4 = new byte[] {
-        (byte)0x32, (byte)0xec, (byte)0x01, (byte)0xec, (byte)0x4a, (byte)0x6d, (byte)0xac, (byte)0x72, 
-        (byte)0xc0, (byte)0xab, (byte)0x96, (byte)0xfb, (byte)0x34, (byte)0xc0, (byte)0xb5, (byte)0xd1, 
-        
-    };
-
-    /**
-     * Hash for the text "text".
-     *
-     * This hash was generated using MD2 algorithm.
-     */
-    private static final byte[] EXPECTED_HASH_5 = new byte[] {
-        (byte)0x5a, (byte)0x31, (byte)0x20, (byte)0x22, (byte)0xa0, (byte)0xef, (byte)0x6d, (byte)0x7c, 
-        (byte)0xd0, (byte)0xa9, (byte)0x97, (byte)0x61, (byte)0x6a, (byte)0x43, (byte)0x4b, (byte)0xdd, 
-        
-    };
-
-    /**
-     * Hash for the text "Hello world!".
-     *
-     * This hash was generated using MD2 algorithm.
-     */
-    private static final byte[] EXPECTED_HASH_6 = new byte[] {
-        (byte)0x63, (byte)0x50, (byte)0x3d, (byte)0x31, (byte)0x17, (byte)0xad, (byte)0x33, (byte)0xf9, 
-        (byte)0x41, (byte)0xd2, (byte)0x0f, (byte)0x57, (byte)0x14, (byte)0x4e, (byte)0xce, (byte)0x64, 
-        
-    };
-
-    /**
-     * Hash for the text "Even longer text...".
-     *
-     * This hash was generated using MD2 algorithm.
-     */
-    private static final byte[] EXPECTED_HASH_7 = new byte[] {
-        (byte)0xa7, (byte)0x0e, (byte)0x2c, (byte)0x4a, (byte)0xf3, (byte)0x93, (byte)0x05, (byte)0x62, 
-        (byte)0x6c, (byte)0x9a, (byte)0xaf, (byte)0x14, (byte)0x5c, (byte)0xf0, (byte)0xd7, (byte)0x3d, 
-        
-    };
-
-    /**
-     * Hash for the text 'Lorem ipsum dolor sit amet, consectetur adipisicing
-     * elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-     * Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-     * ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-     * reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-     * pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-     * qui officia deserunt mollit anim id est laborum.'
-     *
-     * This hash was generated using MD2 algorithm.
-     */
-    private static final byte[] EXPECTED_HASH_8 = new byte[] {
-        (byte)0xae, (byte)0xa1, (byte)0xa5, (byte)0xce, (byte)0x2c, (byte)0xa0, (byte)0x8f, (byte)0xd3, 
-        (byte)0x6b, (byte)0x95, (byte)0xf6, (byte)0xeb, (byte)0x6f, (byte)0x81, (byte)0xc9, (byte)0x62, 
-        
-    };
-
-    /**
-     * Generate hash for given text using the specified hash algorithm.
-     */
-    private static byte[] generateHash(TestHarness harness, String algorithmName, String text) throws NoSuchAlgorithmException {
+    private static byte[] generateHash(TestHarness harness, String algorithmName, String text2) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(algorithmName);
         harness.check(md != null);
-        md.update(text.getBytes());
+        md.update(text2.getBytes());
         byte[] digest = md.digest();
         harness.check(digest != null);
         harness.check(digest.length, 16);
         return digest;
     }
 
-    /**
-     * Compare digest (hash) with the expected result.
-     */
-    private void dotest(TestHarness harness, String algorithmName, byte[] expectedHash, String text) throws NoSuchAlgorithmException {
-        byte[] digest;
-        digest = generateHash(harness, algorithmName, text);
-        for (int i = 0; i < digest.length; i++) {
-            if (digest[i] != expectedHash[i]) {
-                harness.fail("Difference found at offset " + i);
-            }
+    private void dotest(TestHarness harness, String algorithmName, byte[] expectedHash, String text2) throws NoSuchAlgorithmException {
+        byte[] digest = MessageDigestMD2Test.generateHash(harness, algorithmName, text2);
+        for (int i = 0; i < digest.length; ++i) {
+            if (digest[i] == expectedHash[i]) continue;
+            harness.fail("Difference found at offset " + i);
         }
     }
 
     private void run(TestHarness harness) throws NoSuchAlgorithmException {
-        dotest(harness, "MD2", EXPECTED_HASH_1, "");
-        dotest(harness, "MD2", EXPECTED_HASH_2, "\0");
-        dotest(harness, "MD2", EXPECTED_HASH_3, " ");
-        dotest(harness, "MD2", EXPECTED_HASH_4, "a");
-        dotest(harness, "MD2", EXPECTED_HASH_5, "text");
-        dotest(harness, "MD2", EXPECTED_HASH_6, "Hello world!");
-        dotest(harness, "MD2", EXPECTED_HASH_7, "Even longer text...");
-        dotest(harness, "MD2", EXPECTED_HASH_8, "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+        this.dotest(harness, "MD2", EXPECTED_HASH_1, "");
+        this.dotest(harness, "MD2", EXPECTED_HASH_2, "\u0000");
+        this.dotest(harness, "MD2", EXPECTED_HASH_3, " ");
+        this.dotest(harness, "MD2", EXPECTED_HASH_4, "a");
+        this.dotest(harness, "MD2", EXPECTED_HASH_5, "text");
+        this.dotest(harness, "MD2", EXPECTED_HASH_6, "Hello world!");
+        this.dotest(harness, "MD2", EXPECTED_HASH_7, "Even longer text...");
+        this.dotest(harness, "MD2", EXPECTED_HASH_8, "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
     }
 
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
+    @Override
     public void test(TestHarness harness) {
-        if (!isMD2Available()) {
+        if (!this.isMD2Available()) {
             return;
         }
         try {
-            run(harness);
+            this.run(harness);
         }
         catch (NoSuchAlgorithmException e) {
-            // algorithm implementation can't be found
             harness.fail("Fail for algorithm MD2.");
             harness.debug(e);
         }
@@ -194,16 +72,13 @@ public class MessageDigestMD2Test implements Testlet {
         return true;
     }
 
-    /**
-     * @param args
-     * @throws NoSuchAlgorithmException 
-     */
     public static void main(String[] args) {
         try {
             new MessageDigestMD2Test().run(null);
             System.out.println("OK");
         }
-        catch (NoSuchAlgorithmException e) {
+        catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+            // empty catch block
         }
     }
 }

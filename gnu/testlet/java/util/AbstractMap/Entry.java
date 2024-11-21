@@ -1,39 +1,44 @@
-// Tags: not-a-test
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.util.AbstractMap;
 
-import java.util.*;
+import java.util.Map;
 
-class Entry implements Map.Entry {
-
+class Entry
+implements Map.Entry {
     private Object key;
     private Object value;
 
     public Entry(Object k, Object v) {
-            key = k;
-            value = v;
+        this.key = k;
+        this.value = v;
     }
 
     public Object getKey() {
-            return key;
+        return this.key;
     }
 
     public Object getValue() {
-            return value;
+        return this.value;
     }
 
     public Object setValue(Object nv) {
-            Object ov = value;
-            value = nv;
-            return ov;
+        Object ov = this.value;
+        this.value = nv;
+        return ov;
     }
 
+    @Override
     public boolean equals(Object o) {
-
-            if (!(o instanceof Map.Entry))return false;
-            Map.Entry e = (Map.Entry)o;
-            if (  e == null ) return false;
-            return ( (key == null ? e.getKey()==null : key.equals(e.getKey())) &&
-              (value == null ? e.getValue()==null : key.equals(e.getValue())));
+        if (!(o instanceof Map.Entry)) {
+            return false;
+        }
+        Map.Entry e = (Map.Entry)o;
+        if (e == null) {
+            return false;
+        }
+        return (this.key == null ? e.getKey() == null : this.key.equals(e.getKey())) && (this.value == null ? e.getValue() == null : this.key.equals(e.getValue()));
     }
 }
+

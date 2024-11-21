@@ -1,69 +1,41 @@
-// Tags: not-a-test
-
-// Copyright (C) 2007 Andrew John Hughes <gnu_andrew@member.fsf.org>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.javax.management.MBeanServerInvocationHandler;
 
-/**
- * Test bean implementation for proxying.
- *
- * @author <a href="mailto:gnu_andrew@member.fsf.org">Andrew John Hughes</a>
- */
+import gnu.testlet.javax.management.MBeanServerInvocationHandler.Test;
+import gnu.testlet.javax.management.MBeanServerInvocationHandler.TestXMBean;
+
 public class TestX
-  extends Test
-  implements TestXMBean
-{
+extends Test
+implements TestXMBean {
+    private String lastMethodCalled;
 
-  private String lastMethodCalled;
+    public TestX(String name2) {
+        super(name2);
+    }
 
-  public TestX(String name)
-  {
-    super(name);
-  }
+    @Override
+    public boolean equals(Object obj) {
+        this.lastMethodCalled = "equals";
+        return false;
+    }
 
-  public boolean equals(Object obj)
-  {
-    lastMethodCalled = "equals";
-    return false;
-  }
+    @Override
+    public int hashCode() {
+        this.lastMethodCalled = "hashCode";
+        return 42;
+    }
 
-  public int hashCode()
-  {
-    lastMethodCalled = "hashCode";
-    return 42;
-  }
+    @Override
+    public String getLastMethodCalled() {
+        return this.lastMethodCalled;
+    }
 
-  public String getLastMethodCalled()
-  {
-    return lastMethodCalled;
-  }
-
-  public String toString()
-  {
-    lastMethodCalled = "toString";
-    return getClass().getName() +
-      "[name=" + getName() +
-      ",isEdible=" + isEdible() +
-      ",lastMethodCalled=" + lastMethodCalled +
-      "]";
-  }
-    
-
+    @Override
+    public String toString() {
+        this.lastMethodCalled = "toString";
+        return this.getClass().getName() + "[name=" + this.getName() + ",isEdible=" + this.isEdible() + ",lastMethodCalled=" + this.lastMethodCalled + "]";
+    }
 }
+

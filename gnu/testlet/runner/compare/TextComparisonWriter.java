@@ -1,82 +1,68 @@
-// Copyright (c) 2008 Fabien DUMINY (fduminy@jnode.org)
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.runner.compare;
 
+import gnu.testlet.runner.compare.ComparisonWriter;
 import java.io.PrintWriter;
 import java.util.List;
 
-/**
- * Writer in Text format for a {@link Comparison}
- * @author fabien
- *
- */
-public class TextComparisonWriter extends ComparisonWriter {
-    //@Override
-    protected Visitor createVisitor(PrintWriter pw) {
+public class TextComparisonWriter
+extends ComparisonWriter {
+    @Override
+    protected ComparisonWriter.Visitor createVisitor(PrintWriter pw) {
         return new TextVisitor(pw);
     }
-    
-    protected static class TextVisitor extends Visitor { 
+
+    protected static class TextVisitor
+    extends ComparisonWriter.Visitor {
         private TextVisitor(PrintWriter pw) {
             super(pw);
         }
-        
-        //@Override
+
+        @Override
         protected void writeSummary(int nbRegressions, int nbProgressions, int nbStagnations) {
-            pw.append(Integer.toString(nbRegressions)).append(" regressions. ");
-            pw.append(Integer.toString(nbProgressions)).append(" progressions. ");
-            pw.append(Integer.toString(nbStagnations)).append(" stagnations.\n");
+            this.pw.append(Integer.toString(nbRegressions)).append(" regressions. ");
+            this.pw.append(Integer.toString(nbProgressions)).append(" progressions. ");
+            this.pw.append(Integer.toString(nbStagnations)).append(" stagnations.\n");
         }
-        
+
+        @Override
         protected void writeSystemProperties(List systemProperties, String result1Name, String result2Name) {
-            pw.append("\nSystem properties\n");
-            pw.append("Name\t").append(result1Name).append('\t').append(result2Name).append('\n');
-            for (int i = 0; i < systemProperties.size(); ) {
-                pw.append((String) systemProperties.get(i++)).append('\t');
-                pw.append((String) systemProperties.get(i++)).append('\t');
-                pw.append((String) systemProperties.get(i++)).append('\n');
+            this.pw.append("\nSystem properties\n");
+            this.pw.append("Name\t").append(result1Name).append('\t').append(result2Name).append('\n');
+            int i = 0;
+            while (i < systemProperties.size()) {
+                this.pw.append((String)systemProperties.get(i++)).append('\t');
+                this.pw.append((String)systemProperties.get(i++)).append('\t');
+                this.pw.append((String)systemProperties.get(i++)).append('\n');
             }
-        }        
-        
+        }
+
+        @Override
         public void writeBeginTable() {
-            pw.append("\n").append(evolutionLabel).append("\n");
+            this.pw.append("\n").append(this.evolutionLabel).append("\n");
         }
-        
-        //@Override
-        protected void writeBeginLine(Level level) {
-            writeIndent(level);
+
+        @Override
+        protected void writeBeginLine(ComparisonWriter.Level level) {
+            this.writeIndent(level);
         }
-        
-        //@Override
-        protected void writeName(Level level, String name) {
-            pw.append(name).append('\t');
+
+        @Override
+        protected void writeName(ComparisonWriter.Level level, String name2) {
+            this.pw.append(name2).append('\t');
         }
-        
-        //@Override
+
+        @Override
         protected void writeEndLine() {
-            pw.append('\n');
+            this.pw.append('\n');
         }
-        
-        //@Override
+
+        @Override
         protected void writeCheckResult(String result) {
-            pw.append('\t').append(result);
+            this.pw.append('\t').append(result);
         }
-    };
+    }
 }
+

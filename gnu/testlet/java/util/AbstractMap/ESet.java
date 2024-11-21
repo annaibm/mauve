@@ -1,23 +1,29 @@
-// Tags: not-a-test
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.util.AbstractMap;
 
-import java.util.*;
+import gnu.testlet.java.util.AbstractMap.AcuniaAbstractMapTest;
+import gnu.testlet.java.util.AbstractMap.EIterator;
+import java.util.AbstractSet;
+import java.util.Iterator;
 
-class ESet extends AbstractSet {
+class ESet
+extends AbstractSet {
+    private AcuniaAbstractMapTest map;
 
-	private AcuniaAbstractMapTest map;
+    ESet(AcuniaAbstractMapTest map2) {
+        this.map = map2;
+    }
 
-	ESet(AcuniaAbstractMapTest map) {
-		this.map = map;
-	}
-   
-        public Iterator iterator() {
-            return new EIterator(map);
-        }
+    @Override
+    public Iterator iterator() {
+        return new EIterator(this.map);
+    }
 
-        public int size() {
-            return map.keys.size();
-        }
+    @Override
+    public int size() {
+        return this.map.keys.size();
+    }
 }
 

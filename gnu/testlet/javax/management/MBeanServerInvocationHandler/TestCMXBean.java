@@ -1,83 +1,59 @@
-// Tags: not-a-test
-
-// Copyright (C) 2007 Andrew John Hughes <gnu_andrew@member.fsf.org>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.javax.management.MBeanServerInvocationHandler;
 
-import javax.management.ObjectName;
-
+import gnu.testlet.javax.management.MBeanServerInvocationHandler.ChildMXBean;
+import gnu.testlet.javax.management.MBeanServerInvocationHandler.Colour;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
+import javax.management.ObjectName;
 
-/**
- * Test {@link javax.management.MXBean} for proxying.
- *
- * @author <a href="mailto:gnu_andrew@member.fsf.org">Andrew John Hughes</a>
- */
-public interface TestCMXBean
-{
-  
-  int getId();
+public interface TestCMXBean {
+    public int getId();
 
-  void setId(int id);
+    public void setId(int var1);
 
-  Integer getSize();
+    public Integer getSize();
 
-  void setSize(Integer size);
+    public void setSize(Integer var1);
 
-  ObjectName getName();
+    public ObjectName getName();
 
-  void setName(ObjectName name);
-  
-  float[] getWeights();
+    public void setName(ObjectName var1);
 
-  void setWeights(float[] weights);
+    public float[] getWeights();
 
-  String[] getNames();
+    public void setWeights(float[] var1);
 
-  void setNames(String[] names);
+    public String[] getNames();
 
-  Set<Integer> getAges();
+    public void setNames(String[] var1);
 
-  void setAges(Set<Integer> ages);
+    public Set<Integer> getAges();
 
-  SortedSet<String> getBiscuits();
+    public void setAges(Set<Integer> var1);
 
-  void setBiscuits(SortedSet<String> biscuits);
+    public SortedSet<String> getBiscuits();
 
-  Colour getColour();
+    public void setBiscuits(SortedSet<String> var1);
 
-  void setColour(Colour colour);
+    public Colour getColour();
 
-  Map<String,Integer> getPhoneNumbers();
+    public void setColour(Colour var1);
 
-  void setPhoneNumbers(Map<String,Integer> numbers);
+    public Map<String, Integer> getPhoneNumbers();
 
-  SortedMap<String, Integer> getSortedPhoneNumbers();
+    public void setPhoneNumbers(Map<String, Integer> var1);
 
-  void setSortedPhoneNumbers(SortedMap<String, Integer> numbers);
+    public SortedMap<String, Integer> getSortedPhoneNumbers();
 
-  ChildMXBean getChild();
+    public void setSortedPhoneNumbers(SortedMap<String, Integer> var1);
 
-  void setChild(ChildMXBean bean);
+    public ChildMXBean getChild();
 
+    public void setChild(ChildMXBean var1);
 }
+

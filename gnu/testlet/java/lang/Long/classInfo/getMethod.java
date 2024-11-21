@@ -1,151 +1,109 @@
-// Test for method java.lang.Long.getClass().getMethod()
-
-// Copyright (C) 2012, 2013, 2014, 2015 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.Long.classInfo;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
-import java.lang.Long;
-import java.util.Map;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
-
-
-/**
- * Test for method java.lang.Long.getClass().getMethod()
- */
-public class getMethod implements Testlet
-{
-
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
-    public void test(TestHarness harness)
-    {
-        // following methods should exist
-        Map<String, Class[]> methodsThatShouldExist_jdk6 = new HashMap<String, Class[]>();
-        methodsThatShouldExist_jdk6.put("numberOfLeadingZeros", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("numberOfTrailingZeros", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("bitCount", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("equals", new Class[] {java.lang.Object.class});
-        methodsThatShouldExist_jdk6.put("toString", new Class[] {});
-        methodsThatShouldExist_jdk6.put("toString", new Class[] {long.class, int.class});
-        methodsThatShouldExist_jdk6.put("toString", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("hashCode", new Class[] {});
-        methodsThatShouldExist_jdk6.put("reverseBytes", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("compareTo", new Class[] {java.lang.Long.class});
-        methodsThatShouldExist_jdk6.put("compareTo", new Class[] {java.lang.Object.class});
-        methodsThatShouldExist_jdk6.put("getLong", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk6.put("getLong", new Class[] {java.lang.String.class, java.lang.Long.class});
-        methodsThatShouldExist_jdk6.put("getLong", new Class[] {java.lang.String.class, long.class});
-        methodsThatShouldExist_jdk6.put("byteValue", new Class[] {});
-        methodsThatShouldExist_jdk6.put("shortValue", new Class[] {});
-        methodsThatShouldExist_jdk6.put("intValue", new Class[] {});
-        methodsThatShouldExist_jdk6.put("longValue", new Class[] {});
-        methodsThatShouldExist_jdk6.put("floatValue", new Class[] {});
-        methodsThatShouldExist_jdk6.put("doubleValue", new Class[] {});
-        methodsThatShouldExist_jdk6.put("valueOf", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk6.put("valueOf", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("valueOf", new Class[] {java.lang.String.class, int.class});
-        methodsThatShouldExist_jdk6.put("toHexString", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("decode", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk6.put("reverse", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("toOctalString", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("toBinaryString", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("highestOneBit", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("lowestOneBit", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("rotateLeft", new Class[] {long.class, int.class});
-        methodsThatShouldExist_jdk6.put("rotateRight", new Class[] {long.class, int.class});
-        methodsThatShouldExist_jdk6.put("signum", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("parseLong", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk6.put("parseLong", new Class[] {java.lang.String.class, int.class});
-        methodsThatShouldExist_jdk6.put("wait", new Class[] {long.class, int.class});
-        methodsThatShouldExist_jdk6.put("wait", new Class[] {long.class});
-        methodsThatShouldExist_jdk6.put("wait", new Class[] {});
-        methodsThatShouldExist_jdk6.put("getClass", new Class[] {});
-        methodsThatShouldExist_jdk6.put("notify", new Class[] {});
-        methodsThatShouldExist_jdk6.put("notifyAll", new Class[] {});
-
-        Map<String, Class[]> methodsThatShouldExist_jdk7 = new HashMap<String, Class[]>();
-        methodsThatShouldExist_jdk7.put("numberOfLeadingZeros", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("numberOfTrailingZeros", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("bitCount", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("equals", new Class[] {java.lang.Object.class});
-        methodsThatShouldExist_jdk7.put("toString", new Class[] {});
-        methodsThatShouldExist_jdk7.put("toString", new Class[] {long.class, int.class});
-        methodsThatShouldExist_jdk7.put("toString", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("hashCode", new Class[] {});
-        methodsThatShouldExist_jdk7.put("reverseBytes", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("compareTo", new Class[] {java.lang.Long.class});
-        methodsThatShouldExist_jdk7.put("compareTo", new Class[] {java.lang.Object.class});
-        methodsThatShouldExist_jdk7.put("getLong", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk7.put("getLong", new Class[] {java.lang.String.class, java.lang.Long.class});
-        methodsThatShouldExist_jdk7.put("getLong", new Class[] {java.lang.String.class, long.class});
-        methodsThatShouldExist_jdk7.put("byteValue", new Class[] {});
-        methodsThatShouldExist_jdk7.put("shortValue", new Class[] {});
-        methodsThatShouldExist_jdk7.put("intValue", new Class[] {});
-        methodsThatShouldExist_jdk7.put("longValue", new Class[] {});
-        methodsThatShouldExist_jdk7.put("floatValue", new Class[] {});
-        methodsThatShouldExist_jdk7.put("doubleValue", new Class[] {});
-        methodsThatShouldExist_jdk7.put("valueOf", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("valueOf", new Class[] {java.lang.String.class, int.class});
-        methodsThatShouldExist_jdk7.put("valueOf", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk7.put("toHexString", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("compare", new Class[] {long.class, long.class});
-        methodsThatShouldExist_jdk7.put("decode", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk7.put("reverse", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("highestOneBit", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("lowestOneBit", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("rotateLeft", new Class[] {long.class, int.class});
-        methodsThatShouldExist_jdk7.put("rotateRight", new Class[] {long.class, int.class});
-        methodsThatShouldExist_jdk7.put("signum", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("toBinaryString", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("toOctalString", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("parseLong", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk7.put("parseLong", new Class[] {java.lang.String.class, int.class});
-        methodsThatShouldExist_jdk7.put("wait", new Class[] {long.class, int.class});
-        methodsThatShouldExist_jdk7.put("wait", new Class[] {long.class});
-        methodsThatShouldExist_jdk7.put("wait", new Class[] {});
-        methodsThatShouldExist_jdk7.put("getClass", new Class[] {});
-        methodsThatShouldExist_jdk7.put("notify", new Class[] {});
-        methodsThatShouldExist_jdk7.put("notifyAll", new Class[] {});
-
-        // get the right map containing method signatures
-        Map<String, Class[]> methodsThatShouldExist = getJavaVersion() < 7 ? methodsThatShouldExist_jdk6 : methodsThatShouldExist_jdk7;
-
-        // create instance of a class Long
-        final Object o = new Long(42);
-
-        // get a runtime class of an object "o"
-        final Class c = o.getClass();
-
-        // check if all required methods really exist
-        for (Map.Entry<String, Class[]> methodThatShouldExists : methodsThatShouldExist.entrySet()) {
+public class getMethod
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        HashMap<String, Class[]> methodsThatShouldExist_jdk6 = new HashMap<String, Class[]>();
+        methodsThatShouldExist_jdk6.put("numberOfLeadingZeros", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("numberOfTrailingZeros", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("bitCount", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("equals", new Class[]{Object.class});
+        methodsThatShouldExist_jdk6.put("toString", new Class[0]);
+        methodsThatShouldExist_jdk6.put("toString", new Class[]{Long.TYPE, Integer.TYPE});
+        methodsThatShouldExist_jdk6.put("toString", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("hashCode", new Class[0]);
+        methodsThatShouldExist_jdk6.put("reverseBytes", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("compareTo", new Class[]{Long.class});
+        methodsThatShouldExist_jdk6.put("compareTo", new Class[]{Object.class});
+        methodsThatShouldExist_jdk6.put("getLong", new Class[]{String.class});
+        methodsThatShouldExist_jdk6.put("getLong", new Class[]{String.class, Long.class});
+        methodsThatShouldExist_jdk6.put("getLong", new Class[]{String.class, Long.TYPE});
+        methodsThatShouldExist_jdk6.put("byteValue", new Class[0]);
+        methodsThatShouldExist_jdk6.put("shortValue", new Class[0]);
+        methodsThatShouldExist_jdk6.put("intValue", new Class[0]);
+        methodsThatShouldExist_jdk6.put("longValue", new Class[0]);
+        methodsThatShouldExist_jdk6.put("floatValue", new Class[0]);
+        methodsThatShouldExist_jdk6.put("doubleValue", new Class[0]);
+        methodsThatShouldExist_jdk6.put("valueOf", new Class[]{String.class});
+        methodsThatShouldExist_jdk6.put("valueOf", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("valueOf", new Class[]{String.class, Integer.TYPE});
+        methodsThatShouldExist_jdk6.put("toHexString", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("decode", new Class[]{String.class});
+        methodsThatShouldExist_jdk6.put("reverse", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("toOctalString", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("toBinaryString", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("highestOneBit", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("lowestOneBit", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("rotateLeft", new Class[]{Long.TYPE, Integer.TYPE});
+        methodsThatShouldExist_jdk6.put("rotateRight", new Class[]{Long.TYPE, Integer.TYPE});
+        methodsThatShouldExist_jdk6.put("signum", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("parseLong", new Class[]{String.class});
+        methodsThatShouldExist_jdk6.put("parseLong", new Class[]{String.class, Integer.TYPE});
+        methodsThatShouldExist_jdk6.put("wait", new Class[]{Long.TYPE, Integer.TYPE});
+        methodsThatShouldExist_jdk6.put("wait", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk6.put("wait", new Class[0]);
+        methodsThatShouldExist_jdk6.put("getClass", new Class[0]);
+        methodsThatShouldExist_jdk6.put("notify", new Class[0]);
+        methodsThatShouldExist_jdk6.put("notifyAll", new Class[0]);
+        HashMap<String, Class[]> methodsThatShouldExist_jdk7 = new HashMap<String, Class[]>();
+        methodsThatShouldExist_jdk7.put("numberOfLeadingZeros", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("numberOfTrailingZeros", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("bitCount", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("equals", new Class[]{Object.class});
+        methodsThatShouldExist_jdk7.put("toString", new Class[0]);
+        methodsThatShouldExist_jdk7.put("toString", new Class[]{Long.TYPE, Integer.TYPE});
+        methodsThatShouldExist_jdk7.put("toString", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("hashCode", new Class[0]);
+        methodsThatShouldExist_jdk7.put("reverseBytes", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("compareTo", new Class[]{Long.class});
+        methodsThatShouldExist_jdk7.put("compareTo", new Class[]{Object.class});
+        methodsThatShouldExist_jdk7.put("getLong", new Class[]{String.class});
+        methodsThatShouldExist_jdk7.put("getLong", new Class[]{String.class, Long.class});
+        methodsThatShouldExist_jdk7.put("getLong", new Class[]{String.class, Long.TYPE});
+        methodsThatShouldExist_jdk7.put("byteValue", new Class[0]);
+        methodsThatShouldExist_jdk7.put("shortValue", new Class[0]);
+        methodsThatShouldExist_jdk7.put("intValue", new Class[0]);
+        methodsThatShouldExist_jdk7.put("longValue", new Class[0]);
+        methodsThatShouldExist_jdk7.put("floatValue", new Class[0]);
+        methodsThatShouldExist_jdk7.put("doubleValue", new Class[0]);
+        methodsThatShouldExist_jdk7.put("valueOf", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("valueOf", new Class[]{String.class, Integer.TYPE});
+        methodsThatShouldExist_jdk7.put("valueOf", new Class[]{String.class});
+        methodsThatShouldExist_jdk7.put("toHexString", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("compare", new Class[]{Long.TYPE, Long.TYPE});
+        methodsThatShouldExist_jdk7.put("decode", new Class[]{String.class});
+        methodsThatShouldExist_jdk7.put("reverse", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("highestOneBit", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("lowestOneBit", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("rotateLeft", new Class[]{Long.TYPE, Integer.TYPE});
+        methodsThatShouldExist_jdk7.put("rotateRight", new Class[]{Long.TYPE, Integer.TYPE});
+        methodsThatShouldExist_jdk7.put("signum", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("toBinaryString", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("toOctalString", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("parseLong", new Class[]{String.class});
+        methodsThatShouldExist_jdk7.put("parseLong", new Class[]{String.class, Integer.TYPE});
+        methodsThatShouldExist_jdk7.put("wait", new Class[]{Long.TYPE, Integer.TYPE});
+        methodsThatShouldExist_jdk7.put("wait", new Class[]{Long.TYPE});
+        methodsThatShouldExist_jdk7.put("wait", new Class[0]);
+        methodsThatShouldExist_jdk7.put("getClass", new Class[0]);
+        methodsThatShouldExist_jdk7.put("notify", new Class[0]);
+        methodsThatShouldExist_jdk7.put("notifyAll", new Class[0]);
+        HashMap<String, Class[]> methodsThatShouldExist = this.getJavaVersion() < 7 ? methodsThatShouldExist_jdk6 : methodsThatShouldExist_jdk7;
+        Long o = new Long(42L);
+        Class<?> c = o.getClass();
+        for (Map.Entry methodThatShouldExists : methodsThatShouldExist.entrySet()) {
             try {
-                java.lang.reflect.Method method = c.getMethod(methodThatShouldExists.getKey(), methodThatShouldExists.getValue());
+                Method method = c.getMethod((String)methodThatShouldExists.getKey(), (Class[])methodThatShouldExists.getValue());
                 harness.check(method != null);
                 String methodName = method.getName();
                 harness.check(methodName != null);
@@ -157,12 +115,6 @@ public class getMethod implements Testlet
         }
     }
 
-    /**
-     * Returns version of Java. The input could have the following form: "1.7.0_06"
-     * and we are interested only in "7" in this case.
-     * 
-     * @return Java version
-     */
     protected int getJavaVersion() {
         String javaVersionStr = System.getProperty("java.version");
         String[] parts = javaVersionStr.split("\\.");

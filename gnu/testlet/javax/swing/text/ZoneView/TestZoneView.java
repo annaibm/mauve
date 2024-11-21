@@ -1,109 +1,79 @@
-/* TestZoneView.java -- A ZoneView subclass for testing
-   Copyright (C) 2006 Roman Kennke (kennke@aicas.com)
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to the
-Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301 USA.
-
-*/
-
-// Tags: not-a-test
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.javax.swing.text.ZoneView;
 
+import gnu.testlet.javax.swing.text.ZoneView.TestView;
 import java.util.ArrayList;
-
 import javax.swing.text.Element;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.ZoneView;
 
-public class TestZoneView extends ZoneView
-{
+public class TestZoneView
+extends ZoneView {
+    private static final Element DEFAULT_ELEMENT;
+    ArrayList lastUnloadedZones = new ArrayList();
 
-  private static final Element DEFAULT_ELEMENT;
-  static
-  {
-    PlainDocument doc = new PlainDocument();
-    Element el = doc.getDefaultRootElement();
-    DEFAULT_ELEMENT = el;
-  }
+    TestZoneView() {
+        this(0);
+    }
 
-  ArrayList lastUnloadedZones;
+    TestZoneView(int axis) {
+        this(DEFAULT_ELEMENT, axis);
+    }
 
-  TestZoneView()
-  {
-    this(X_AXIS);
-  }
+    TestZoneView(Element el, int axis) {
+        super(el, axis);
+    }
 
-  TestZoneView(int axis)
-  {
-    this(DEFAULT_ELEMENT, axis);
-  }
+    @Override
+    public void zoneWasLoaded(View zone) {
+        super.zoneWasLoaded(zone);
+    }
 
-  TestZoneView(Element el, int axis)
-  {
-    super(el, axis);
-    lastUnloadedZones = new ArrayList();
-  }
+    @Override
+    public void unloadZone(View zone) {
+        super.unloadZone(zone);
+        this.lastUnloadedZones.add(zone);
+    }
 
-  /**
-   * Overridden to make method publicly accessible.
-   */
-  public void zoneWasLoaded(View zone)
-  {
-    super.zoneWasLoaded(zone);
-  }
+    @Override
+    public boolean isZoneLoaded(View z) {
+        return super.isZoneLoaded(z);
+    }
 
-  public void unloadZone(View zone)
-  {
-    super.unloadZone(zone);
-    lastUnloadedZones.add(zone);
-  }
+    @Override
+    public View createZone(int p0, int p1) {
+        return super.createZone(p0, p1);
+    }
 
-  public boolean isZoneLoaded(View z)
-  {
-    return super.isZoneLoaded(z);
-  }
+    @Override
+    public int getViewIndexAtPosition(int pos) {
+        return super.getViewIndexAtPosition(pos);
+    }
 
-  public View createZone(int p0, int p1)
-  {
-    return super.createZone(p0, p1);
-  }
+    @Override
+    public void loadChildren(ViewFactory vf) {
+        super.loadChildren(vf);
+    }
 
-  public int getViewIndexAtPosition(int pos)
-  {
-    return super.getViewIndexAtPosition(pos);
-  }
+    @Override
+    public ViewFactory getViewFactory() {
+        return new ViewFactory(){
 
-  public void loadChildren(ViewFactory vf)
-  {
-    super.loadChildren(vf);
-  }
+            @Override
+            public View create(Element elem) {
+                return new TestView(elem, 0);
+            }
+        };
+    }
 
-  public ViewFactory getViewFactory()
-  {
-    return new ViewFactory()
-    {
-
-      public View create(Element elem)
-      {
-        return new TestView(elem, View.X_AXIS);
-      }
-      
-    };
-  }
+    static {
+        Element el;
+        PlainDocument doc = new PlainDocument();
+        DEFAULT_ELEMENT = el = doc.getDefaultRootElement();
+    }
 }
+

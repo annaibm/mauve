@@ -1,232 +1,166 @@
-/* Constructors.java -- 
-   Copyright (C) 2006 Red Hat
-This file is part of Mauve.
-
-Mauve is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-Mauve is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Mauve; see the file COPYING.  If not, write to the
-Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301 USA.
-
-*/
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.dnd.DropTarget;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
 import java.awt.Button;
 import java.awt.datatransfer.FlavorMap;
 import java.awt.datatransfer.SystemFlavorMap;
-import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.util.TooManyListenersException;
 
-public class Constructors implements Testlet
-{
-  TestHarness h;
-  boolean caught = false;
-  DropTarget dt;
-  DropTarget oldDt;
-  FlavorMap fm;
-  Button b = new Button();
-  
-  public void test(TestHarness harness)
-  {
-    h = harness;
-    testNoParam();
-    testTwoParams();
-    testThreeParams();
-    testFourParams();
-    testFiveParams();
-  }
-  
-  public void testNoParam()
-  {
-    dt = new DropTarget();
-    oldDt = dt;
-    h.check(dt.getComponent() == null);
-    h.check(dt.getDefaultActions() == DnDConstants.ACTION_COPY_OR_MOVE);
-    
-    try
-    {
-      dt.addDropTargetListener(null);
+public class Constructors
+implements Testlet {
+    TestHarness h;
+    boolean caught = false;
+    DropTarget dt;
+    DropTarget oldDt;
+    FlavorMap fm;
+    Button b = new Button();
+
+    @Override
+    public void test(TestHarness harness) {
+        this.h = harness;
+        this.testNoParam();
+        this.testTwoParams();
+        this.testThreeParams();
+        this.testFourParams();
+        this.testFiveParams();
     }
-    catch (TooManyListenersException tmle)
-    {
-      caught = true;
+
+    public void testNoParam() {
+        this.oldDt = this.dt = new DropTarget();
+        this.h.check(this.dt.getComponent() == null);
+        this.h.check(this.dt.getDefaultActions() == 3);
+        try {
+            this.dt.addDropTargetListener(null);
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = true;
+        }
+        this.h.check(!this.caught);
+        this.h.check(this.dt.isActive());
+        this.fm = this.dt.getFlavorMap();
+        this.h.check(this.fm != null);
+        this.h.check(this.fm instanceof SystemFlavorMap);
+        this.caught = false;
     }
-    
-    h.check(!caught);
-    h.check(dt.isActive());
-    
-    fm = dt.getFlavorMap();
-    h.check(fm != null);
-    h.check((fm instanceof SystemFlavorMap));
-    
-    caught = false;
-  }
-  
-  public void testTwoParams()
-  {    
-    dt = new DropTarget(b, oldDt);
-    h.check(dt.getComponent().equals(b));
-    h.check(dt.getDefaultActions() == DnDConstants.ACTION_COPY_OR_MOVE);
-    
-    try
-    {
-      dt.addDropTargetListener(dt);
+
+    public void testTwoParams() {
+        this.dt = new DropTarget(this.b, this.oldDt);
+        this.h.check(this.dt.getComponent().equals(this.b));
+        this.h.check(this.dt.getDefaultActions() == 3);
+        try {
+            this.dt.addDropTargetListener(this.dt);
+        }
+        catch (IllegalArgumentException iae) {
+            this.caught = true;
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = false;
+        }
+        this.h.check(this.caught);
+        this.caught = false;
+        try {
+            this.dt.addDropTargetListener(this.oldDt);
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = true;
+        }
+        this.h.check(this.caught);
+        this.caught = false;
+        this.h.check(this.dt.isActive());
+        this.fm = this.dt.getFlavorMap();
+        this.h.check(this.fm != null);
+        this.h.check(this.fm instanceof SystemFlavorMap);
     }
-    catch (IllegalArgumentException iae)
-    {
-      caught = true;
+
+    public void testThreeParams() {
+        this.dt = new DropTarget(this.b, 3, this.oldDt);
+        this.h.check(this.dt.getComponent().equals(this.b));
+        this.h.check(this.dt.getDefaultActions() == 3);
+        try {
+            this.dt.addDropTargetListener(this.dt);
+        }
+        catch (IllegalArgumentException iae) {
+            this.caught = true;
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = false;
+        }
+        this.h.check(this.caught);
+        this.caught = false;
+        try {
+            this.dt.addDropTargetListener(this.oldDt);
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = true;
+        }
+        this.h.check(this.caught);
+        this.caught = false;
+        this.h.check(this.dt.isActive());
+        this.fm = this.dt.getFlavorMap();
+        this.h.check(this.fm != null);
+        this.h.check(this.fm instanceof SystemFlavorMap);
     }
-    catch (TooManyListenersException tmle)
-    {
-      caught = false;
+
+    public void testFourParams() {
+        this.dt = new DropTarget(this.b, 3, this.oldDt, false);
+        this.h.check(this.dt.getComponent().equals(this.b));
+        this.h.check(this.dt.getDefaultActions() == 3);
+        try {
+            this.dt.addDropTargetListener(this.dt);
+        }
+        catch (IllegalArgumentException iae) {
+            this.caught = true;
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = false;
+        }
+        this.h.check(this.caught);
+        this.caught = false;
+        try {
+            this.dt.addDropTargetListener(this.oldDt);
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = true;
+        }
+        this.h.check(this.caught);
+        this.caught = false;
+        this.h.check(!this.dt.isActive());
+        this.fm = this.dt.getFlavorMap();
+        this.h.check(this.fm != null);
+        this.h.check(this.fm instanceof SystemFlavorMap);
     }
-    h.check(caught);
-    caught = false;
-    
-    try
-    {
-      dt.addDropTargetListener(oldDt);
+
+    public void testFiveParams() {
+        this.fm = SystemFlavorMap.getDefaultFlavorMap();
+        this.dt = new DropTarget(this.b, 3, this.oldDt, false, this.fm);
+        this.h.check(this.dt.getComponent().equals(this.b));
+        this.h.check(this.dt.getDefaultActions() == 3);
+        try {
+            this.dt.addDropTargetListener(this.dt);
+        }
+        catch (IllegalArgumentException iae) {
+            this.caught = true;
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = false;
+        }
+        this.h.check(this.caught);
+        this.caught = false;
+        try {
+            this.dt.addDropTargetListener(this.oldDt);
+        }
+        catch (TooManyListenersException tmle) {
+            this.caught = true;
+        }
+        this.h.check(this.caught);
+        this.caught = false;
+        this.h.check(!this.dt.isActive());
+        this.h.check(this.dt.getFlavorMap().equals(this.fm));
     }
-    catch (TooManyListenersException tmle)
-    {
-      caught = true;
-    }
-    h.check(caught);
-    caught = false;
-    
-    h.check(dt.isActive());
-    
-    fm = dt.getFlavorMap();
-    h.check(fm != null);
-    h.check((fm instanceof SystemFlavorMap));
-  }
-  
-  public void testThreeParams()
-  {    
-    dt = new DropTarget(b, DnDConstants.ACTION_COPY_OR_MOVE, oldDt);
-    h.check(dt.getComponent().equals(b));
-    h.check(dt.getDefaultActions() == DnDConstants.ACTION_COPY_OR_MOVE);
-    
-    try
-    {
-      dt.addDropTargetListener(dt);
-    }
-    catch (IllegalArgumentException iae)
-    {
-      caught = true;
-    }
-    catch (TooManyListenersException tmle)
-    {
-      caught = false;
-    }
-    h.check(caught);
-    caught = false;
-    
-    try
-    {
-      dt.addDropTargetListener(oldDt);
-    }
-    catch (TooManyListenersException tmle)
-    {
-      caught = true;
-    }
-    h.check(caught);
-    caught = false;
-    
-    h.check(dt.isActive());
-    
-    fm = dt.getFlavorMap();
-    h.check(fm != null);
-    h.check((fm instanceof SystemFlavorMap));
-  }
-  
-  public void testFourParams()
-  {    
-    dt = new DropTarget(b, DnDConstants.ACTION_COPY_OR_MOVE, oldDt, false);
-    h.check(dt.getComponent().equals(b));
-    h.check(dt.getDefaultActions() == DnDConstants.ACTION_COPY_OR_MOVE);
-    
-    try
-    {
-      dt.addDropTargetListener(dt);
-    }
-    catch (IllegalArgumentException iae)
-    {
-      caught = true;
-    }
-    catch (TooManyListenersException tmle)
-    {
-      caught = false;
-    }
-    h.check(caught);
-    caught = false;
-    
-    try
-    {
-      dt.addDropTargetListener(oldDt);
-    }
-    catch (TooManyListenersException tmle)
-    {
-      caught = true;
-    }
-    h.check(caught);
-    caught = false;
-    
-    h.check(!dt.isActive());
-    
-    fm = dt.getFlavorMap();
-    h.check(fm != null);
-    h.check((fm instanceof SystemFlavorMap));
-  }
-  
-  public void testFiveParams()
-  {    
-    fm = SystemFlavorMap.getDefaultFlavorMap();
-    dt = new DropTarget(b, DnDConstants.ACTION_COPY_OR_MOVE, oldDt, false, fm);
-    h.check(dt.getComponent().equals(b));
-    h.check(dt.getDefaultActions() == DnDConstants.ACTION_COPY_OR_MOVE);
-    
-    try
-    {
-      dt.addDropTargetListener(dt);
-    }
-    catch (IllegalArgumentException iae)
-    {
-      caught = true;
-    }
-    catch (TooManyListenersException tmle)
-    {
-      caught = false;
-    }
-    h.check(caught);
-    caught = false;
-    
-    try
-    {
-      dt.addDropTargetListener(oldDt);
-    }
-    catch (TooManyListenersException tmle)
-    {
-      caught = true;
-    }
-    h.check(caught);
-    caught = false;
-    
-    h.check(!dt.isActive());
-    h.check(dt.getFlavorMap().equals(fm));
-  }
 }
+

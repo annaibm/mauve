@@ -1,280 +1,104 @@
-// Tags: JDK1.4
-
-// Copyright (C) 2005 Roman Kennke <roman@kennke.org>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.awt.event.MouseEvent;
 
-import gnu.testlet.Testlet;
 import gnu.testlet.TestHarness;
-
+import gnu.testlet.Testlet;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Robot;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.KeyEvent;
 
-/**
- * Checks if a click does trigger the correct getModifiers() flags.
- * This doesn't test the ALT, META or ALT_GRAPH modifiers as their
- * behaviour is window-manager specific.  Some window managers
- * intercept some key-mouse combinations, e.g. ALT-BUTTON1 means
- * "Start dragging this window" in Metacity.  Also note that xmodmap
- * settings will affect Java-generated modifier masks.
- *
- * @author Roman Kennke
- */
-public class modifiers implements Testlet
-{
-  int mask;
-  Robot robot;
-  TestHarness h;
-  // set this to true to test ALT, META and ALT_GRAPH modifiers
-  boolean test_alt;
+public class modifiers
+implements Testlet {
+    int mask;
+    Robot robot;
+    TestHarness h;
+    boolean test_alt;
 
-  public void checkMask (int keycode[], int buttonmask, int keymask)
-  {
-    int i;
-    for (i = 0; i < keycode.length; i++)
-      robot.keyPress (keycode[i]);
-
-    robot.mousePress(buttonmask);
-    h.check(mask, buttonmask | keymask, "mousePressed: " + mask);
-    mask = 0;
-    robot.mouseRelease(buttonmask);
-    h.check(mask, buttonmask | keymask, "mouseReleased: " + mask);
-    mask = 0;
-
-    for (i = 0; i < keycode.length; i++)
-      robot.keyRelease (keycode[i]);
-  }
-
-  public void checkAllMaskCombinations (int buttonmask)
-  {
-    // each of the 5 key masks can be on or off, giving 32 possible
-    // combinations.
-
-    // no modifiers
-    checkMask (new int[] {},
-	       buttonmask,
-	       0);
-
-    // one modifier
-    // SHIFT_MASK
-    checkMask (new int[] { KeyEvent.VK_SHIFT },
-	       buttonmask,
-	       InputEvent.SHIFT_MASK);
-
-    // CTRL_MASK
-    checkMask (new int[] { KeyEvent.VK_CONTROL },
-	       buttonmask,
-	       InputEvent.CTRL_MASK);
-
-    if (test_alt)
-      {
-	// META_MASK
-	checkMask (new int[] { KeyEvent.VK_META },
-		   buttonmask,
-		   InputEvent.META_MASK);
-
-	// ALT_MASK
-	checkMask (new int[] { KeyEvent.VK_ALT },
-		   buttonmask,
-		   InputEvent.ALT_MASK);
-
-	// ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.ALT_GRAPH_MASK);
-      }
-
-    // two modifiers
-
-    // SHIFT_MASK | CTRL_MASK
-    checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL },
-	       buttonmask,
-	       InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK);
-
-    if (test_alt)
-      {
-	// SHIFT_MASK | META_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_META },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.META_MASK);
-
-	// SHIFT_MASK | ALT_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_ALT },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.ALT_MASK);
-
-	// SHIFT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// CTRL_MASK | META_MASK
-	checkMask (new int[] { KeyEvent.VK_CONTROL, KeyEvent.VK_META },
-		   buttonmask,
-		   InputEvent.CTRL_MASK | InputEvent.META_MASK);
-
-	// CTRL_MASK | ALT_MASK
-	checkMask (new int[] { KeyEvent.VK_CONTROL, KeyEvent.VK_ALT },
-		   buttonmask,
-		   InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
-
-	// CTRL_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_CONTROL, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.CTRL_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// META_MASK | ALT_MASK
-	checkMask (new int[] { KeyEvent.VK_META, KeyEvent.VK_ALT },
-		   buttonmask,
-		   InputEvent.META_MASK | InputEvent.ALT_MASK);
-
-	// META_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_META, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.META_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// ALT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_ALT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// three modifiers
-
-	// SHIFT_MASK | CTRL_MASK | META_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, KeyEvent.VK_META },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK);
-
-	// SHIFT_MASK | CTRL_MASK | ALT_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, KeyEvent.VK_ALT },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
-
-	// SHIFT_MASK | CTRL_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// SHIFT_MASK | META_MASK | ALT_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_META, KeyEvent.VK_ALT },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.META_MASK | InputEvent.ALT_MASK);
-
-	// SHIFT_MASK | META_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// SHIFT_MASK | ALT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_ALT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// CTRL_MASK | META_MASK | ALT_MASK
-	checkMask (new int[] { KeyEvent.VK_CONTROL, KeyEvent.VK_META, KeyEvent.VK_ALT },
-		   buttonmask,
-		   InputEvent.CTRL_MASK | InputEvent.META_MASK | InputEvent.ALT_MASK);
-
-	// CTRL_MASK | META_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_CONTROL, KeyEvent.VK_META, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.CTRL_MASK | InputEvent.META_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// CTRL_MASK | ALT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_CONTROL, KeyEvent.VK_ALT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// META_MASK | ALT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_META, KeyEvent.VK_ALT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.META_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// four modifiers
-
-	// SHIFT_MASK | CTRL_MASK | META_MASK | ALT_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, KeyEvent.VK_META, KeyEvent.VK_ALT },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK | InputEvent.ALT_MASK);
-
-	// SHIFT_MASK | CTRL_MASK | META_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, KeyEvent.VK_META, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// SHIFT_MASK | CTRL_MASK | ALT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, KeyEvent.VK_ALT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// SHIFT_MASK | META_MASK | ALT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_META, KeyEvent.VK_ALT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.META_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// CTRL_MASK | META_MASK | ALT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_CONTROL, KeyEvent.VK_META, KeyEvent.VK_ALT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.CTRL_MASK | InputEvent.META_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK);
-
-	// five modifiers
-
-	// SHIFT_MASK | CTRL_MASK | META_MASK | ALT_MASK | ALT_GRAPH_MASK
-	checkMask (new int[] { KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, KeyEvent.VK_META, KeyEvent.VK_ALT, KeyEvent.VK_ALT_GRAPH },
-		   buttonmask,
-		   InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK);
-      }
-  }
-
-  public void test(TestHarness h)
-  {
-    this.h = h;
-    Frame frame = new Frame();
-    MouseAdapter a = new MouseAdapter()
-      {
-        public void mousePressed(MouseEvent ev) 
-        {
-          mask = ev.getModifiers();
+    public void checkMask(int[] keycode, int buttonmask, int keymask) {
+        int i;
+        for (i = 0; i < keycode.length; ++i) {
+            this.robot.keyPress(keycode[i]);
         }
-        public void mouseReleased(MouseEvent ev) 
-        {
-          mask = ev.getModifiers();
+        this.robot.mousePress(buttonmask);
+        this.h.check(this.mask, buttonmask | keymask, "mousePressed: " + this.mask);
+        this.mask = 0;
+        this.robot.mouseRelease(buttonmask);
+        this.h.check(this.mask, buttonmask | keymask, "mouseReleased: " + this.mask);
+        this.mask = 0;
+        for (i = 0; i < keycode.length; ++i) {
+            this.robot.keyRelease(keycode[i]);
         }
-      };
-    frame.addMouseListener(a);
-    frame.setSize(100, 100);
-    frame.show();
-    Point loc = frame.getLocationOnScreen();
-    
-    robot = h.createRobot();
-    robot.setAutoWaitForIdle (true);
+    }
 
-    robot.mouseMove(loc.x + 50, loc.y + 50);
+    public void checkAllMaskCombinations(int buttonmask) {
+        this.checkMask(new int[0], buttonmask, 0);
+        this.checkMask(new int[]{16}, buttonmask, 1);
+        this.checkMask(new int[]{17}, buttonmask, 2);
+        if (this.test_alt) {
+            this.checkMask(new int[]{157}, buttonmask, 4);
+            this.checkMask(new int[]{18}, buttonmask, 8);
+            this.checkMask(new int[]{65406}, buttonmask, 32);
+        }
+        this.checkMask(new int[]{16, 17}, buttonmask, 3);
+        if (this.test_alt) {
+            this.checkMask(new int[]{16, 157}, buttonmask, 5);
+            this.checkMask(new int[]{16, 18}, buttonmask, 9);
+            this.checkMask(new int[]{16, 65406}, buttonmask, 33);
+            this.checkMask(new int[]{17, 157}, buttonmask, 6);
+            this.checkMask(new int[]{17, 18}, buttonmask, 10);
+            this.checkMask(new int[]{17, 65406}, buttonmask, 34);
+            this.checkMask(new int[]{157, 18}, buttonmask, 12);
+            this.checkMask(new int[]{157, 65406}, buttonmask, 36);
+            this.checkMask(new int[]{18, 65406}, buttonmask, 40);
+            this.checkMask(new int[]{16, 17, 157}, buttonmask, 7);
+            this.checkMask(new int[]{16, 17, 18}, buttonmask, 11);
+            this.checkMask(new int[]{16, 17, 65406}, buttonmask, 35);
+            this.checkMask(new int[]{16, 157, 18}, buttonmask, 13);
+            this.checkMask(new int[]{16, 17, 65406}, buttonmask, 35);
+            this.checkMask(new int[]{16, 18, 65406}, buttonmask, 41);
+            this.checkMask(new int[]{17, 157, 18}, buttonmask, 14);
+            this.checkMask(new int[]{17, 157, 65406}, buttonmask, 38);
+            this.checkMask(new int[]{17, 18, 65406}, buttonmask, 42);
+            this.checkMask(new int[]{157, 18, 65406}, buttonmask, 44);
+            this.checkMask(new int[]{16, 17, 157, 18}, buttonmask, 15);
+            this.checkMask(new int[]{16, 17, 157, 65406}, buttonmask, 39);
+            this.checkMask(new int[]{16, 17, 18, 65406}, buttonmask, 43);
+            this.checkMask(new int[]{16, 157, 18, 65406}, buttonmask, 45);
+            this.checkMask(new int[]{17, 157, 18, 65406}, buttonmask, 46);
+            this.checkMask(new int[]{16, 17, 157, 18, 65406}, buttonmask, 47);
+        }
+    }
 
-    checkAllMaskCombinations (InputEvent.BUTTON1_MASK);
-    checkAllMaskCombinations (InputEvent.BUTTON2_MASK);
-    checkAllMaskCombinations (InputEvent.BUTTON3_MASK);
-  }
+    @Override
+    public void test(TestHarness h) {
+        this.h = h;
+        Frame frame = new Frame();
+        MouseAdapter a = new MouseAdapter(){
+
+            @Override
+            public void mousePressed(MouseEvent ev) {
+                modifiers.this.mask = ev.getModifiers();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent ev) {
+                modifiers.this.mask = ev.getModifiers();
+            }
+        };
+        frame.addMouseListener(a);
+        frame.setSize(100, 100);
+        frame.show();
+        Point loc = frame.getLocationOnScreen();
+        this.robot = h.createRobot();
+        this.robot.setAutoWaitForIdle(true);
+        this.robot.mouseMove(loc.x + 50, loc.y + 50);
+        this.checkAllMaskCombinations(16);
+        this.checkAllMaskCombinations(8);
+        this.checkAllMaskCombinations(4);
+    }
 }
+

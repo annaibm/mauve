@@ -1,119 +1,73 @@
-// Tags: JDK1.2
-//
-// Uses: MauveSecureRandom
-
-// Copyright (C) 2002 Free Software Foundation, Inc.
-// Written by Mark Wielaard (mark@klomp.org)
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, 59 Temple Place - Suite 330,
-// Boston, MA 02111-1307, USA.  */
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.security.SecureRandom;
 
-import gnu.testlet.Testlet;
 import gnu.testlet.TestHarness;
-
-import java.security.Security;
+import gnu.testlet.Testlet;
+import java.security.GeneralSecurityException;
 import java.security.Provider;
 import java.security.SecureRandom;
-import java.security.GeneralSecurityException;
+import java.security.Security;
 
-public class Instance extends Provider
-  implements Testlet
-{
-  static final String NAME = "Mauve-Test-Provider-SecureRandom";
-  static final double VERSION = 3.14;
-  static final String INFO = "Mauve Info-Test implements MauveSecureRandom";
+public class Instance
+extends Provider
+implements Testlet {
+    static final String NAME = "Mauve-Test-Provider-SecureRandom";
+    static final double VERSION = 3.14;
+    static final String INFO = "Mauve Info-Test implements MauveSecureRandom";
+    TestHarness harness;
 
-  TestHarness harness;
+    public Instance() {
+        super(NAME, 3.14, INFO);
+        this.put("SecureRandom.MauveSecureRandom", "gnu.testlet.java.security.SecureRandom.MauveSecureRandom");
+        this.put("Alg.Alias.SecureRandom.MauveAlias", "MauveSecureRandom");
+    }
 
-  public Instance()
-  {
-    super(NAME, VERSION, INFO);
+    void checkSecureRandom(String name2) {
+        this.checkSecureRandom(name2, null);
+    }
 
-    put("SecureRandom.MauveSecureRandom",
-	"gnu.testlet.java.security.SecureRandom.MauveSecureRandom");
-    put("Alg.Alias.SecureRandom.MauveAlias", "MauveSecureRandom");
-  }
+    void checkSecureRandom(String name2, String provider2) {
+        SecureRandom sr;
+        String checkPoint = name2 + (provider2 == null ? "" : " " + provider2);
+        this.harness.checkPoint(checkPoint);
+        try {
+            sr = provider2 == null ? SecureRandom.getInstance(name2) : SecureRandom.getInstance(name2, provider2);
+        }
+        catch (GeneralSecurityException gse) {
+            this.harness.fail(checkPoint + " instance caught " + gse);
+            return;
+        }
+        this.harness.check(sr.getProvider(), this);
+        byte[] seed = new byte[]{42};
+        sr.setSeed(seed);
+        byte[] random = new byte[1];
+        sr.nextBytes(random);
+        this.harness.check(random[0], 42);
+    }
 
-  void checkSecureRandom(String name)
-  {
-    checkSecureRandom(name, null);
-  }
-
-  void checkSecureRandom(String name, String provider)
-  {
-    String checkPoint = name + (provider == null ? "" : " " + provider);
-    harness.checkPoint(checkPoint);
-
-    SecureRandom sr;
-    try
-      {
-	if (provider == null)
-	  sr = SecureRandom.getInstance(name);
-	else
-	  sr = SecureRandom.getInstance(name, provider);
-      }
-    catch (GeneralSecurityException gse)
-      {
-	harness.fail(checkPoint + " instance caught " + gse);
-	return;
-      }
-
-    // Just make sure we got the correct Signature 
-    harness.check(sr.getProvider(), this);
-
-    // Do some of our dummy operations
-    byte[] seed = new byte[1];
-    seed[0] = 42;
-    sr.setSeed(seed);
-    byte[] random = new byte[1];
-    sr.nextBytes(random);
-    harness.check(random[0], (byte)42);
-  }
-
-  public void test (TestHarness h)
-  {
-    this.harness = h;
-
-    // Without provider
-    byte[] seed = new byte[1];
-    seed[0] = 42;
-    SecureRandom sr = new SecureRandom();
-    harness.check(sr != null);
-    sr = new SecureRandom(seed);
-    harness.check(sr != null);
-
-    // With our own provider
-    Security.addProvider(this);
-    sr = new SecureRandom();
-    harness.check(sr != null);
-    sr = new SecureRandom(seed);
-    harness.check(sr != null);
-
-    checkSecureRandom("MauveSecureRandom");
-    checkSecureRandom("MAUVESecurerandom");
-    checkSecureRandom("MauveAlias");
-    checkSecureRandom("MAUVEALIAS");
-
-    checkSecureRandom("MauveSecureRandom", NAME);
-    checkSecureRandom("MAUVESECURERANDOM", NAME);
-    checkSecureRandom("MauveAlias", NAME);
-    checkSecureRandom("MAUVEALIAS", NAME);
-  }
+    @Override
+    public void test(TestHarness h) {
+        this.harness = h;
+        byte[] seed = new byte[]{42};
+        SecureRandom sr = new SecureRandom();
+        this.harness.check(sr != null);
+        sr = new SecureRandom(seed);
+        this.harness.check(sr != null);
+        Security.addProvider(this);
+        sr = new SecureRandom();
+        this.harness.check(sr != null);
+        sr = new SecureRandom(seed);
+        this.harness.check(sr != null);
+        this.checkSecureRandom("MauveSecureRandom");
+        this.checkSecureRandom("MAUVESecurerandom");
+        this.checkSecureRandom("MauveAlias");
+        this.checkSecureRandom("MAUVEALIAS");
+        this.checkSecureRandom("MauveSecureRandom", NAME);
+        this.checkSecureRandom("MAUVESECURERANDOM", NAME);
+        this.checkSecureRandom("MauveAlias", NAME);
+        this.checkSecureRandom("MAUVEALIAS", NAME);
+    }
 }
 

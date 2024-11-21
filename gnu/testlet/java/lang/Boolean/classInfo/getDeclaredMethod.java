@@ -1,93 +1,51 @@
-// Test for method java.lang.Boolean.getClass().getDeclaredMethod()
-
-// Copyright (C) 2012, 2013, 2014, 2015 Pavel Tisnovsky <ptisnovs@redhat.com>
-
-// This file is part of Mauve.
-
-// Mauve is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2, or (at your option)
-// any later version.
-
-// Mauve is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Mauve; see the file COPYING.  If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Fifth Floor, Boston, MA 02110-1301 USA.
-
-// Tags: JDK1.5
-
+/*
+ * Decompiled with CFR 0.152.
+ */
 package gnu.testlet.java.lang.Boolean.classInfo;
 
 import gnu.testlet.TestHarness;
 import gnu.testlet.Testlet;
-
-import java.lang.Boolean;
-import java.util.Map;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
-
-
-/**
- * Test for method java.lang.Boolean.getClass().getDeclaredMethod()
- */
-public class getDeclaredMethod implements Testlet
-{
-
-    /**
-     * Runs the test using the specified harness.
-     *
-     * @param harness  the test harness (<code>null</code> not permitted).
-     */
-    public void test(TestHarness harness)
-    {
-        // following declared methods should exist
-        Map<String, Class[]> methodsThatShouldExist_jdk6 = new HashMap<String, Class[]>();
-        methodsThatShouldExist_jdk6.put("equals", new Class[] {java.lang.Object.class});
-        methodsThatShouldExist_jdk6.put("toString", new Class[] {});
-        methodsThatShouldExist_jdk6.put("toString", new Class[] {boolean.class});
-        methodsThatShouldExist_jdk6.put("hashCode", new Class[] {});
-        methodsThatShouldExist_jdk6.put("compareTo", new Class[] {java.lang.Object.class});
-        methodsThatShouldExist_jdk6.put("compareTo", new Class[] {java.lang.Boolean.class});
-        methodsThatShouldExist_jdk6.put("getBoolean", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk6.put("booleanValue", new Class[] {});
-        methodsThatShouldExist_jdk6.put("valueOf", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk6.put("valueOf", new Class[] {boolean.class});
-        methodsThatShouldExist_jdk6.put("parseBoolean", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk6.put("toBoolean", new Class[] {java.lang.String.class});
-
-        Map<String, Class[]> methodsThatShouldExist_jdk7 = new HashMap<String, Class[]>();
-        methodsThatShouldExist_jdk7.put("equals", new Class[] {java.lang.Object.class});
-        methodsThatShouldExist_jdk7.put("toString", new Class[] {boolean.class});
-        methodsThatShouldExist_jdk7.put("toString", new Class[] {});
-        methodsThatShouldExist_jdk7.put("hashCode", new Class[] {});
-        methodsThatShouldExist_jdk7.put("compareTo", new Class[] {java.lang.Boolean.class});
-        methodsThatShouldExist_jdk7.put("compareTo", new Class[] {java.lang.Object.class});
-        methodsThatShouldExist_jdk7.put("getBoolean", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk7.put("booleanValue", new Class[] {});
-        methodsThatShouldExist_jdk7.put("valueOf", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk7.put("valueOf", new Class[] {boolean.class});
-        methodsThatShouldExist_jdk7.put("compare", new Class[] {boolean.class, boolean.class});
-        methodsThatShouldExist_jdk7.put("parseBoolean", new Class[] {java.lang.String.class});
-        methodsThatShouldExist_jdk7.put("toBoolean", new Class[] {java.lang.String.class});
-
-        // get the right map containing method signatures
-        Map<String, Class[]> methodsThatShouldExist = getJavaVersion() < 7 ? methodsThatShouldExist_jdk6 : methodsThatShouldExist_jdk7;
-
-        // create instance of a class Boolean
-        final Object o = new Boolean(true);
-
-        // get a runtime class of an object "o"
-        final Class c = o.getClass();
-
-        // check if all required methods really exist
-        for (Map.Entry<String, Class[]> methodThatShouldExists : methodsThatShouldExist.entrySet()) {
+public class getDeclaredMethod
+implements Testlet {
+    @Override
+    public void test(TestHarness harness) {
+        HashMap<String, Class[]> methodsThatShouldExist_jdk6 = new HashMap<String, Class[]>();
+        methodsThatShouldExist_jdk6.put("equals", new Class[]{Object.class});
+        methodsThatShouldExist_jdk6.put("toString", new Class[0]);
+        methodsThatShouldExist_jdk6.put("toString", new Class[]{Boolean.TYPE});
+        methodsThatShouldExist_jdk6.put("hashCode", new Class[0]);
+        methodsThatShouldExist_jdk6.put("compareTo", new Class[]{Object.class});
+        methodsThatShouldExist_jdk6.put("compareTo", new Class[]{Boolean.class});
+        methodsThatShouldExist_jdk6.put("getBoolean", new Class[]{String.class});
+        methodsThatShouldExist_jdk6.put("booleanValue", new Class[0]);
+        methodsThatShouldExist_jdk6.put("valueOf", new Class[]{String.class});
+        methodsThatShouldExist_jdk6.put("valueOf", new Class[]{Boolean.TYPE});
+        methodsThatShouldExist_jdk6.put("parseBoolean", new Class[]{String.class});
+        methodsThatShouldExist_jdk6.put("toBoolean", new Class[]{String.class});
+        HashMap<String, Class[]> methodsThatShouldExist_jdk7 = new HashMap<String, Class[]>();
+        methodsThatShouldExist_jdk7.put("equals", new Class[]{Object.class});
+        methodsThatShouldExist_jdk7.put("toString", new Class[]{Boolean.TYPE});
+        methodsThatShouldExist_jdk7.put("toString", new Class[0]);
+        methodsThatShouldExist_jdk7.put("hashCode", new Class[0]);
+        methodsThatShouldExist_jdk7.put("compareTo", new Class[]{Boolean.class});
+        methodsThatShouldExist_jdk7.put("compareTo", new Class[]{Object.class});
+        methodsThatShouldExist_jdk7.put("getBoolean", new Class[]{String.class});
+        methodsThatShouldExist_jdk7.put("booleanValue", new Class[0]);
+        methodsThatShouldExist_jdk7.put("valueOf", new Class[]{String.class});
+        methodsThatShouldExist_jdk7.put("valueOf", new Class[]{Boolean.TYPE});
+        methodsThatShouldExist_jdk7.put("compare", new Class[]{Boolean.TYPE, Boolean.TYPE});
+        methodsThatShouldExist_jdk7.put("parseBoolean", new Class[]{String.class});
+        methodsThatShouldExist_jdk7.put("toBoolean", new Class[]{String.class});
+        HashMap<String, Class[]> methodsThatShouldExist = this.getJavaVersion() < 7 ? methodsThatShouldExist_jdk6 : methodsThatShouldExist_jdk7;
+        Boolean o = new Boolean(true);
+        Class<?> c = o.getClass();
+        for (Map.Entry methodThatShouldExists : methodsThatShouldExist.entrySet()) {
             try {
-                java.lang.reflect.Method method = c.getDeclaredMethod(methodThatShouldExists.getKey(), methodThatShouldExists.getValue());
+                Method method = c.getDeclaredMethod((String)methodThatShouldExists.getKey(), (Class[])methodThatShouldExists.getValue());
                 harness.check(method != null);
                 String methodName = method.getName();
                 harness.check(methodName != null);
@@ -99,12 +57,6 @@ public class getDeclaredMethod implements Testlet
         }
     }
 
-    /**
-     * Returns version of Java. The input could have the following form: "1.7.0_06"
-     * and we are interested only in "7" in this case.
-     * 
-     * @return Java version
-     */
     protected int getJavaVersion() {
         String javaVersionStr = System.getProperty("java.version");
         String[] parts = javaVersionStr.split("\\.");
